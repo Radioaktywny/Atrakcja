@@ -40,8 +40,7 @@ public class Rejestracja extends Activity {
 		final String haslo=edittext2.getText().toString();
 		String haslo_powtorz=edittext4.getText().toString();
 		final String mail=edittext3.getText().toString();
-		ExecutorService exe = Executors.newFixedThreadPool(1);
-		Future <String> Czy_istnieje_login= exe.submit(new Test("select * from `uzytkownicy` where login=\""+login+"\"", "zwroc"));
+		
 		
 		//--jest polaczenie
 		if(test_polaczenia())
@@ -49,39 +48,34 @@ public class Rejestracja extends Activity {
 			//--jezeli formularz jest pusty
 			if(login.equals("") || haslo.equals("") || haslo_powtorz.equals("") || mail.equals(""))
 			{
-				Toast info = Toast.makeText(Rejestracja.this, "Musisz wypelnic wszystkie pola !", 10000);
-				info.setGravity(Gravity.CENTER, 0, 0);
-				info.show();
-				
+				Toast("Musisz wypelnic wszystkie pola !");
 			}
 			else
-			//--jezeli formulaz jest wypelniony i konto nie istnieje
-			if(Czy_istnieje_login.get().equals(""))
-			{	//--i hasla sa zgodne
-				if(haslo.equals(haslo_powtorz))
-				{
-					exe.submit(new Test("INSERT INTO `uzytkownicy`(`login`, `haslo`, `mail`) VALUES (\""+login+"\",\""+haslo+"\",\""+mail+"\")", "dodaj"));
-					startActivity(new Intent(Rejestracja.this, MainActivity.class));
+			{	
+				ExecutorService exe = Executors.newFixedThreadPool(1);
+				Future <String> Czy_istnieje_login= exe.submit(new Test("select * from `uzytkownicy` where login=\""+login+"\"", "zwroc"));
+				//--jezeli formulaz jest wypelniony i konto nie istnieje
+				if(Czy_istnieje_login.get().equals(""))
+				{	//--i hasla sa zgodne
+					if(haslo.equals(haslo_powtorz))
+					{
+						exe.submit(new Test("INSERT INTO `uzytkownicy`(`login`, `haslo`, `mail`) VALUES (\""+login+"\",\""+haslo+"\",\""+mail+"\")", "dodaj"));
+						startActivity(new Intent(Rejestracja.this, MainActivity.class));
+					}
+					else
+					{
+						Toast("Nie prawidlowe haslo sproboj ponownie");
+					}
 				}
 				else
 				{
-					Toast info = Toast.makeText(Rejestracja.this, "Nie prawidlowe haslo sproboj ponownie", 10000);
-					info.setGravity(Gravity.CENTER, 0, 0);
-					info.show();
+					Toast("Uzytkownik o takim loginie juz istnieje");
 				}
-			}
-			else
-			{
-				Toast info = Toast.makeText(Rejestracja.this, "Uzytkownik o takim loginie juz istnieje", 10000);
-				info.setGravity(Gravity.CENTER, 0, 0);
-				info.show();
 			}
 		}
 		else
 		{
-			Toast info = Toast.makeText(Rejestracja.this, "Brak polaczenia z internetem", 10000);
-			info.setGravity(Gravity.CENTER, 0, 0);
-			info.show();
+			Toast("Brak polaczenia z internetem");
 		}
 		
 	
@@ -102,6 +96,12 @@ public class Rejestracja extends Activity {
 		} catch (Exception e) {
 		return false;
 		}
+	}
+	private void Toast(String informacja)
+	{
+		Toast info = Toast.makeText(Rejestracja.this, informacja, 10000);
+		info.setGravity(Gravity.CENTER, 0, 0);
+		info.show();
 	}
 
 	@Override

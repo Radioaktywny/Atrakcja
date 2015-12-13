@@ -56,26 +56,19 @@ public class Logowanie extends Activity {
 		Log.d("polaczenie", String.valueOf(test_polaczenia()));
 		//---jest polaczenie z internetem
 		if(test_polaczenia()){
-			ExecutorService exe = Executors.newFixedThreadPool(1);
-			Future <String> Czy_istnieje_login= exe.submit(new Baza("select * from `uzytkownicy` where login=\""+login+"\"", "zwroc"));
-			String dane_usera=Czy_istnieje_login.get();//pobieram haslo i meil uzytkownika
-		
-			
+		ExecutorService exe = Executors.newFixedThreadPool(1);
+		Future <String> Czy_istnieje_login= exe.submit(new Baza("select * from `uzytkownicy` where login=\""+login+"\"", "zwroc"));
+		String dane_usera=Czy_istnieje_login.get();//pobieram haslo i meil uzytkownika	
 		//---jezeli nie podal loginu	
 		if(dane_usera.equals(""))
 		{
-			
-				Toast info = Toast.makeText(Logowanie.this, "Uzytkownik o takim loginie nie istnieje", 10000);
-				info.setGravity(Gravity.CENTER, 0, 0);
-				info.show();
+				Toast("Uzytkownik o takim loginie nie istnieje");
 		}
 		else
 		{	//---jezeli nie podal haslo
 			if(haslo.equals(""))
-			{
-				Toast info = Toast.makeText(Logowanie.this, "Podaj haslo !", 10000);
-				info.setGravity(Gravity.CENTER, 0, 0);
-				info.show();
+			{	
+				Toast("Podaj haslo !");
 			}
 			else{
 				//---jezeli podal login i haslo i sa prawidlowe
@@ -85,17 +78,13 @@ public class Logowanie extends Activity {
 				}
 				else
 				{
-					Toast info = Toast.makeText(Logowanie.this, "Nie poprawne haslo", 10000);
-					info.setGravity(Gravity.CENTER, 0, 0);
-					info.show();
+					Toast("Nie poprawne haslo");
 				}
 			}
 		}
 	}
 	else{
-			Toast info = Toast.makeText(Logowanie.this, "Brak polaczenia z internetem", 10000);
-			info.setGravity(Gravity.CENTER, 0, 0);
-			info.show();
+			Toast("Brak polaczenia z internetem");
 		}
 	}
 	
@@ -115,6 +104,13 @@ public class Logowanie extends Activity {
 		}
 		
 	}
+	
+	private void Toast(String informacja)
+	{
+		Toast info = Toast.makeText(Logowanie.this, informacja, 10000);
+		info.setGravity(Gravity.CENTER, 0, 0);
+		info.show();
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -123,11 +119,10 @@ public class Logowanie extends Activity {
 		return true;
 	}
 
+	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 		if (id == R.id.action_settings) {
 			return true;
