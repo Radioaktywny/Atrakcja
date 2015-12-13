@@ -3,6 +3,10 @@ package logowanie;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import com.example.projekt_atrakcja.MainActivity;
 import com.example.projekt_atrakcja.R;
@@ -38,8 +42,17 @@ public class Rejestracja extends Activity {
 		String haslo_powtorz=edittext4.getText().toString();
 		final String mail=edittext3.getText().toString();
 		Log.d("baza", "nacisnieto");
-		new Thread(new Baza("INSERT INTO `uzytkownicy`(`login`, `haslo`, `mail`) VALUES (\""+login+"\",\""+haslo+"\",\""+mail+"\")", "dodaj")).start();;
-//		{
+	//	new Thread(new Baza("INSERT INTO `uzytkownicy`(`login`, `haslo`, `mail`) VALUES (\""+login+"\",\""+haslo+"\",\""+mail+"\")", "dodaj")).start();
+		ExecutorService exe = Executors.newFixedThreadPool(1);
+		
+		Future <String> future= exe.submit(new Test("INSERT INTO `uzytkownicy`(`login`, `haslo`, `mail`) VALUES (\""+login+"\",\""+haslo+"\",\""+mail+"\")", "dodaj"));
+		try {
+			Log.d("exe", future.get());
+		} catch (InterruptedException | ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//		{
 //			@Override
 //			public void run() {
 //				
