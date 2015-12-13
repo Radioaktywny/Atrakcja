@@ -29,28 +29,16 @@ public class Test implements  Callable<String> {
 	String  sql_dodaj=null;
 	String sql_wyswietl=null;
 	String sql_zwroc=null;
+	String sprawdz_polaczenie=null;
 	
 	java.sql.Connection connection;
 	String sql;
 	String nazwabazy;
 	Statement s ;
 	
-	public Test(String nazwabazy)
+	public Test()
 	{
-		if (ladujSterownik())
-			System.out.print(" sterownik OK");
-		else
-			System.exit(1);
-		java.sql.Connection connection = connectToDatabase("www.db4free.net:3306",
-				"", "maciek2015", "testtest");
-		if (connection != null)
-			System.out.print(" polaczenie OK\n");
 		
-		Statement s = createStatement(connection);
-	
-		executeUpdate(s, "Create database if not exists "+nazwabazy+"");
-		this.connection = connectToDatabase("www.db4free.net:3306",""+nazwabazy+"", "maciek2015", "testtest");
-		this.s = createStatement(connection);
 	}
 	
 	/**
@@ -59,7 +47,7 @@ public class Test implements  Callable<String> {
 		 * @param sql
 		 *            - komenda sql
 		 * @param rodzaj
-		 *            - rodzaj polcenie "dodaj" , "wyswietl"
+		 *            - rodzaj polcenie "dodaj" , "wyswietl" , "zwroc" , "sprawdz_polaczenie"
 	 * @return 
 		 */
 	
@@ -81,6 +69,10 @@ public class Test implements  Callable<String> {
 				{	
 					this.sql=sql;
 					sql_zwroc=rodzaj;	
+				}
+				else if (rodzaj.equals("sprawdz_polaczenie"))
+				{	
+					sprawdz_polaczenie="sprawdzam";
 				}
 				
 				
@@ -350,6 +342,19 @@ public class Test implements  Callable<String> {
 					Log.d("baza blad", e.getMessage());
 				}				
 			}
+			if(sprawdz_polaczenie != null)
+			{
+				try {
+					Class.forName("com.mysql.jdbc.Driver");
+					Log.d("sterownik", "sterownik zaladowany");
+				String baza = "jdbc:mysql://www.db4free.net:3306/projekt_2015";
+				java.sql.Connection c = DriverManager.getConnection(baza, "maciek2015", "testtest");
+				zwrot="polaczono";
+				} catch (SQLException | ClassNotFoundException e) {
+					return "nie polaczono";
+				}
+			}
+			
 			return zwrot;
 		
 	}

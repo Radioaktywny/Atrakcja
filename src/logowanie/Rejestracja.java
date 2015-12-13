@@ -43,31 +43,43 @@ public class Rejestracja extends Activity {
 		ExecutorService exe = Executors.newFixedThreadPool(1);
 		Future <String> Czy_istnieje_login= exe.submit(new Test("select * from `uzytkownicy` where login=\""+login+"\"", "zwroc"));
 		
-		if(login.equals("") || haslo.equals("") || haslo_powtorz.equals("") || mail.equals(""))
+		//--jest polaczenie
+		if(test_polaczenia())
 		{
-			Toast info = Toast.makeText(Rejestracja.this, "Musisz wypelnic wszystkie pola !", 10000);
-			info.setGravity(Gravity.CENTER, 0, 0);
-			info.show();
-			
-		}
-		else
-		if(Czy_istnieje_login.get().equals(""))
-		{
-			if(haslo.equals(haslo_powtorz))
+			//--jezeli formularz jest pusty
+			if(login.equals("") || haslo.equals("") || haslo_powtorz.equals("") || mail.equals(""))
 			{
-				exe.submit(new Test("INSERT INTO `uzytkownicy`(`login`, `haslo`, `mail`) VALUES (\""+login+"\",\""+haslo+"\",\""+mail+"\")", "dodaj"));
-				startActivity(new Intent(Rejestracja.this, MainActivity.class));
+				Toast info = Toast.makeText(Rejestracja.this, "Musisz wypelnic wszystkie pola !", 10000);
+				info.setGravity(Gravity.CENTER, 0, 0);
+				info.show();
+				
+			}
+			else
+			//--jezeli formulaz jest wypelniony i konto nie istnieje
+			if(Czy_istnieje_login.get().equals(""))
+			{	//--i hasla sa zgodne
+				if(haslo.equals(haslo_powtorz))
+				{
+					exe.submit(new Test("INSERT INTO `uzytkownicy`(`login`, `haslo`, `mail`) VALUES (\""+login+"\",\""+haslo+"\",\""+mail+"\")", "dodaj"));
+					startActivity(new Intent(Rejestracja.this, MainActivity.class));
+				}
+				else
+				{
+					Toast info = Toast.makeText(Rejestracja.this, "Nie prawidlowe haslo sproboj ponownie", 10000);
+					info.setGravity(Gravity.CENTER, 0, 0);
+					info.show();
+				}
 			}
 			else
 			{
-				Toast info = Toast.makeText(Rejestracja.this, "Nie prawidlowe haslo sproboj ponownie", 10000);
+				Toast info = Toast.makeText(Rejestracja.this, "Uzytkownik o takim loginie juz istnieje", 10000);
 				info.setGravity(Gravity.CENTER, 0, 0);
 				info.show();
 			}
 		}
 		else
 		{
-			Toast info = Toast.makeText(Rejestracja.this, "Uzytkownik o takim loginie juz istnieje", 10000);
+			Toast info = Toast.makeText(Rejestracja.this, "Brak polaczenia z internetem", 10000);
 			info.setGravity(Gravity.CENTER, 0, 0);
 			info.show();
 		}
@@ -76,7 +88,21 @@ public class Rejestracja extends Activity {
 		
 	}
 
-	
+	private boolean test_polaczenia() {
+		try {
+			ExecutorService exe = Executors.newFixedThreadPool(1);
+			Future <String> Czy_istnieje_baza= exe.submit(new Baza("","sprawdz_polaczenie"));
+			
+			if(Czy_istnieje_baza.get().equals("polaczono"))
+			{
+				return true;
+			}else{
+				return false;
+			}
+		} catch (Exception e) {
+		return false;
+		}
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

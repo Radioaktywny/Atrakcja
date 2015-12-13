@@ -1,9 +1,19 @@
 package logowanie;
 
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.MalformedURLException;
+import java.net.Socket;
+import java.net.URL;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+
+import javax.net.ssl.HttpsURLConnection;
 
 import com.example.projekt_atrakcja.MainActivity;
 import com.example.projekt_atrakcja.R;
@@ -43,10 +53,15 @@ public class Logowanie extends Activity {
 		final String login=edittext1.getText().toString();
 		final String haslo=edittext2.getText().toString();
 		
-		ExecutorService exe = Executors.newFixedThreadPool(1);
-		Future <String> Czy_istnieje_login= exe.submit(new Test("select * from `uzytkownicy` where login=\""+login+"\"", "zwroc"));
-		String dane_usera=Czy_istnieje_login.get();//pobieram haslo i meil uzytkownika
-		//---jezeli nie podal loginu
+		Log.d("polaczenie", String.valueOf(test_polaczenia()));
+		//---jest polaczenie z internetem
+		if(test_polaczenia()){
+			ExecutorService exe = Executors.newFixedThreadPool(1);
+			Future <String> Czy_istnieje_login= exe.submit(new Baza("select * from `uzytkownicy` where login=\""+login+"\"", "zwroc"));
+			String dane_usera=Czy_istnieje_login.get();//pobieram haslo i meil uzytkownika
+		
+			
+		//---jezeli nie podal loginu	
 		if(dane_usera.equals(""))
 		{
 			
@@ -77,6 +92,30 @@ public class Logowanie extends Activity {
 			}
 		}
 	}
+	else{
+			Toast info = Toast.makeText(Logowanie.this, "Brak polaczenia z internetem", 10000);
+			info.setGravity(Gravity.CENTER, 0, 0);
+			info.show();
+		}
+	}
+	
+	private boolean test_polaczenia() {
+		try {
+			ExecutorService exe = Executors.newFixedThreadPool(1);
+			Future <String> Czy_istnieje_baza= exe.submit(new Baza("","sprawdz_polaczenie"));
+			
+			if(Czy_istnieje_baza.get().equals("polaczono"))
+			{
+				return true;
+			}else{
+				return false;
+			}
+		} catch (Exception e) {
+		return false;
+		}
+		
+	}
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
