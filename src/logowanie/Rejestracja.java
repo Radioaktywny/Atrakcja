@@ -4,12 +4,14 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import com.example.projekt_atrakcja.MainActivity;
 import com.example.projekt_atrakcja.R;
 import com.example.projekt_atrakcja.R.id;
 import com.example.projekt_atrakcja.R.layout;
 import com.example.projekt_atrakcja.R.menu;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -44,21 +46,10 @@ public class Rejestracja extends Activity {
 				insert("INSERT INTO `uzytkownicy`(`login`, `haslo`, `mail`) VALUES (\""+login+"\",\""+haslo+"\",\""+mail+"\")");
 			}
 		}).start();
-		
+		startActivity(new Intent(Rejestracja.this,MainActivity.class));
 		
 	}
-	public void nacisnieto(View view)
-	{	
-		new Thread(new Runnable()
-		{
-			@Override
-			public void run() {
-				// TODO Auto-generated method stub
-			//	insert();
-			}
-		}).start();
-	}
-	
+
 	protected void insert(String sql) {
 		Log.d("baza", "weszlo do inserta");
 		try {
