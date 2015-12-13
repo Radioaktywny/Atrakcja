@@ -38,14 +38,14 @@ public class Rejestracja extends Activity {
 		String haslo_powtorz=edittext4.getText().toString();
 		final String mail=edittext3.getText().toString();
 		Log.d("baza", "nacisnieto");
-		new Thread(new Runnable()
-		{
-			@Override
-			public void run() {
-				
-				insert("INSERT INTO `uzytkownicy`(`login`, `haslo`, `mail`) VALUES (\""+login+"\",\""+haslo+"\",\""+mail+"\")");
-			}
-		}).start();
+		new Thread(new Baza("INSERT INTO `uzytkownicy`(`login`, `haslo`, `mail`) VALUES (\""+login+"\",\""+haslo+"\",\""+mail+"\")", "dodaj")).start();;
+//		{
+//			@Override
+//			public void run() {
+//				
+//				insert("INSERT INTO `uzytkownicy`(`login`, `haslo`, `mail`) VALUES (\""+login+"\",\""+haslo+"\",\""+mail+"\")");
+//			}
+//		}).start();
 		startActivity(new Intent(Rejestracja.this,MainActivity.class));
 		
 	}
