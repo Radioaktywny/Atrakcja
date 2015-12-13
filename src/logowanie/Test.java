@@ -310,11 +310,45 @@ public class Test implements  Callable<String> {
 				java.sql.Connection c = DriverManager.getConnection(baza, "maciek2015", "testtest");
 				Statement s = c.createStatement();
 				s.executeUpdate(sql);
+				s.close();
 				Log.d("baza", "wyslano sqlka");
 			} catch (SQLException | ClassNotFoundException e) {
 				Log.d("baza", e.getMessage());
 			}
+				
+			}
 			
+			if(sql_wyswietl != null)
+			{
+			Log.d("baza", "weszlo do dodaj");
+			
+				try {
+					Class.forName("com.mysql.jdbc.Driver");
+					Log.d("sterownik", "sterownik zaladowany");
+				String baza = "jdbc:mysql://www.db4free.net:3306/projekt_2015";
+				java.sql.Connection c = DriverManager.getConnection(baza, "maciek2015", "testtest");
+				Statement s = c.createStatement();
+				s.executeUpdate(sql);
+				Log.d("baza", "wyslano sqlka");
+			} catch (SQLException | ClassNotFoundException e) {
+				Log.d("baza", e.getMessage());
+			}
+			}
+			if(sql_zwroc != null)
+			{	
+				Class.forName("com.mysql.jdbc.Driver");
+				Log.d("sterownik", "sterownik zaladowany");
+			String baza = "jdbc:mysql://www.db4free.net:3306/projekt_2015";
+			java.sql.Connection c = DriverManager.getConnection(baza, "maciek2015", "testtest");
+			Statement s = c.createStatement();
+				ResultSet r = executeQuery(s, sql);
+				zwrot = returnDataFromQuery(r);
+				try {
+					s.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					Log.d("baza blad", e.getMessage());
+				}				
 			}
 			return zwrot;
 		

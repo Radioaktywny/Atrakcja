@@ -10,18 +10,17 @@ import java.util.concurrent.Future;
 
 import com.example.projekt_atrakcja.MainActivity;
 import com.example.projekt_atrakcja.R;
-import com.example.projekt_atrakcja.R.id;
-import com.example.projekt_atrakcja.R.layout;
-import com.example.projekt_atrakcja.R.menu;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class Rejestracja extends Activity {
 	
@@ -31,7 +30,7 @@ public class Rejestracja extends Activity {
 		setContentView(R.layout.activity_rejestracja);
 		
 	}
-	public void zarejestruj(View view)
+	public void zarejestruj(View view) throws InterruptedException, ExecutionException
 	{
 		EditText edittext1 =(EditText) findViewById(R.id.editText1);
 		EditText edittext2 =(EditText) findViewById(R.id.editText2);
@@ -41,50 +40,36 @@ public class Rejestracja extends Activity {
 		final String haslo=edittext2.getText().toString();
 		String haslo_powtorz=edittext4.getText().toString();
 		final String mail=edittext3.getText().toString();
-		Log.d("baza", "nacisnieto");
-	//	new Thread(new Baza("INSERT INTO `uzytkownicy`(`login`, `haslo`, `mail`) VALUES (\""+login+"\",\""+haslo+"\",\""+mail+"\")", "dodaj")).start();
 		ExecutorService exe = Executors.newFixedThreadPool(1);
+		Future <String> Czy_istnieje_login= exe.submit(new Test("select * from `uzytkownicy` where login=\""+login+"\"", "zwroc"));
 		
-		Future <String> future= exe.submit(new Test("INSERT INTO `uzytkownicy`(`login`, `haslo`, `mail`) VALUES (\""+login+"\",\""+haslo+"\",\""+mail+"\")", "dodaj"));
-		try {
-			Log.d("exe", future.get());
-		} catch (InterruptedException | ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		
+		if(Czy_istnieje_login.get().equals(""))
+		{
+			if(haslo.equals(haslo_powtorz))
+			{
+				exe.submit(new Test("INSERT INTO `uzytkownicy`(`login`, `haslo`, `mail`) VALUES (\""+login+"\",\""+haslo+"\",\""+mail+"\")", "dodaj"));
+				startActivity(new Intent(Rejestracja.this, MainActivity.class));
+			}
+			else
+			{
+				Toast info = Toast.makeText(Rejestracja.this, "Nie prawidlowe haslo sproboj ponownie", 10000);
+				info.setGravity(Gravity.CENTER, 0, 0);
+				info.show();
+			}
 		}
-		//		{
-//			@Override
-//			public void run() {
-//				
-//				insert("INSERT INTO `uzytkownicy`(`login`, `haslo`, `mail`) VALUES (\""+login+"\",\""+haslo+"\",\""+mail+"\")");
-//			}
-//		}).start();
-		startActivity(new Intent(Rejestracja.this,MainActivity.class));
+		else
+		{
+			Toast info = Toast.makeText(Rejestracja.this, "Uzytkownik o takim loginie juz istnieje", 10000);
+			info.setGravity(Gravity.CENTER, 0, 0);
+			info.show();
+		}
+		
+	
 		
 	}
 
-	protected void insert(String sql) {
-		Log.d("baza", "weszlo do inserta");
-		try {
-			try {
-				Class.forName("com.mysql.jdbc.Driver");
-				Log.d("sterownik", "sterownik zaladowany");
-			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				Log.d("sterownik", "jak zwykle sie zjebal");
-			}
-			String baza = "jdbc:mysql://www.db4free.net:3306/projekt_2015";
-			
-			java.sql.Connection c = DriverManager.getConnection(baza, "maciek2015", "testtest");
-			Statement s = c.createStatement();
-			s.executeUpdate(sql);
-			Log.d("baza", "wyslano sqlka");
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			Log.d("baza", e.getMessage());
-		}
-		
-	}
+	
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
