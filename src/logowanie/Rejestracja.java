@@ -43,7 +43,14 @@ public class Rejestracja extends Activity {
 		ExecutorService exe = Executors.newFixedThreadPool(1);
 		Future <String> Czy_istnieje_login= exe.submit(new Test("select * from `uzytkownicy` where login=\""+login+"\"", "zwroc"));
 		
-		
+		if(login.equals("") || haslo.equals("") || haslo_powtorz.equals("") || mail.equals(""))
+		{
+			Toast info = Toast.makeText(Rejestracja.this, "Musisz wypelnic wszystkie pola !", 10000);
+			info.setGravity(Gravity.CENTER, 0, 0);
+			info.show();
+			
+		}
+		else
 		if(Czy_istnieje_login.get().equals(""))
 		{
 			if(haslo.equals(haslo_powtorz))
