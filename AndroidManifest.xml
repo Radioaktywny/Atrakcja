@@ -27,11 +27,6 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <!-- Search Activity -->
         <activity android:name=".SearchActivity" />
@@ -48,10 +43,7 @@
             android:name="logowanie.Rejestracja"
             android:label="@string/title_activity_rejestracja" >
         </activity>
-        <activity
-            android:name="logowanie.Rejestracja"
-            android:label="@string/title_activity_rejestracja" >
-        </activity>
+   
     </application>
 
 </manifest>
