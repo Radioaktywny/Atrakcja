@@ -60,7 +60,8 @@ public class Rejestracja extends Activity {
 					if(haslo.equals(haslo_powtorz))
 					{
 						exe.submit(new Baza("INSERT INTO `uzytkownicy`(`login`, `haslo`, `mail`) VALUES (\""+login+"\",\""+haslo+"\",\""+mail+"\")", "dodaj"));
-						startActivity(new Intent(Rejestracja.this, MainActivity.class));
+						startActivity(new Intent(Rejestracja.this, Logowanie.class));
+						finish();
 					}
 					else
 					{

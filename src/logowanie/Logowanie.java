@@ -12,6 +12,7 @@ import java.util.concurrent.Future;
 import com.example.projekt_atrakcja.MainActivity;
 import com.example.projekt_atrakcja.R;
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -32,7 +33,7 @@ public class Logowanie extends Activity
 	protected void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_logowanie);
+		
 		// sprawdzenie czy istnieje plik z danymi do logowania jesli istnieje to proba zalogowania
 		if(wczytaj_pasy(getApplicationContext()))
             try 
@@ -42,16 +43,22 @@ public class Logowanie extends Activity
                     | IOException e)
 		    {
                 setContentView(R.layout.activity_logowanie);
+                finish();
                 e.printStackTrace();
             }
+		else
+		    setContentView(R.layout.activity_logowanie);
         
             //jesli sie nie udalo wczytaj hasla i loginu to zaladuj normalny widok do logowania
 				
 	}	
 	
+	
 	public void zarejestruj(View view)
 	{	
 		startActivity(new Intent(Logowanie.this,Rejestracja.class));
+		finish();
+				
 	}	
 	public void zaloguj(View view) throws InterruptedException, ExecutionException, IOException 
 	{
@@ -90,6 +97,7 @@ public class Logowanie extends Activity
                 {           if(czy_zapisywac)
                         zapisz_uzytkownika(getBaseContext());                        
                         startActivity(new Intent(Logowanie.this, MainActivity.class));
+                        finish();
                         
                 }
                 else
