@@ -55,13 +55,12 @@ public class Logowanie extends Activity {
 		   String pasy[] = wczytaj_pasy(getApplicationContext());//do poprawy
 		   login=pasy[0];
 		   haslo=pasy[1];
-		   
 		}
 	}
 	
 	public void zarejestruj(View view)
 	{	
-		startActivity(new Intent(Logowanie.this,Rejestracja.class));
+		startActivity(new Intent(Logowanie.this,MainActivity.class));
 	}
 	
 	public void zaloguj(View view) throws InterruptedException, ExecutionException
