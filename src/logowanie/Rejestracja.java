@@ -53,13 +53,13 @@ public class Rejestracja extends Activity {
 			else
 			{	
 				ExecutorService exe = Executors.newFixedThreadPool(1);
-				Future <String> Czy_istnieje_login= exe.submit(new Test("select * from `uzytkownicy` where login=\""+login+"\"", "zwroc"));
+				Future <String> Czy_istnieje_login= exe.submit(new Baza("select * from `uzytkownicy` where login=\""+login+"\"", "zwroc"));
 				//--jezeli formulaz jest wypelniony i konto nie istnieje
 				if(Czy_istnieje_login.get().equals(""))
 				{	//--i hasla sa zgodne
 					if(haslo.equals(haslo_powtorz))
 					{
-						exe.submit(new Test("INSERT INTO `uzytkownicy`(`login`, `haslo`, `mail`) VALUES (\""+login+"\",\""+haslo+"\",\""+mail+"\")", "dodaj"));
+						exe.submit(new Baza("INSERT INTO `uzytkownicy`(`login`, `haslo`, `mail`) VALUES (\""+login+"\",\""+haslo+"\",\""+mail+"\")", "dodaj"));
 						startActivity(new Intent(Rejestracja.this, MainActivity.class));
 					}
 					else
