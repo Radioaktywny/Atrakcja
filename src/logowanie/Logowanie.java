@@ -43,111 +43,112 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class Logowanie extends Activity {
+public class Logowanie extends Activity 
+{
     private  String login;
     private  String haslo;
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState) 
+	{
 		super.onCreate(savedInstanceState);
+		// sprawdzenie czy istnieje plik z danymi do logowania jesli istnieje to proba zalogowania
+//		if(wczytaj_pasy(getApplicationContext()))
+//            try 
+//		    {
+//                zaloguj_do_bazy();
+//            } catch (InterruptedException | ExecutionException
+//                    | IOException e)
+//		    {
+//                setContentView(R.layout.activity_logowanie);
+//                e.printStackTrace();
+//            }
+//        else
+            //jesli sie nie udalo wczytaj hasla i loginu to zaladuj normalny widok do logowania
 		setContentView(R.layout.activity_logowanie);
-		if(wczytaj_pasy(getApplicationContext())!=null)
-		{
-		   String pasy[] = wczytaj_pasy(getApplicationContext());//do poprawy
-		   login=pasy[0];
-		   haslo=pasy[1];
-		}
-	}
+		
+	}	
 	
 	public void zarejestruj(View view)
 	{	
 		startActivity(new Intent(Logowanie.this,Rejestracja.class));
-	}
-	
-	public void zaloguj(View view) throws InterruptedException, ExecutionException
+	}	
+	public void zaloguj(View view) throws InterruptedException, ExecutionException, IOException 
 	{
 		EditText edittext1 =(EditText) findViewById(R.id.text_login);
 		EditText edittext2 =(EditText) findViewById(R.id.text_haslo);
 		login=edittext1.getText().toString();
-		haslo=edittext2.getText().toString();
+		haslo=edittext2.getText().toString();	
+		zaloguj_do_bazy();
 		
-		Log.d("polaczenie", String.valueOf(test_polaczenia()));
-		//---jest polaczenie z internetem
-		if(test_polaczenia())
-		{
-		ExecutorService exe = Executors.newFixedThreadPool(1);
-		Future <String> Czy_istnieje_login= exe.submit(new Baza("select * from `uzytkownicy` where login=\""+login+"\"", "zwroc"));
-		String dane_usera=Czy_istnieje_login.get();//pobieram haslo i meil uzytkownika	
-		//---jezeli nie podal loginu	
-		if(dane_usera.equals(""))
-		{
-				Toast("Uzytkownik o takim loginie nie istnieje");
-		}
-		else
-		{	//---jezeli nie podal haslo
-			if(haslo.equals(""))
-			{	
-				Toast("Podaj haslo !");
-			}
-			else{
-				//---jezeli podal login i haslo i sa prawidlowe
-				if(dane_usera.startsWith(haslo, 0))
-				 {
-					
-					CheckBox czy_zapisac = (CheckBox) findViewById(R.id.check_zapamietaj);
-					if(czy_zapisac.isChecked())
-					{
-					    try {
-                            zapisz_pasy(getBaseContext(),login,haslo);
-                        } catch ( IOException e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
-                        
-					}}
-					    startActivity(new Intent(Logowanie.this, MainActivity.class));
-				}
-				else
-				{
-					Toast("Nie poprawne haslo");
-				}
-			}
-		}
-		
-		}	
-	else{
-			Toast("Brak polaczenia z internetem");
-		}
 	}
-	
-	private void zapisz_pasy(Context context,String login,String haslo) throws IOException
+	private void zaloguj_do_bazy() throws InterruptedException, ExecutionException, IOException
 	{
-        // TODO Auto-generated method stub
 	    
-            FileOutputStream fos = context.openFileOutput("userpass" + ".txt",Context.MODE_PRIVATE);//do poprawy
-            Writer out = new OutputStreamWriter(fos);
-            
-                out.write(login+"\n"+haslo);
-                out.close();
+	    Log.d("polaczenie", String.valueOf(test_polaczenia()));
+        //---jest polaczenie z internetem
+        if(test_polaczenia())
+        {
+        ExecutorService exe = Executors.newFixedThreadPool(1);
+        Future <String> Czy_istnieje_login= exe.submit(new Baza("select * from `uzytkownicy` where login=\""+login+"\"", "zwroc"));
+        String dane_usera=Czy_istnieje_login.get();//pobieram haslo i meil uzytkownika  
+        //---jezeli nie podal loginu    
+        if(dane_usera.equals(""))
+        {
+                Toast("Uzytkownik o takim loginie nie istnieje");
+        }
+        else
+        {   //---jezeli nie podal haslo
+            if(haslo.equals(""))
+            {   
+                Toast("Podaj haslo !");
+            }
+            else
+            {
+                //---jezeli podal login i haslo i sa prawidlowe
+                if(dane_usera.startsWith(haslo, 0))
+                {           
+                        zapisz_uzytkownika(getBaseContext());                        
+                        startActivity(new Intent(Logowanie.this, MainActivity.class));
+                }
+                else
+                {
+                    Toast("Nie poprawne haslo");
+                }
+            }
+        }
+        
+        }   
+    else{
+            Toast("Brak polaczenia z internetem");
+        }
+	}
+	private void zapisz_uzytkownika(Context context) throws IOException
+	{
+	    CheckBox czy_zapisac = (CheckBox) findViewById(R.id.check_zapamietaj);
+        if(czy_zapisac.isChecked())
+        {
+        FileOutputStream fos = context.openFileOutput("userpass" + ".txt",Context.MODE_PRIVATE);//do poprawy
+        Writer out = new OutputStreamWriter(fos);            
+        out.write(login+"\n"+haslo);
+        out.close();
+        }
    
     }
-	private String[] wczytaj_pasy(Context context){
+	private boolean wczytaj_pasy(Context context) 
+	{	    
 	    try {
 	        FileInputStream fis = context.openFileInput( "userpass" + ".txt");//do poprawy !!!
 	        BufferedReader r = new BufferedReader(new InputStreamReader(fis));
-	        String s = "";
-	        String txt []= new String[2];
-	        int i=0;
-	        while ((s = r.readLine()) != null)
-	        {
-	            	        
-	            txt[i] = s;
-	            i++;
-	        }
-	        r.close();
-	        return txt;
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	        return null;
-	    }
+	        login = r.readLine();	        
+            haslo = r.readLine();
+                r.close();   
+                return true;
+            } catch (IOException e) {
+                // TODO Auto-generated catch block                
+                e.printStackTrace();
+                return false;
+            }	        
+	             
 	}
 
     private boolean test_polaczenia() {

@@ -26,38 +26,17 @@ import android.widget.EditText;
 import android.util.Log;
 public class Baza implements  Callable<String> {
 
-	String  sql_dodaj=null;
-	String sql_wyswietl=null;
-	String sql_zwroc=null;
-	String sprawdz_polaczenie=null;
-	
-	java.sql.Connection connection;
-	String sql;
-	String nazwabazy;
-	Statement s ;
-	
-	public Baza()
-	{
+	private String  sql_dodaj=null;
+	private String sql_wyswietl=null;
+	private String sql_zwroc=null;
+	private String sprawdz_polaczenie=null;	
+	private String sql;
+	private Statement s ;
 		
-	}
-	
-	/**
-		 * konstruktor
-		 * 
-		 * @param sql
-		 *            - komenda sql
-		 * @param rodzaj
-		 *            - rodzaj polcenie "dodaj" , "wyswietl" , "zwroc" , "sprawdz_polaczenie"
-	 * @return 
-		 */
-	
-		public  Baza(String sql,String rodzaj){
-		
-			
-			
+	public  Baza(String sql,String rodzaj)
+	{			
 			if(rodzaj.equals("dodaj"))
-				{
-					
+				{				
 					sql_dodaj=rodzaj;
 					this.sql=sql;
 				}
@@ -74,19 +53,9 @@ public class Baza implements  Callable<String> {
 				{	
 					sprawdz_polaczenie="sprawdzam";
 				}
-				
-				
-				
-			
-		}
-		/**
-		 * Metoda ³aduje sterownik jdbc
-		 * 
-		 * @return true/false
-		 */
-		static boolean ladujSterownik() {
-			// LADOWANIE STEROWNIKA
-//			System.out.print("Sprawdzanie sterownika:");
+	}
+	static boolean ladujSterownik() 
+	{
 			try {
 				Class.forName("com.mysql.jdbc.Driver").newInstance();
 				return true;
@@ -94,21 +63,7 @@ public class Baza implements  Callable<String> {
 				System.out.println("Blad przy ladowaniu sterownika bazy!");
 				return false;
 			}
-		}
-
-			/**
-			 * Metoda s³u¿y do nawi¹zania po³¹czenia z baz¹ danych
-			 * 
-			 * @param adress
-			 *            - adres bazy danych
-			 * @param dataBaseName
-			 *            - nazwa bazy
-			 * @param userName
-			 *            - login do bazy
-			 * @param password
-			 *            - has³o do bazy
-			 * @return - po³¹czenie z baz¹
-			 */
+	}
 		public static Connection connectToDatabase(String adress,
 				String dataBaseName, String userName, String password) {
 		//	System.out.print("\nLaczenie z baza danych:");
@@ -128,14 +83,6 @@ public class Baza implements  Callable<String> {
 			}
 			return connection;
 		}
-		/**
-		 * Zwrocenie danych uzyskanych z zapytaniem select
-		 * 
-		 * @param r
-		 *            - wynik zapytania
-		 * @return zwroc
-		 * 			  - zwraca String z danymi z zapytania select
-		 */
 		public static String returnDataFromQuery(ResultSet r) {
 			ResultSetMetaData rsmd;
 			String zwroc="";
@@ -165,13 +112,6 @@ public class Baza implements  Callable<String> {
 			return zwroc;
 			
 		}
-		/**
-		 * Wyœwietla dane uzyskane zapytaniem select
-		 * 
-		 * @param r
-		 *            - wynik zapytania
-		 * @return 
-		 */
 		public static void printDataFromQuery(ResultSet r) {
 			ResultSetMetaData rsmd;
 			try {
@@ -206,16 +146,6 @@ public class Baza implements  Callable<String> {
 			}
 			
 		}
-	 
-		/**
-		 * Wykonanie kwerendy i przes³anie wyników do obiektu ResultSet
-		 * 
-		 * @param s
-		 *            - Statement
-		 * @param sql
-		 *            - zapytanie
-		 * @return wynik
-		 */
 		public static ResultSet executeQuery(Statement s, String sql) {
 			try {
 				return s.executeQuery(sql);
@@ -224,14 +154,6 @@ public class Baza implements  Callable<String> {
 			}
 			return null;
 		}
-	 
-		/**
-		 * tworzenie obiektu Statement przesy³aj¹cego zapytania do bazy connection
-		 * 
-		 * @param connection
-		 *            - po³¹czenie z baz¹
-		 * @return obiekt Statement przesy³aj¹cy zapytania do bazy
-		 */
 		public static Statement createStatement(Connection connection) {
 			try {
 				return connection.createStatement();
@@ -249,15 +171,6 @@ public class Baza implements  Callable<String> {
 			}
 			return -1;
 		}
-	 
-		/**
-		 * Zamykanie po³¹czenia z baz¹ danych
-		 * 
-		 * @param connection
-		 *            - po³¹czenie z baz¹
-		 * @param s
-		 *            - obiekt przesy³aj¹cy zapytanie do bazy
-		 */
 		public static void closeConnection(Connection connection, Statement s) {
 			try {
 				s.close();
@@ -265,25 +178,16 @@ public class Baza implements  Callable<String> {
 			} catch (SQLException e) {
 				System.exit(4);
 			}
-		}
-	 
-		
-		
+		}		
 		public void dodaj_do_bazy(String sql)
 		{	
 			executeUpdate(s, sql);
-			
-			
 		}
 		public ResultSet wyswietl_z_bazy(String sql)
 		{	
 			ResultSet r = executeQuery(s, sql);
 			return r;
-		}
-		
-	
-
-		
+		}		
 		@Override
 		public String call() throws Exception {
 			
@@ -355,8 +259,7 @@ public class Baza implements  Callable<String> {
 				}
 			}
 			
-			return zwrot;
-		
+			return zwrot;		
 	}
 }
 
