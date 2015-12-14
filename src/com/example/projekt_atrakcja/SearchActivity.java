@@ -37,24 +37,22 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
         // Add a marker in Sydney, Australia, and move the camera.
     	
     	gps = new GPSLocation(SearchActivity.this);
-    	if(gps.canGetLocation()) {
-    		mLastLocation=gps.location;
-		} else {
-			gps.showSettingsAlert();
-		}
+    	Localization local=new Localization(map);
+    	
+    	local.execute(gps);
     	
     	
     	
-    	if(mLastLocation !=null){
-        LatLng polozenie = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
-        map.addMarker(new MarkerOptions().position(polozenie).title("Tu jesteœ ziomeczku"));
-        map.moveCamera(CameraUpdateFactory.newLatLng(polozenie));
-    	}else
-    	{
-    		LatLng sydney = new LatLng(0, 0);
-            map.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-            map.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-    	}
+//    	if(mLastLocation !=null){
+//        LatLng polozenie = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+//        map.addMarker(new MarkerOptions().position(polozenie).title("Tu jesteœ ziomeczku"));
+//        map.moveCamera(CameraUpdateFactory.newLatLng(polozenie));
+//    	}else
+//    	{
+//    		LatLng sydney = new LatLng(0, 0);
+//            map.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+//            map.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+//    	}
     	
     }
     
@@ -89,4 +87,5 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 		// TODO Auto-generated method stub
 		
 	}
+	
 }

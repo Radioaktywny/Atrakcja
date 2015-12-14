@@ -102,7 +102,8 @@ public class Logowanie extends Activity {
                             // TODO Auto-generated catch block
                             e.printStackTrace();
                         
-					}}
+					}
+					    }
 					    startActivity(new Intent(Logowanie.this, MainActivity.class));
 				}
 				else
