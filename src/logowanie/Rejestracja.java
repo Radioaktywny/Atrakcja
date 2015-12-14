@@ -1,20 +1,15 @@
 package logowanie;
 
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import com.example.projekt_atrakcja.MainActivity;
 import com.example.projekt_atrakcja.R;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -53,14 +48,15 @@ public class Rejestracja extends Activity {
 			else
 			{	
 				ExecutorService exe = Executors.newFixedThreadPool(1);
-				Future <String> Czy_istnieje_login= exe.submit(new Test("select * from `uzytkownicy` where login=\""+login+"\"", "zwroc"));
+				Future <String> Czy_istnieje_login= exe.submit(new Baza("select * from `uzytkownicy` where login=\""+login+"\"", "zwroc"));
 				//--jezeli formulaz jest wypelniony i konto nie istnieje
 				if(Czy_istnieje_login.get().equals(""))
 				{	//--i hasla sa zgodne
 					if(haslo.equals(haslo_powtorz))
 					{
-						exe.submit(new Test("INSERT INTO `uzytkownicy`(`login`, `haslo`, `mail`) VALUES (\""+login+"\",\""+haslo+"\",\""+mail+"\")", "dodaj"));
-						startActivity(new Intent(Rejestracja.this, MainActivity.class));
+						exe.submit(new Baza("INSERT INTO `uzytkownicy`(`login`, `haslo`, `email`) VALUES (\""+login+"\",\""+haslo+"\",\""+mail+"\")", "dodaj"));
+						startActivity(new Intent(Rejestracja.this, Logowanie.class));
+						finish();
 					}
 					else
 					{
@@ -99,7 +95,7 @@ public class Rejestracja extends Activity {
 	}
 	private void Toast(String informacja)
 	{
-		Toast info = Toast.makeText(Rejestracja.this, informacja, 10000);
+		Toast info = Toast.makeText(Rejestracja.this, informacja, Toast.LENGTH_LONG);
 		info.setGravity(Gravity.CENTER, 0, 0);
 		info.show();
 	}
