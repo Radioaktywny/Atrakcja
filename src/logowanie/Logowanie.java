@@ -60,7 +60,7 @@ public class Logowanie extends Activity {
 	
 	public void zarejestruj(View view)
 	{	
-		startActivity(new Intent(Logowanie.this,MainActivity.class));
+		startActivity(new Intent(Logowanie.this,Rejestracja.class));
 	}
 	
 	public void zaloguj(View view) throws InterruptedException, ExecutionException
@@ -102,7 +102,7 @@ public class Logowanie extends Activity {
                             // TODO Auto-generated catch block
                             e.printStackTrace();
                         
-					}
+					}}
 					    startActivity(new Intent(Logowanie.this, MainActivity.class));
 				}
 				else
@@ -111,7 +111,7 @@ public class Logowanie extends Activity {
 				}
 			}
 		}
-		}
+		
 		}	
 	else{
 			Toast("Brak polaczenia z internetem");
