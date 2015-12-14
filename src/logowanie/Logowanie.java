@@ -1,35 +1,16 @@
 package logowanie;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.io.Writer;
-import java.net.InetAddress;
-import java.net.MalformedURLException;
-import java.net.Socket;
-import java.net.URL;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import javax.net.ssl.HttpsURLConnection;
-
 import com.example.projekt_atrakcja.MainActivity;
 import com.example.projekt_atrakcja.R;
-import com.example.projekt_atrakcja.R.id;
-import com.example.projekt_atrakcja.R.layout;
-import com.example.projekt_atrakcja.R.menu;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -51,21 +32,21 @@ public class Logowanie extends Activity
 	protected void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
-		// sprawdzenie czy istnieje plik z danymi do logowania jesli istnieje to proba zalogowania
-//		if(wczytaj_pasy(getApplicationContext()))
-//            try 
-//		    {
-//                zaloguj_do_bazy();
-//            } catch (InterruptedException | ExecutionException
-//                    | IOException e)
-//		    {
-//                setContentView(R.layout.activity_logowanie);
-//                e.printStackTrace();
-//            }
-//        else
-            //jesli sie nie udalo wczytaj hasla i loginu to zaladuj normalny widok do logowania
 		setContentView(R.layout.activity_logowanie);
-		
+		// sprawdzenie czy istnieje plik z danymi do logowania jesli istnieje to proba zalogowania
+		if(wczytaj_pasy(getApplicationContext()))
+            try 
+		    {
+                zaloguj_do_bazy(false);
+            } catch (InterruptedException | ExecutionException
+                    | IOException e)
+		    {
+                setContentView(R.layout.activity_logowanie);
+                e.printStackTrace();
+            }
+        
+            //jesli sie nie udalo wczytaj hasla i loginu to zaladuj normalny widok do logowania
+				
 	}	
 	
 	public void zarejestruj(View view)
@@ -78,10 +59,10 @@ public class Logowanie extends Activity
 		EditText edittext2 =(EditText) findViewById(R.id.text_haslo);
 		login=edittext1.getText().toString();
 		haslo=edittext2.getText().toString();	
-		zaloguj_do_bazy();
+		zaloguj_do_bazy(true);
 		
 	}
-	private void zaloguj_do_bazy() throws InterruptedException, ExecutionException, IOException
+	private void zaloguj_do_bazy(boolean czy_zapisywac) throws InterruptedException, ExecutionException, IOException
 	{
 	    
 	    Log.d("polaczenie", String.valueOf(test_polaczenia()));
@@ -106,9 +87,10 @@ public class Logowanie extends Activity
             {
                 //---jezeli podal login i haslo i sa prawidlowe
                 if(dane_usera.startsWith(haslo, 0))
-                {           
+                {           if(czy_zapisywac)
                         zapisz_uzytkownika(getBaseContext());                        
                         startActivity(new Intent(Logowanie.this, MainActivity.class));
+                        
                 }
                 else
                 {
@@ -127,24 +109,28 @@ public class Logowanie extends Activity
 	    CheckBox czy_zapisac = (CheckBox) findViewById(R.id.check_zapamietaj);
         if(czy_zapisac.isChecked())
         {
-        FileOutputStream fos = context.openFileOutput("userpass" + ".txt",Context.MODE_PRIVATE);//do poprawy
-        Writer out = new OutputStreamWriter(fos);            
-        out.write(login+"\n"+haslo);
-        out.close();
-        }
-   
+//            File plik = new File(context.getFilesDir().getAbsolutePath() + "/" + "userpass" +".txt");
+//            FileOutputStream fos = context.openFileOutput(plik.getCanonicalPath(),Context.MODE_PRIVATE);
+//            Writer out = new OutputStreamWriter(fos);     
+//        out.write(login+"\n"+haslo);
+//        out.close();
+        PrintWriter zapis = new PrintWriter(context.getFilesDir().getAbsolutePath() + "/" + "userpass" +".txt");
+        zapis.println(login);
+        zapis.println(haslo);
+        zapis.close();
+        }   
     }
 	private boolean wczytaj_pasy(Context context) 
 	{	    
 	    try {
-	        FileInputStream fis = context.openFileInput( "userpass" + ".txt");//do poprawy !!!
-	        BufferedReader r = new BufferedReader(new InputStreamReader(fis));
-	        login = r.readLine();	        
-            haslo = r.readLine();
-                r.close();   
+	        File plik = new File(context.getFilesDir().getAbsolutePath() + "/" + "userpass" +".txt");
+	        Scanner in = new Scanner(plik);
+	        login=in.nextLine();
+	        haslo=in.nextLine();
+	        in.close();       
+	        
                 return true;
-            } catch (IOException e) {
-                // TODO Auto-generated catch block                
+            } catch (IOException e) {   
                 e.printStackTrace();
                 return false;
             }	        
@@ -170,7 +156,7 @@ public class Logowanie extends Activity
 	
 	private void Toast(String informacja)
 	{
-		Toast info = Toast.makeText(Logowanie.this, informacja, 10000);
+		Toast info = Toast.makeText(Logowanie.this, informacja, Toast.LENGTH_LONG);
 		info.setGravity(Gravity.CENTER, 0, 0);
 		info.show();
 	}
