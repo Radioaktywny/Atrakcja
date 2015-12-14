@@ -1,7 +1,6 @@
 package logowanie;
 
 public class User 
-
 {
     private final String password;
     private final String login;

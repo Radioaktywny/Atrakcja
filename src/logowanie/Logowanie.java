@@ -95,8 +95,14 @@ public class Logowanie extends Activity
                 //---jezeli podal login i haslo i sa prawidlowe
                 if(dane_usera.startsWith(haslo, 0))
                 {           if(czy_zapisywac)
-                        zapisz_uzytkownika(getBaseContext());                        
-                        startActivity(new Intent(Logowanie.this, MainActivity.class));
+                        zapisz_uzytkownika(getBaseContext());  
+                        User user = new User(haslo,login);
+                        Intent activity = new Intent(Logowanie.this, MainActivity.class);
+                        
+                        
+                        //activity.putExtra(); // tutaj trzeba wyslac dane usera nie wiem jak :CCC
+                        
+                        startActivity(activity);                        
                         finish();
                         
                 }

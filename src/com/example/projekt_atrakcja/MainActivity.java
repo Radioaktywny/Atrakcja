@@ -9,8 +9,14 @@ import android.support.v4.content.res.ResourcesCompat;
 import android.view.Window;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
+import logowanie.User;
  
 public class MainActivity extends TabActivity {
+    protected User user;
+    public MainActivity(User user)
+    {
+        this.user=user;
+    }
     
 	public void onCreate(Bundle savedInstanceState) {
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
