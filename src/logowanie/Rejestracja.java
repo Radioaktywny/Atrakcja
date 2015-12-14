@@ -1,20 +1,15 @@
 package logowanie;
 
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import com.example.projekt_atrakcja.MainActivity;
 import com.example.projekt_atrakcja.R;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -59,7 +54,7 @@ public class Rejestracja extends Activity {
 				{	//--i hasla sa zgodne
 					if(haslo.equals(haslo_powtorz))
 					{
-						exe.submit(new Baza("INSERT INTO `uzytkownicy`(`login`, `haslo`, `mail`) VALUES (\""+login+"\",\""+haslo+"\",\""+mail+"\")", "dodaj"));
+						exe.submit(new Baza("INSERT INTO `uzytkownicy`(`login`, `haslo`, `email`) VALUES (\""+login+"\",\""+haslo+"\",\""+email+"\")", "dodaj"));
 						startActivity(new Intent(Rejestracja.this, Logowanie.class));
 						finish();
 					}
@@ -100,7 +95,7 @@ public class Rejestracja extends Activity {
 	}
 	private void Toast(String informacja)
 	{
-		Toast info = Toast.makeText(Rejestracja.this, informacja, 10000);
+		Toast info = Toast.makeText(Rejestracja.this, informacja, Toast.LENGTH_LONG);
 		info.setGravity(Gravity.CENTER, 0, 0);
 		info.show();
 	}

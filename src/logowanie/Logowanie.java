@@ -12,7 +12,6 @@ import java.util.concurrent.Future;
 import com.example.projekt_atrakcja.MainActivity;
 import com.example.projekt_atrakcja.R;
 import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -49,11 +48,8 @@ public class Logowanie extends Activity
 		else
 		    setContentView(R.layout.activity_logowanie);
         
-            //jesli sie nie udalo wczytaj hasla i loginu to zaladuj normalny widok do logowania
-				
+            //jesli sie nie udalo wczytaj hasla i loginu to zaladuj normalny widok do logowania	
 	}	
-	
-	
 	public void zarejestruj(View view)
 	{	
 		startActivity(new Intent(Logowanie.this,Rejestracja.class));
@@ -72,39 +68,36 @@ public class Logowanie extends Activity
 	private void zaloguj_do_bazy(boolean czy_zapisywac) throws InterruptedException, ExecutionException, IOException
 	{
 	    
-	    Log.d("polaczenie", String.valueOf(test_polaczenia()));
-        //---jest polaczenie z internetem
+	    Log.d("polaczenie", String.valueOf(test_polaczenia())); //---jest polaczenie z internetem        
         if(test_polaczenia())
         {
         ExecutorService exe = Executors.newFixedThreadPool(1);
         Future <String> Czy_istnieje_login= exe.submit(new Baza("select * from `uzytkownicy` where login=\""+login+"\"", "zwroc"));
         String dane_usera=Czy_istnieje_login.get();//pobieram haslo i meil uzytkownika  
-        //---jezeli nie podal loginu    
-        if(dane_usera.equals(""))
+        
+        if(dane_usera.equals(""))//---jezeli nie podal loginu    
         {
                 Toast("Uzytkownik o takim loginie nie istnieje");
         }
         else
-        {   //---jezeli nie podal haslo
-            if(haslo.equals(""))
+        {  
+            if(haslo.equals("")) //---jezeli nie podal haslo
             {   
                 Toast("Podaj haslo !");
             }
             else
             {
-                //---jezeli podal login i haslo i sa prawidlowe
-                if(dane_usera.startsWith(haslo, 0))
+             
+                if(dane_usera.startsWith(haslo, 0))//---jezeli podal login i haslo i sa prawidlowe
                 {           if(czy_zapisywac)
                         zapisz_uzytkownika(getBaseContext());  
-                        User user = new User(haslo,login);
+                        //User user = new User(haslo,login);
                         Intent activity = new Intent(Logowanie.this, MainActivity.class);
-                        
                         
                         //activity.putExtra(); // tutaj trzeba wyslac dane usera nie wiem jak :CCC
                         
                         startActivity(activity);                        
-                        finish();
-                        
+                        finish();                        
                 }
                 else
                 {
@@ -141,8 +134,7 @@ public class Logowanie extends Activity
 	        Scanner in = new Scanner(plik);
 	        login=in.nextLine();
 	        haslo=in.nextLine();
-	        in.close();       
-	        
+	        in.close();       	        
                 return true;
             } catch (IOException e) {   
                 e.printStackTrace();

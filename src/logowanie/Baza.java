@@ -7,22 +7,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.concurrent.Callable;
 
-import com.example.projekt_atrakcja.MainActivity;
-import com.example.projekt_atrakcja.R;
-import com.example.projekt_atrakcja.R.id;
-import com.example.projekt_atrakcja.R.layout;
-import com.example.projekt_atrakcja.R.menu;
-
-import android.app.Activity;
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.EditText;
-
-
 import android.util.Log;
 public class Baza implements  Callable<String> {
 
