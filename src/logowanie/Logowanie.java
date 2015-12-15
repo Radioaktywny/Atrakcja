@@ -51,9 +51,12 @@ public class Logowanie extends Activity
             //jesli sie nie udalo wczytaj hasla i loginu to zaladuj normalny widok do logowania	
 	}	
 	public void zarejestruj(View view)
-	{	
-		startActivity(new Intent(Logowanie.this,Rejestracja.class));
-		finish();
+	{	//testy 
+	    
+		//startActivity(new Intent(Logowanie.this,Rejestracja.class));
+		
+	    startActivity(new Intent(Logowanie.this,MainActivity.class));
+	    finish();
 				
 	}	
 	public void zaloguj(View view) throws InterruptedException, ExecutionException, IOException 
@@ -66,8 +69,7 @@ public class Logowanie extends Activity
 		
 	}
 	private void zaloguj_do_bazy(boolean czy_zapisywac) throws InterruptedException, ExecutionException, IOException
-	{
-	    
+	{	    
 	    Log.d("polaczenie", String.valueOf(test_polaczenia())); //---jest polaczenie z internetem        
         if(test_polaczenia())
         {
