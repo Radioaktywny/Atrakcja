@@ -93,10 +93,10 @@ public class Logowanie extends Activity
                 if(dane_usera.startsWith(haslo, 0))//---jezeli podal login i haslo i sa prawidlowe
                 {           if(czy_zapisywac)
                         zapisz_uzytkownika(getBaseContext());  
-                        //User user = new User(haslo,login);
+                        User user = new User(haslo,login);
                         Intent activity = new Intent(Logowanie.this, MainActivity.class);
                         
-                        //activity.putExtra(); // tutaj trzeba wyslac dane usera nie wiem jak :CCC
+                        activity.putExtra("nazwa","dupa"); // tutaj trzeba wyslac dane usera nie wiem jak :CCC
                         
                         startActivity(activity);                        
                         finish();                        
@@ -135,7 +135,12 @@ public class Logowanie extends Activity
 	        File plik = new File(context.getFilesDir().getAbsolutePath() + "/" + "userpass" +".txt");
 	        Scanner in = new Scanner(plik);
 	        login=in.nextLine();
-	        haslo=in.nextLine();
+	        if(login.equals("brak_uzytkownika"))
+	        {
+	            in.close();
+	            return false;
+	        }
+	            haslo=in.nextLine();
 	        in.close();       	        
                 return true;
             } catch (IOException e) {   

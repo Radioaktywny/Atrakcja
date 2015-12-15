@@ -1,14 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  android:orientation="vertical"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent">
-   
+<AbsoluteLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
   <!-- Screen Design for the SONGS -->
-  <TextView android:text="Profil"
-            android:padding="15dip"
-            android:textSize="18dip"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"/>
-</LinearLayout>
+
+  <TextView
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:layout_x="0dp"
+      android:layout_y="0dp"
+      android:padding="15dip"
+      android:text="@string/profil"
+      android:textSize="18dip" />
+
+  <TextView
+      android:id="@+id/textView1"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_x="18dp"
+      android:layout_y="98dp"
+      android:text="Login"
+      android:textAppearance="?android:attr/textAppearanceMedium" />
+
+  <Button
+      android:id="@+id/button1"
+      style="?android:attr/buttonStyleSmall"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_x="190dp"
+      android:layout_y="64dp"
+      android:text="wyloguj"
+      android:onClick="wyloguj" />
+
+  <TextView
+      android:id="@+id/textView2"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_x="18dp"
+      android:layout_y="156dp"
+      android:textAppearance="?android:attr/textAppearanceLarge" />
+
+</AbsoluteLayout>
