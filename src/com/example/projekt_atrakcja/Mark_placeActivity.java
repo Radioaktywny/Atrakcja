@@ -67,8 +67,7 @@ public class Mark_placeActivity extends Activity {
         	setContentView(R.layout.mark_place_layout);
         }
         else{
-        	Toast("brak polaczenie z internetem")
-
+        	Toast("brak polaczenie z internetem");
         }
         }
       
