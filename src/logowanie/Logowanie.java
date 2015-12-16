@@ -114,41 +114,45 @@ public class Logowanie extends Activity
         }
 	}
 	private void zapisz_uzytkownika(Context context) throws IOException
-	{
-	    CheckBox czy_zapisac = (CheckBox) findViewById(R.id.check_zapamietaj);
-        if(czy_zapisac.isChecked())
-        {
-//            File plik = new File(context.getFilesDir().getAbsolutePath() + "/" + "userpass" +".txt");
-//            FileOutputStream fos = context.openFileOutput(plik.getCanonicalPath(),Context.MODE_PRIVATE);
-//            Writer out = new OutputStreamWriter(fos);     
-//        out.write(login+"\n"+haslo);
-//        out.close();
+    {
+        CheckBox czy_zapisac = (CheckBox) findViewById(R.id.check_zapamietaj);
         PrintWriter zapis = new PrintWriter(context.getFilesDir().getAbsolutePath() + "/" + "userpass" +".txt");
         zapis.println(login);
         zapis.println(haslo);
+        if(czy_zapisac.isChecked())
+        {
+            zapis.println("1");
+        }
+        else
+        {
+            zapis.print("0");
+        }
         zapis.close();
-        }   
+         
     }
-	private boolean wczytaj_pasy(Context context) 
-	{	    
-	    try {
-	        File plik = new File(context.getFilesDir().getAbsolutePath() + "/" + "userpass" +".txt");
-	        Scanner in = new Scanner(plik);
-	        login=in.nextLine();
-	        if(login.equals("brak_uzytkownika"))
-	        {
-	            in.close();
-	            return false;
-	        }
-	            haslo=in.nextLine();
-	        in.close();       	        
+    private boolean wczytaj_pasy(Context context) 
+    {       
+        try {
+            File plik = new File(context.getFilesDir().getAbsolutePath() + "/" + "userpass" +".txt");
+            Scanner in = new Scanner(plik);
+            login=in.nextLine();        
+            haslo=in.nextLine();            
+            if(in.nextLine().startsWith("0"))
+            { in.close(); 
+                return false;
+            }
+            else    
+            {
+                in.close(); 
                 return true;
+            }           
             } catch (IOException e) {   
                 e.printStackTrace();
                 return false;
-            }	        
-	             
-	}
+            }           
+                 
+    }
+
 
     private boolean test_polaczenia() {
 		try {
