@@ -1,11 +1,14 @@
 package com.example.projekt_atrakcja;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.View;
 import logowanie.Logowanie;
 import logowanie.User;
 
@@ -25,11 +28,14 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 //---wszystko do poprawy XD
+
+
 public class SearchActivity extends FragmentActivity implements OnMapReadyCallback, ConnectionCallbacks, OnConnectionFailedListener {
     private GoogleApiClient mGoogleApiClient;
 	private Location mLastLocation;
 	GPSLocation gps;
 	protected User user;
+	protected static Location Aktualna_Lokalizacja=null;
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,30 +54,37 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
             finish(); 
         }
     }
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
+	
+	
+//najwazniejsza funkcja
     @Override
     public void onMapReady(GoogleMap map) {
-        // Add a marker in Sydney, Australia, and move the camera.
-    	
     	gps = new GPSLocation(SearchActivity.this);
-    	//Localization local=new Localization(map);
-    	
-    	//local.execute(gps);
-    	
+    	Aktualna_Lokalizacja=gps.getLocation();
+    	rysuj(map,gps);
     	
     	
-    	if(mLastLocation !=null){
-        LatLng polozenie = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
-        map.addMarker(new MarkerOptions().position(polozenie).title("Tu jesteú ziomeczku"));
-        map.moveCamera(CameraUpdateFactory.newLatLng(polozenie));
-    	}else
-    	{
-    		LatLng sydney = new LatLng(0, 0);
-            map.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-            map.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-    	}
+    
     	
-    }
+    
+    	
+    } 	
+    protected void rysuj(GoogleMap map, GPSLocation gps) {
+		LatLng polozenie = new LatLng(gps.getLatitude(), gps.getLongitude());
+        map.addMarker(new MarkerOptions().position(polozenie).title("Tu jeste≈ì ziomeczku"));
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(polozenie, 16));
+		
+	}
     
     protected synchronized void buildGoogleApiClient(){
 		Log.d("Building", "zbudowane");
@@ -118,5 +131,10 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
             }           
                  
     }
+	public static Location getLokalizacja() {
+		return Aktualna_Lokalizacja;
+	
+		
+	}
 	
 }

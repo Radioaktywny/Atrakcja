@@ -11,14 +11,19 @@ import com.example.projekt_atrakcja.R;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import logowanie.Logowanie;
 import logowanie.User;
  
 public class Mark_placeActivity extends Activity {
     private User user;
+    Location lokalizacja;
+    
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        lokalizacja=pobierz_lokalizacje();
         if(wczytaj_pasy(getBaseContext()))
         {
             setContentView(R.layout.mark_place_layout);
@@ -31,7 +36,13 @@ public class Mark_placeActivity extends Activity {
         }
         
     }
-    private boolean wczytaj_pasy(Context context) 
+    private Location pobierz_lokalizacje() {
+    	Log.d("Lokalizacja", String.valueOf(SearchActivity.getLokalizacja().getLatitude()));
+		return SearchActivity.getLokalizacja();
+		
+		
+	}
+	private boolean wczytaj_pasy(Context context) 
     {       
         try {
             File plik = new File(context.getFilesDir().getAbsolutePath() + "/" + "userpass" +".txt");

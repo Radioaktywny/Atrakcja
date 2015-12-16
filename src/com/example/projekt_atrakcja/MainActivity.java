@@ -53,5 +53,7 @@ public class MainActivity extends TabActivity {
         tabHost.addTab(mark_placespec); // Adding mark_place tab
         tabHost.addTab(profilespec); // Adding profile tab
         tabHost.addTab(challengespec); // Adding challenge tab
+        
+       
     }
 }

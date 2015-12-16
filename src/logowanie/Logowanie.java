@@ -50,6 +50,7 @@ public class Logowanie extends Activity
         
             //jesli sie nie udalo wczytaj hasla i loginu to zaladuj normalny widok do logowania	
 	}	
+	
 	public void zarejestruj(View view)
 	{	//testy 
 	    
