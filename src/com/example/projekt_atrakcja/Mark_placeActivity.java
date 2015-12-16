@@ -19,6 +19,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 import logowanie.Baza;
@@ -40,21 +41,19 @@ public class Mark_placeActivity extends Activity {
         else
         {
             startActivity(new Intent(Mark_placeActivity.this,Logowanie.class));
-            finish(); 
+            finish();
         }
         
     }
     private Location pobierz_lokalizacje() {
     	Log.d("Lokalizacja", String.valueOf(SearchActivity.getLokalizacja().getLatitude()));
-		return SearchActivity.getLokalizacja();
-		
-		
+		return SearchActivity.getLokalizacja();	
 	}
     
-    public void oznacz() throws InterruptedException, ExecutionException
+    public void oznacz(View view) 
     {	
     	
-    	String lokalizacja_string="x"+lokalizacja.getLatitude()+"y"+lokalizacja.getLongitude();
+    	String lokalizacja_string="x"+String.valueOf(lokalizacja.getLatitude())+"y"+String.valueOf(lokalizacja.getLongitude());
     	EditText edittext1 =(EditText) findViewById(R.id.opis);
 		EditText edittext2 =(EditText) findViewById(R.id.nazwa_miejsca);
 		String opis = edittext1.getText().toString();
@@ -63,48 +62,40 @@ public class Mark_placeActivity extends Activity {
     	Log.d("oznaczanie", String.valueOf(test_polaczenia())); //---jest polaczenie z internetem        
         if(test_polaczenia())
         {
-//        	if(czy_pola_sa_uzupelnione())
-//        ExecutorService exe = Executors.newFixedThreadPool(1);
-//        Future <String> Czy_istnieje_login= exe.submit(new Baza("select * from `miejsca` where lokalizacja=\""+lokalizacja_string+"\"", "zwroc"));
-//        
-//        if(Czy_istnieje_login.get()!=null)//pobieram wszystko bez sensu  
-     //   {
-       // 	dodaj_lokalizacje();
+        	dodaj_lokalizacje(nazwa_miejsca, opis);
+        	Toast("Miejsce zostalo dodane :) ");
+        	setContentView(R.layout.mark_place_layout);
         }
         else{
-        	
-        	
-        	
+        	Toast("brak polaczenie z internetem")
+
         }
-        
-        
-        
-        
         }
       
 
        
-    private void Toast(String informacja)
+    private void wyczysc_przyciski() {
+    	
+		
+	}
+	private void Toast(String informacja)
    	{
     	Toast info = Toast.makeText(Mark_placeActivity.this, informacja, Toast.LENGTH_LONG);
     	info.setGravity(Gravity.CENTER, 0, 0);
     	info.show();
     }
         
-    private void dodaj_lokalizacje() {
+    private void dodaj_lokalizacje(String nazwa_miejsca, String opis) {
     	String lokal;
     	lokal="x"+lokalizacja.getLatitude()+"y"+lokalizacja.getLongitude();
     	ExecutorService exe = Executors.newFixedThreadPool(1);
-    	 
     	try{ 
-    //	exe.submit(new Baza("INSERT INTO `miejsca`(`nazwa`, `lokalizacja`, `uzytkownik`, `Opis`) VALUES ("cos",123,"test","opis");", "zwroc"));
+    		exe.submit(new Baza("INSERT INTO `miejsca`(`nazwa`, `lokalizacja`, `uzytkownik`, `Opis`) VALUES (\""+nazwa_miejsca+"\",\""+lokal+"\",\""+user.getLogin()+"\",\""+opis+"\");", "dodaj"));
     	}catch(Exception e)
     	{
     		Log.d("dodaj_lokalizacje", e.getMessage());
     	}
-    	 
-    //    Future <String> Czy_istnieje_login= exe.submit(new Baza("select * from `miejsca` where lokalizacja=\""++"\"", "zwroc"));
-		
+
 	}
 	
 

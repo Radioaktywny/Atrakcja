@@ -22,7 +22,8 @@
         android:layout_marginRight="58dp"
         android:layout_x="166dp"
         android:layout_y="368dp"
-        android:text="@string/oznacz" />
+        android:text="@string/oznacz" 
+        android:onClick="oznacz"/>
 
     <Button
         android:id="@+id/zdjecie"
