@@ -9,12 +9,12 @@
     tools:context="activites.DrugaAktywnosc" >
 
     <EditText
-        android:id="@+id/editText2"
+        android:id="@+id/nowe_haslo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/editText1"
-        android:layout_alignStart="@+id/editText1"
-        android:layout_below="@+id/editText1"
+        android:layout_alignLeft="@+id/haslo_aktualne"
+        android:layout_alignStart="@+id/haslo_aktualne"
+        android:layout_below="@+id/haslo_aktualne"
         android:layout_marginTop="26dp"
         android:ems="10"
         android:hint="@string/haslo"
@@ -24,7 +24,7 @@
         android:id="@+id/button1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/editText3"
+        android:layout_below="@+id/nowe_haslo1"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="26dp"
         android:hint="@string/rejestracja"
@@ -32,11 +32,11 @@
         android:onClick="zarejestruj"/>
 
     <EditText
-        android:id="@+id/editText3"
+        android:id="@+id/nowe_haslo1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/editText2"
-        android:layout_alignStart="@+id/editText2"
+        android:layout_alignLeft="@+id/nowe_haslo"
+        android:layout_alignStart="@+id/nowe_haslo"
         android:layout_below="@+id/editText4"
         android:layout_marginTop="26dp"
         android:ems="10"
@@ -47,16 +47,16 @@
         android:id="@+id/editText4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/editText2"
-        android:layout_alignStart="@+id/editText2"
-        android:layout_below="@+id/editText2"
+        android:layout_alignLeft="@+id/nowe_haslo"
+        android:layout_alignStart="@+id/nowe_haslo"
+        android:layout_below="@+id/nowe_haslo"
         android:layout_marginTop="24dp"
         android:ems="10"
         android:hint="@string/powtorzhaslo"
         android:inputType="textPassword" />
 
     <EditText
-        android:id="@+id/editText1"
+        android:id="@+id/haslo_aktualne"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"

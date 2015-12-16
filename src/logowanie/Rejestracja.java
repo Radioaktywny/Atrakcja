@@ -27,9 +27,9 @@ public class Rejestracja extends Activity {
 	}
 	public void zarejestruj(View view) throws InterruptedException, ExecutionException
 	{
-		EditText edittext1 =(EditText) findViewById(R.id.editText1);
-		EditText edittext2 =(EditText) findViewById(R.id.editText2);
-		EditText edittext3 =(EditText) findViewById(R.id.editText3);
+		EditText edittext1 =(EditText) findViewById(R.id.haslo_aktualne);
+		EditText edittext2 =(EditText) findViewById(R.id.nowe_haslo);
+		EditText edittext3 =(EditText) findViewById(R.id.nowe_haslo1);
 		EditText edittext4 =(EditText) findViewById(R.id.editText4);
 		final String login=edittext1.getText().toString();
 		final String haslo=edittext2.getText().toString();

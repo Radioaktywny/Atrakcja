@@ -3,43 +3,86 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    
-  <!-- Screen Design for the SONGS -->
 
-  <TextView
-      android:layout_width="fill_parent"
-      android:layout_height="wrap_content"
-      android:layout_x="0dp"
-      android:layout_y="0dp"
-      android:padding="15dip"
-      android:text="@string/profil"
-      android:textSize="18dip" />
+    <!-- Screen Design for the SONGS -->
 
-  <TextView
-      android:id="@+id/textView1"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_x="18dp"
-      android:layout_y="98dp"
-      android:text="Login"
-      android:textAppearance="?android:attr/textAppearanceMedium" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="0dp"
+        android:layout_y="0dp"
+        android:padding="15dip"
+        android:text="@string/profil"
+        android:textSize="18dip" />
 
-  <Button
-      android:id="@+id/button1"
-      style="?android:attr/buttonStyleSmall"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_x="190dp"
-      android:layout_y="64dp"
-      android:text="wyloguj"
-      android:onClick="wyloguj" />
+    <Button
+        android:id="@+id/button1"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="202dp"
+        android:layout_y="0dp"
+        android:onClick="wyloguj"
+        android:text="wyloguj" />
 
-  <TextView
-      android:id="@+id/textView2"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_x="18dp"
-      android:layout_y="156dp"
-      android:textAppearance="?android:attr/textAppearanceLarge" />
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="20dp"
+        android:layout_y="78dp"
+        android:text="Witaj :"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <EditText
+        android:id="@+id/nowe_haslo1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="26dp"
+        android:layout_y="318dp"
+        android:ems="10"
+        android:hint="powtórz hasło"
+        android:inputType="textPassword" />
+
+    <EditText
+        android:id="@+id/haslo_aktualne"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="25dp"
+        android:layout_y="217dp"
+        android:ems="10"
+        android:hint="aktualne hasło"
+        android:inputType="textVisiblePassword" />
+
+    <EditText
+        android:id="@+id/nowe_haslo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="28dp"
+        android:layout_y="271dp"
+        android:ems="10"
+        android:hint="nowe haslo"
+        android:inputType="textPassword" >
+
+        <requestFocus />
+    </EditText>
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="158dp"
+        android:layout_height="41dp"
+        android:layout_x="76dp"
+        android:layout_y="65dp"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <Button
+        android:id="@+id/zmien_haslo"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="17dp"
+        android:layout_y="148dp"
+        android:text="@string/zmien_haslo" 
+        android:onClick="zmien_haslo"/>
 
 </AbsoluteLayout>

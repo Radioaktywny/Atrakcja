@@ -17,7 +17,7 @@ public class Baza implements  Callable<String> {
 	private String sql;
 	private Statement s ;
 		
-	public  Baza(String sql,String rodzaj)
+	public Baza(String sql,String rodzaj)
 	{			
 			if(rodzaj.equals("dodaj"))
 				{				
