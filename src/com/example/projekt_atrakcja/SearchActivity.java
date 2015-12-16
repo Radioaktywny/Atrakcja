@@ -56,13 +56,21 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
     }
 	
 	
-	
-	
-	
-	
-	
-	
-	
+//	@Override
+//	public void onAttach (Activity activity)
+//	{
+//		GPSLocation	gps = new GPSLocation(SearchActivity.this);
+//		Log.d("szerokosc z Async", String.valueOf(gps.getLatitude()));
+//	}
+//	
+//	
+//	
+//	@Override
+//	public void getMapAsync (OnMapReadyCallback callback)
+//	{
+//		GPSLocation	gps = new GPSLocation(SearchActivity.this);
+//		Log.d("szerokosc z Async", String.valueOf(gps.getLatitude()));
+//	}
 
 	
 	
