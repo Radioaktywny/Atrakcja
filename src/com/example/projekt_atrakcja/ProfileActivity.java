@@ -19,6 +19,7 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -81,19 +82,24 @@ public class ProfileActivity extends Activity {
                         String haslo;
                         
                             haslo = dane_usera.get().toString();
-                       Toast(haslo + " "+user.getLogin());
+                       
                          
                         if(haslo.startsWith(haslo, 0))
                         {
-                            exe.submit(new Baza("UPDATE `uzytkownicy` SET `haslo`= (\""+haslo1+"\" where `login`=\""+user.getLogin()+"\"", "dodaj"));
+                            
+                            exe.submit(new Baza("UPDATE uzytkownicy SET haslo=\""+haslo1+"\" where `login`=\""+user.getLogin()+"\"", "dodaj"));
                             //startActivity(new Intent(Rejestracja.this, Logowanie.class));
                             // finish();  
+                            Toast("Zmiana has³a zakoñczona powodzeniem");
+                            zapisz_uzytkownika(getApplicationContext(), user.getLogin(), haslo1);
+                            wczytaj_pasy(getBaseContext());
+                            
                         }
                         else
                         {
                             Toast("niepooprawne haslo !");
                         }
-                    } catch (InterruptedException | ExecutionException e) 
+                    } catch (InterruptedException | ExecutionException | IOException e) 
                         
                     {
                         Toast("Blad w polaczeniu z internetem sprawdz polaczenie");
@@ -122,6 +128,18 @@ public class ProfileActivity extends Activity {
                 return false;
             }           
                  
+    }
+    private void zapisz_uzytkownika(Context context,String login,String haslo) throws IOException
+    {
+        
+        PrintWriter zapis = new PrintWriter(context.getFilesDir().getAbsolutePath() + "/" + "userpass" +".txt");
+        zapis.println(login);
+        zapis.println(haslo);
+        {
+            zapis.print("0");
+        }
+        zapis.close();
+         
     }
     private void Toast(String informacja)
     {
