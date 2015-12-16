@@ -32,8 +32,7 @@ public class Logowanie extends Activity
 	protected void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
-		
-		// sprawdzenie czy istnieje plik z danymi do logowania jesli istnieje to proba zalogowania
+				// sprawdzenie czy istnieje plik z danymi do logowania jesli istnieje to proba zalogowania
 		if(wczytaj_pasy(getApplicationContext()))
             try 
 		    {
@@ -126,7 +125,7 @@ public class Logowanie extends Activity
         }
         else
         {
-            zapis.print("0");
+            zapis.println("0");
         }
         zapis.close();
          
@@ -139,7 +138,8 @@ public class Logowanie extends Activity
             login=in.nextLine();        
             haslo=in.nextLine();            
             if(in.nextLine().startsWith("0"))
-            { in.close(); 
+            { 
+                in.close(); 
                 return false;
             }
             else    

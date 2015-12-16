@@ -65,7 +65,7 @@
         android:layout_x="17dp"
         android:layout_y="148dp"
         android:background="@drawable/tlo_obrazka"
-        android:onClick="  zmien_haslo  "
+        android:onClick="    zmien_haslo    "
         android:text="@string/zmien_haslo" />
 
     <TextView
@@ -85,7 +85,7 @@
         android:layout_x="216dp"
         android:layout_y="14dp"
         android:background="@drawable/tlo_obrazka"
-        android:onClick="  wyloguj  "
-        android:text="    wyloguj    " />
+        android:onClick="wyloguj"
+        android:text="     wyloguj     " />
 
 </AbsoluteLayout>
