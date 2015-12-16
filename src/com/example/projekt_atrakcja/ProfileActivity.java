@@ -43,7 +43,6 @@ public class ProfileActivity extends Activity {
         zapis.println(user.getPassword());
         zapis.println("0");
         zapis.close();
-        
         startActivity(new Intent(ProfileActivity.this,Logowanie.class));
         finish();
         

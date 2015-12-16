@@ -1,9 +1,17 @@
 package com.example.projekt_atrakcja;
 
+import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import logowanie.Logowanie;
+import logowanie.User;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Scanner;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -21,15 +29,24 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
     private GoogleApiClient mGoogleApiClient;
 	private Location mLastLocation;
 	GPSLocation gps;
+	protected User user;
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search_layout);
+        if(wczytaj_pasy(getBaseContext()))
+        {
         Log.d("ustaw", "ustawianie");
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         Log.d("ustaw", "chyba mapa");
+        }
+        else
+        {
+            startActivity(new Intent(SearchActivity.this,Logowanie.class));
+            finish(); 
+        }
     }
 
     @Override
@@ -87,5 +104,19 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 		// TODO Auto-generated method stub
 		
 	}
+	private boolean wczytaj_pasy(Context context) 
+    {       
+        try {
+            File plik = new File(context.getFilesDir().getAbsolutePath() + "/" + "userpass" +".txt");
+            Scanner in = new Scanner(plik);
+            user= new User(in.nextLine(),in.nextLine());  
+            in.close();
+            return true;
+            } catch (IOException e) {   
+                e.printStackTrace();
+                return false;
+            }           
+                 
+    }
 	
 }
