@@ -31,21 +31,44 @@ public class Mark_placeActivity extends Activity {
     Location lokalizacja;
     
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        lokalizacja=pobierz_lokalizacje();
-        if(wczytaj_pasy(getBaseContext()))
-        {
-            setContentView(R.layout.mark_place_layout);
-            
-        }        
-        else
-        {
-            startActivity(new Intent(Mark_placeActivity.this,Logowanie.class));
-            finish();
+    	super.onCreate(savedInstanceState);
+    	Log.d("zwrot", String.valueOf(sprawdz_czy_juz_nie_dodane()));
+    	if(sprawdz_czy_juz_nie_dodane())
+        {	
+           	startActivity(new Intent(Mark_placeActivity.this,MainActivity.class));
+        	finish();
+        	Toast("To miejsce juz istnieje ! tu trzeba dodac nowy leyout z wyswietleniem informacji o miejscu");
         }
-        
+        else{
+        	super.onCreate(savedInstanceState);
+	        lokalizacja=pobierz_lokalizacje();
+	        if(wczytaj_pasy(getBaseContext()))
+	        {
+	            setContentView(R.layout.mark_place_layout);
+	        }        
+	        else
+	        {
+	            startActivity(new Intent(Mark_placeActivity.this,Logowanie.class));
+	            finish();
+	        }
+        } 
     }
-    private Location pobierz_lokalizacje() {
+    private boolean sprawdz_czy_juz_nie_dodane() {
+    	try{
+    	  ExecutorService exe = Executors.newFixedThreadPool(1);
+          Future <String> czy= exe.submit(new Baza("select * from `miejsce` where lokalizacja=\""+"x"+String.valueOf(lokalizacja.getLatitude())+"y"+String.valueOf(lokalizacja.getLongitude())+"\"", "sprawdz_polaczenie"));
+          if(czy.get().equals("polaczono"))
+			{
+				return true;
+			}else{
+				return false;
+			}
+		} catch (Exception e) {
+		return false;
+		}
+    	
+	}
+	private Location pobierz_lokalizacje() {
     	Log.d("Lokalizacja", String.valueOf(SearchActivity.getLokalizacja().getLatitude()));
 		return SearchActivity.getLokalizacja();	
 	}
@@ -60,7 +83,11 @@ public class Mark_placeActivity extends Activity {
 		String nazwa_miejsca = edittext2.getText().toString();	
     	
     	Log.d("oznaczanie", String.valueOf(test_polaczenia())); //---jest polaczenie z internetem        
-        if(test_polaczenia())
+        if(opis.equals("") || nazwa_miejsca.equals("") )
+        {
+        	Toast("Wype³nij Wszystkie pola !");// tu bedzie layout
+        }else
+    	if(test_polaczenia())
         {
         	dodaj_lokalizacje(nazwa_miejsca, opis);
         	Toast("Miejsce zostalo dodane :) ");
@@ -111,7 +138,8 @@ public class Mark_placeActivity extends Activity {
             } catch (IOException e) {   
                 e.printStackTrace();
                 return false;
-            }           
+            }   
+		
                  
     }
 	private boolean test_polaczenia() {
