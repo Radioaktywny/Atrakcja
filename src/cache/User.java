@@ -1,4 +1,4 @@
-package logowanie;
+package cache;
 
 public class User 
 {

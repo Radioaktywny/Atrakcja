@@ -23,6 +23,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
+import cache.User;
 
 public class Logowanie extends Activity 
 {

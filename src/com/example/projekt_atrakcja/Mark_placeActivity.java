@@ -23,9 +23,9 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
+import cache.User;
 import logowanie.Baza;
 import logowanie.Logowanie;
-import logowanie.User;
  
 public class Mark_placeActivity extends Activity {
     private User user;
