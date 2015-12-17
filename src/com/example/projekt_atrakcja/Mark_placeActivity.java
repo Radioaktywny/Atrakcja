@@ -12,6 +12,7 @@ import java.util.concurrent.Future;
 
 import com.example.projekt_atrakcja.R;
 
+import android.R.integer;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -29,38 +30,84 @@ import logowanie.User;
 public class Mark_placeActivity extends Activity {
     private User user;
     Location lokalizacja;
+    private int id=0;
+    
     
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        lokalizacja=pobierz_lokalizacje();
-        if(wczytaj_pasy(getBaseContext()))
-        {
-            setContentView(R.layout.mark_place_layout);
-            
-        }        
-        else
-        {
-            startActivity(new Intent(Mark_placeActivity.this,Logowanie.class));
-            finish();
+    	super.onCreate(savedInstanceState);
+    	
+    	Log.d("zwrot", String.valueOf(sprawdz_czy_juz_nie_dodane()));
+    	if(sprawdz_czy_juz_nie_dodane())
+        {	
+           	startActivity(new Intent(Mark_placeActivity.this,MainActivity.class));
+        	finish();
+        	Toast("To miejsce juz istnieje ! tu trzeba dodac nowy leyout z wyswietleniem informacji o miejscu");
         }
-        
+        else{
+        	super.onCreate(savedInstanceState);
+	        lokalizacja=pobierz_lokalizacje();
+	        if(wczytaj_pasy(getBaseContext()))
+	        {
+	            setContentView(R.layout.mark_place_layout);
+	        }        
+	        else
+	        {
+	            startActivity(new Intent(Mark_placeActivity.this,Logowanie.class));
+	            finish();
+	        }
+        } 
     }
-    private Location pobierz_lokalizacje() {
+    private boolean sprawdz_czy_juz_nie_dodane() {
+    	try{
+    	  ExecutorService exe = Executors.newFixedThreadPool(1);
+          Future <String> czy= exe.submit(new Baza("select * from `miejsce` where lokalizacja=\""+"x"+String.valueOf(lokalizacja.getLatitude())+"y"+String.valueOf(lokalizacja.getLongitude())+"\"", "sprawdz_polaczenie"));
+          if(czy.get().equals("polaczono"))
+			{
+				return true;
+			}else{
+				return false;
+			}
+		} catch (Exception e) {
+		return false;
+		}
+    	
+	}
+	private Location pobierz_lokalizacje() {
     	Log.d("Lokalizacja", String.valueOf(SearchActivity.getLokalizacja().getLatitude()));
 		return SearchActivity.getLokalizacja();	
 	}
     
     public void oznacz(View view) 
     {	
+    	try {
+		id = sprawdz_id();
+    	} catch (NumberFormatException | InterruptedException | ExecutionException e1) {
+		Log.d("id_blad",e1.getMessage() );
+    	}
     	
     	String lokalizacja_string="x"+String.valueOf(lokalizacja.getLatitude())+"y"+String.valueOf(lokalizacja.getLongitude());
     	EditText edittext1 =(EditText) findViewById(R.id.opis);
 		EditText edittext2 =(EditText) findViewById(R.id.nazwa_miejsca);
 		String opis = edittext1.getText().toString();
 		String nazwa_miejsca = edittext2.getText().toString();	
-    	
-    	Log.d("oznaczanie", String.valueOf(test_polaczenia())); //---jest polaczenie z internetem        
-        if(test_polaczenia())
+		Log.d ("rozmiar opisu", String.valueOf(opis.length()));
+		Log.d ("rozmiar opisu", String.valueOf(nazwa_miejsca.length()));  
+		
+		
+		
+		
+		if(opis.length() >100 || nazwa_miejsca.length() >40)
+		{
+			if(opis.length() >100)
+			Toast("Zbyt d³ugi opis");
+			else
+			Toast("Zbyt dluga nazwa");
+		}else
+        if(opis.equals("") || nazwa_miejsca.equals("") )
+        {
+        	Toast("Wype³nij Wszystkie pola !");// tu bedzie layout
+        }else
+    	if(test_polaczenia())
         {
         	dodaj_lokalizacje(nazwa_miejsca, opis);
         	Toast("Miejsce zostalo dodane :) ");
@@ -85,12 +132,15 @@ public class Mark_placeActivity extends Activity {
     }
         
     private void dodaj_lokalizacje(String nazwa_miejsca, String opis) {
+    	
+		
     	String lokal;
     	lokal="x"+lokalizacja.getLatitude()+"y"+lokalizacja.getLongitude();
     	ExecutorService exe = Executors.newFixedThreadPool(1);
     	try{ 
-    		exe.submit(new Baza("INSERT INTO `miejsca`(`nazwa`, `lokalizacja`, `uzytkownik`, `Opis`) VALUES (\""+nazwa_miejsca+"\",\""+lokal+"\",\""+user.getLogin()+"\",\""+opis+"\");", "dodaj"));
-    	}catch(Exception e)
+    		exe.submit(new Baza("INSERT INTO `miejsca`(`id` ,`nazwa`, `lokalizacja`, `uzytkownik`, `Opis`) VALUES ("+id+",\""+nazwa_miejsca+"\",\""+lokal+"\",\""+user.getLogin()+"\",\""+opis+"\");", "dodaj"));
+    		Log.d("dodaj_lokalizacje","INSERT INTO `miejsca`(`nazwa`, `lokalizacja`, `uzytkownik`, `Opis`) VALUES (\""+nazwa_miejsca+"\",\""+lokal+"\",\""+user.getLogin()+"\",\""+opis+"\");");
+    		}catch(Exception e)
     	{
     		Log.d("dodaj_lokalizacje", e.getMessage());
     	}
@@ -100,6 +150,18 @@ public class Mark_placeActivity extends Activity {
 
     
 	
+	private int sprawdz_id() throws NumberFormatException, InterruptedException, ExecutionException {
+		ExecutorService exe = Executors.newFixedThreadPool(1);
+		Future<String> fut=exe.submit(new Baza("SELECT `id` from `miejsca` ORDER BY `id` DESC LIMIT 1", "zwroc2"));
+		Log.d("id_zwrot_fut", fut.get());
+		int i=Integer.valueOf(fut.get());
+		Log.d("id_zwrot_i", fut.get());
+		if(fut.get().length()>0)
+		return i;
+		else
+			return 0;
+	}
+
 	private boolean wczytaj_pasy(Context context) 
     {       
         try {
@@ -111,7 +173,8 @@ public class Mark_placeActivity extends Activity {
             } catch (IOException e) {   
                 e.printStackTrace();
                 return false;
-            }           
+            }   
+		
                  
     }
 	private boolean test_polaczenia() {
