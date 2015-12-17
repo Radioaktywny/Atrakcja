@@ -13,6 +13,7 @@ public class Baza implements  Callable<String> {
 	private String  sql_dodaj=null;
 	private String sql_wyswietl=null;
 	private String sql_zwroc=null;
+	private String sql_zwroc2=null;
 	private String sprawdz_polaczenie=null;	
 	private String sql;
 	private Statement s ;
@@ -36,6 +37,11 @@ public class Baza implements  Callable<String> {
 				else if (rodzaj.equals("sprawdz_polaczenie"))
 				{	
 					sprawdz_polaczenie="sprawdzam";
+				}
+				else if (rodzaj.equals("zwroc2"))
+				{	
+					this.sql=sql;
+					sql_zwroc2=rodzaj;	
 				}
 	}
 	static boolean ladujSterownik() 
@@ -96,6 +102,88 @@ public class Baza implements  Callable<String> {
 			return zwroc;
 			
 		}
+		//maciek psuje stary wiem ze trzeba to poprawic ale nic lepszego na mysl mi nie przychodzi
+		public static String returnDataFromQuery_wersja_beta(ResultSet r) {
+			ResultSetMetaData rsmd;
+			String zwroc="";
+			
+			try {
+				rsmd = r.getMetaData();
+				int numcols = rsmd.getColumnCount(); // pobieranie liczby kolum
+				/**
+				 * r.next() - przejœcie do kolejnego rekordu (wiersza) otrzymanych
+				 * wyników
+				 */
+				// wyswietlanie kolejnych rekordow:
+				while (r.next()) {
+					for (int i = 1; i <= numcols; i++) {
+						if(i==1)
+						{zwroc+="$$$$";//miejsce
+						}else
+						if(i==2)
+						{zwroc+="$";//kordynaty sa dla i = 1 i i=2
+						}else
+						if(i==3)
+						{
+							zwroc+="$$";	//uzytkownik
+						}else
+						if(i==4)
+						{
+							zwroc+="$$$";	//opis
+						}else
+						if(i==5)
+						{
+							zwroc+="$$$$";	
+						}
+						Object obj = r.getObject(i);
+						if (obj != null){
+							if( i !=5)
+							zwroc=zwroc+obj.toString()+"\n";//nie dodaje 1 i ostatniej lini
+							if(i==5)
+							zwroc=zwroc+obj.toString();//ostatnia linie dopisz bez znaku \n
+						}
+					}			
+				}
+			} catch (SQLException e) {
+				System.out.println("Bl¹d odczytu z bazy! " + e.toString());
+				System.exit(3);
+			}
+			return zwroc;
+			
+		}
+		
+		public static String returnDataFromQuery_wersja_gamma(ResultSet r) {
+			ResultSetMetaData rsmd;
+			String zwroc="";
+			
+			try {
+				rsmd = r.getMetaData();
+				int numcols = rsmd.getColumnCount(); // pobieranie liczby kolum
+				/**
+				 * r.next() - przejœcie do kolejnego rekordu (wiersza) otrzymanych
+				 * wyników
+				 */
+				// wyswietlanie kolejnych rekordow:
+				while (r.next()) {
+					for (int i = 1; i <= numcols; i++) {
+						Object obj = r.getObject(i);
+						if (obj != null){
+							if(i !=5)
+							zwroc=zwroc+obj.toString()+"\n";//nie dodaje 1 i ostatniej lini
+							if(i==5)
+							zwroc=zwroc+obj.toString();//ostatnia linie dopisz bez znaku \n
+						}
+					}			
+				}
+			} catch (SQLException e) {
+				System.out.println("Bl¹d odczytu z bazy! " + e.toString());
+				System.exit(3);
+			}
+			return zwroc;
+			
+		}
+		
+		
 		public static void printDataFromQuery(ResultSet r) {
 			ResultSetMetaData rsmd;
 			try {
@@ -223,6 +311,22 @@ public class Baza implements  Callable<String> {
 			Statement s = c.createStatement();
 				ResultSet r = executeQuery(s, sql);
 				zwrot = returnDataFromQuery(r);
+				try {
+					s.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					Log.d("baza blad", e.getMessage());
+				}				
+			}
+			if(sql_zwroc2 != null)
+			{	
+				Class.forName("com.mysql.jdbc.Driver");
+				Log.d("sterownik", "sterownik zaladowany");
+			String baza = "jdbc:mysql://www.db4free.net:3306/projekt_2015";
+			java.sql.Connection c = DriverManager.getConnection(baza, "maciek2015", "testtest");
+			Statement s = c.createStatement();
+				ResultSet r = executeQuery(s, sql);
+				zwrot = returnDataFromQuery_wersja_gamma(r);
 				try {
 					s.close();
 				} catch (SQLException e) {
