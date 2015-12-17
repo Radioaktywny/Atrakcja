@@ -9,7 +9,7 @@ import android.support.v4.content.res.ResourcesCompat;
 import android.view.Window;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
-import logowanie.User;
+import cache.User;
  
 public class MainActivity extends TabActivity {
     

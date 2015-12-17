@@ -9,9 +9,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
+import cache.User;
 import logowanie.Baza;
 import logowanie.Logowanie;
-import logowanie.User;
 
 import java.io.File;
 import java.io.IOException;
@@ -69,9 +69,6 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
             finish(); 
         }
     }
-
-	
-	
 //najwazniejsza funkcja
     @Override
     public void onMapReady(GoogleMap map) {
@@ -112,15 +109,11 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
     	
     	}
     }
-
-
 	private void rysuj_innych(GoogleMap map, String user, String opis, String nazwa) {
 		LatLng polozenie = new LatLng(x, y);
         map.addMarker(new MarkerOptions().position(polozenie).title(nazwa).title(opis));
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(polozenie, 16));
 	}
-
-
 	private void przerob_lokacje(String string) {
 		int koniec=0;
 		try{
@@ -147,14 +140,10 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 			Log.d("nie zparsowalo", e.getMessage());
 		}
 	}
-
-
 	protected void rysuj(GoogleMap map, GPSLocation gps, String nazwa) {
 		LatLng polozenie = new LatLng(gps.getLatitude(), gps.getLongitude());
         map.addMarker(new MarkerOptions().position(polozenie).title(nazwa));
-	}
-	
-    
+	}    
     protected synchronized void buildGoogleApiClient(){
 		Log.d("Building", "zbudowane");
 		mGoogleApiClient= new GoogleApiClient.Builder(this)
@@ -162,7 +151,6 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 				.addOnConnectionFailedListener(this)
 				.addApi(LocationServices.API)
 				.build();
-		
 	}
     @Override
 	public void onConnected(Bundle arg0) {

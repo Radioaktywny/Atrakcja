@@ -10,8 +10,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import cache.User;
 import logowanie.Logowanie;
-import logowanie.User;
  
 public class ChallengeActivity extends Activity {
     private User user;

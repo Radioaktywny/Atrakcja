@@ -23,10 +23,10 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import cache.User;
 import logowanie.Baza;
 import logowanie.Logowanie;
 import logowanie.Rejestracja;
-import logowanie.User;
  
 public class ProfileActivity extends Activity {
     protected User user ;
