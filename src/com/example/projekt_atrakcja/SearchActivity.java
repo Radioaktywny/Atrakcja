@@ -121,7 +121,7 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 		{
 			if(string.startsWith("x", i))
 			{	
-				while(!string.startsWith("y", koniec))//dopuki nie napotkam kolejnej liczby
+				while(!string.startsWith("y", koniec))//dopóki nie napotkam kolejnej liczby
 				{
 	   			 koniec++;
 				}

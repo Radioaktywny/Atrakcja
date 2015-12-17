@@ -23,6 +23,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
+import cache.Miejsca;
 import cache.User;
 
 public class Logowanie extends Activity 
@@ -33,7 +34,16 @@ public class Logowanie extends Activity
 	protected void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
-		
+		Miejsca m = new Miejsca(getBaseContext());
+        try {
+            m.dopisz_do_SQLite();
+        } catch (InterruptedException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        } catch (ExecutionException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
 		// sprawdzenie czy istnieje plik z danymi do logowania jesli istnieje to proba zalogowania
 		if(wczytaj_pasy(getApplicationContext()))
             try 
@@ -68,6 +78,8 @@ public class Logowanie extends Activity
 		login=edittext1.getText().toString();
 		haslo=edittext2.getText().toString();	
 		zaloguj_do_bazy(true);
+		
+		
 		
 	}
 	private void zaloguj_do_bazy(boolean czy_zapisywac) throws InterruptedException, ExecutionException, IOException

@@ -19,9 +19,9 @@ public class Miejsca extends Activity
 {
     private int id=0;
     private List<String[]> miejsca = new ArrayList<String[]>();
-    public Miejsca()
+    public Miejsca(Context context)
     {
-        SQLiteDatabase db = openOrCreateDatabase("cache",Context.MODE_PRIVATE,null);
+        SQLiteDatabase db = openOrCreateDatabase("cache",context.MODE_PRIVATE,null);
         db.execSQL("CREATE TABLE `egzamin`.`miejsca` ( `id` VARCHAR(4) NOT NULL , `nazwa` TEXT NOT NULL , `lokalizacja` TEXT NOT NULL , `uzytkownik` TEXT NOT NULL , `opis` TEXT NOT NULL , PRIMARY KEY (`id`));");
         try {
             id=sprawdz_id(db);
@@ -79,17 +79,18 @@ public class Miejsca extends Activity
         String opis="";
         String user="";
         int id_bazy=sprawdz_idbazy();
-        for(int i=id;i<id_bazy;i++ )
+        for(;id<id_bazy;id++ )
         {
-        Future <String> nazwa_f= exe.submit(new Baza("SELECT `nazwa` FROM `miejsca` where `id`=\""+i+"\"", "zwroc2"));
-        Future <String> lokalizacja_f= exe.submit(new Baza("SELECT `lokalizacja` FROM `miejsca` where `id`=\""+i+"\"", "zwroc2"));
-        Future <String> user_f= exe.submit(new Baza("SELECT `uzytkownik` FROM `miejsca` where `id`=\""+i+"\"", "zwroc2"));
-        Future <String> opis_f= exe.submit(new Baza("SELECT `Opis` FROM `miejsca` where `id`=\""+i+"\"", "zwroc2"));
+        Future <String> nazwa_f= exe.submit(new Baza("SELECT `nazwa` FROM `miejsca` where `id`=\""+id+"\"", "zwroc2"));
+        Future <String> lokalizacja_f= exe.submit(new Baza("SELECT `lokalizacja` FROM `miejsca` where `id`=\""+id+"\"", "zwroc2"));
+        Future <String> user_f= exe.submit(new Baza("SELECT `uzytkownik` FROM `miejsca` where `id`=\""+id+"\"", "zwroc2"));
+        Future <String> opis_f= exe.submit(new Baza("SELECT `Opis` FROM `miejsca` where `id`=\""+id+"\"", "zwroc2"));
         nazwa=nazwa_f.get();
         lokacja=lokalizacja_f.get();
         user=user_f.get();
         opis=opis_f.get();
         db.execSQL("INSERT INTO `miejsca`(`id` ,`nazwa`, `lokalizacja`, `uzytkownik`, `opis`) VALUES ("+id+",\""+nazwa+"\",\""+lokacja+"\",\""+user+"\",\""+opis+"\");");
+        
         }
         
         
