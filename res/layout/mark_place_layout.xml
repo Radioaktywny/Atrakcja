@@ -7,18 +7,6 @@
 
     <!-- Screen Design for the SONGS -->
 
-    <Button
-        android:id="@+id/oznacz"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="56dp"
-        android:layout_marginRight="58dp"
-        android:layout_x="180dp"
-        android:layout_y="367dp"
-        android:background="@drawable/tlo_obrazka"
-        android:text="@string/oznacz" 
-        android:onClick="oznacz"/>
-
     <EditText
         android:id="@+id/opis"
         android:layout_width="match_parent"
@@ -42,12 +30,14 @@
 
     <Button
         android:id="@+id/zdjecie"
-        android:layout_width="wrap_content"
+        android:layout_width="132dp"
         android:layout_height="wrap_content"
-        android:layout_x="204dp"
+        android:layout_x="176dp"
         android:layout_y="84dp"
         android:background="@drawable/tlo_obrazka"
-        android:text="@string/zdjecie" />
+        android:minWidth="130dp"
+        android:text="@string/zdjecie"
+        android:textColor="#FFFFFF" />
 
     <TextView
         android:id="@+id/textView1"
@@ -58,5 +48,19 @@
         android:padding="15dip"
         android:text="oznacz"
         android:textSize="28sp" />
+
+    <Button
+        android:id="@+id/oznacz"
+        android:layout_width="140dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="56dp"
+        android:layout_marginRight="58dp"
+        android:layout_x="171dp"
+        android:layout_y="367dp"
+        android:background="@drawable/tlo_obrazka"
+        android:minWidth="130dp"
+        android:onClick="oznacz"
+        android:text="@string/oznacz"
+        android:textColor="#FFFFFF" />
 
 </AbsoluteLayout>

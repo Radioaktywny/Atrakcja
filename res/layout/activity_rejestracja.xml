@@ -30,8 +30,10 @@
         android:layout_marginTop="26dp"
         android:background="@drawable/tlo_obrazka"
         android:hint="@string/rejestracja"
+        android:minWidth="130dp"
         android:onClick="zarejestruj"
-        android:text="@string/rejestracja" />
+        android:text="@string/rejestracja"
+        android:textColor="#FFFFFF" />
 
     <EditText
         android:id="@+id/nowe_haslo1"

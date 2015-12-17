@@ -34,16 +34,6 @@
         android:inputType="textPassword" />
 
     <Button
-        android:id="@+id/button_zaloguj"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:background="@drawable/tlo_obrazka"
-        android:onClick="zaloguj"
-        android:text="@string/zaloguj" />
-
-    <Button
         android:id="@+id/button_rejestracja"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -51,8 +41,10 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="62dp"
         android:background="@drawable/tlo_obrazka"
+        android:minWidth="120dp"
         android:onClick="zarejestruj"
-        android:text="@string/rejestracja" />
+        android:text="@string/rejestracja"
+        android:textColor="#FFFFFF" />
 
     <CheckBox
         android:id="@+id/check_zapamietaj"
@@ -62,5 +54,17 @@
         android:layout_alignRight="@+id/button_zaloguj"
         android:layout_marginBottom="24dp"
         android:text="@string/zapamietaj" />
+
+    <Button
+        android:id="@+id/button_zaloguj"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:background="@drawable/tlo_obrazka"
+        android:minWidth="120dp"
+        android:onClick="zaloguj"
+        android:text="@string/zaloguj"
+        android:textColor="#FFFFFF" />
 
 </RelativeLayout>
