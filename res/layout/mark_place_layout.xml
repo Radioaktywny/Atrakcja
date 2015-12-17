@@ -7,32 +7,6 @@
 
     <!-- Screen Design for the SONGS -->
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:padding="15dip"
-        android:text="oznacz"
-        android:textSize="18dip" />
-
-    <EditText
-        android:id="@+id/nazwa_miejsca"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_x="0dp"
-        android:layout_y="216dp"
-        android:ems="10" 
-      	android:hint="Nazwa Miejsca"/>
-
-    <EditText
-        android:id="@+id/opis"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_x="-2dp"
-        android:layout_y="93dp"
-        android:ems="10" 
-        android:hint="Opis miejsca"/>
-
     <Button
         android:id="@+id/oznacz"
         android:layout_width="wrap_content"
@@ -45,13 +19,44 @@
         android:text="@string/oznacz" 
         android:onClick="oznacz"/>
 
+    <EditText
+        android:id="@+id/opis"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_x="1dp"
+        android:layout_y="152dp"
+        android:ems="10"
+        android:hint="Opis miejsca" >
+
+        <requestFocus />
+    </EditText>
+
+    <EditText
+        android:id="@+id/nazwa_miejsca"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_x="1dp"
+        android:layout_y="246dp"
+        android:ems="10"
+        android:hint="Nazwa Miejsca" />
+
     <Button
         android:id="@+id/zdjecie"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_x="203dp"
-        android:layout_y="18dp"
+        android:layout_x="204dp"
+        android:layout_y="84dp"
         android:background="@drawable/tlo_obrazka"
         android:text="@string/zdjecie" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="138dp"
+        android:layout_height="wrap_content"
+        android:layout_x="92dp"
+        android:layout_y="0dp"
+        android:padding="15dip"
+        android:text="oznacz"
+        android:textSize="28sp" />
 
 </AbsoluteLayout>

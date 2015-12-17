@@ -8,20 +8,11 @@
     <!-- Screen Design for the SONGS -->
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_x="0dp"
-        android:layout_y="0dp"
-        android:padding="15dip"
-        android:text="@string/profil"
-        android:textSize="18dip" />
-
-    <TextView
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_x="20dp"
-        android:layout_y="78dp"
+        android:layout_y="80dp"
         android:text="Witaj :"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -29,7 +20,7 @@
         android:id="@+id/nowe_haslo1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_x="26dp"
+        android:layout_x="25dp"
         android:layout_y="318dp"
         android:ems="10"
         android:hint="powtórz hasło"
@@ -49,7 +40,7 @@
         android:id="@+id/nowe_haslo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_x="28dp"
+        android:layout_x="25dp"
         android:layout_y="271dp"
         android:ems="10"
         android:hint="nowe haslo"
@@ -60,11 +51,11 @@
 
     <TextView
         android:id="@+id/textView2"
-        android:layout_width="158dp"
-        android:layout_height="41dp"
-        android:layout_x="76dp"
-        android:layout_y="65dp"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+		android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="100dp"
+        android:layout_y="80dp"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <Button
         android:id="@+id/zmien_haslo"
@@ -72,7 +63,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_x="17dp"
-        android:layout_y="148dp"
+        android:layout_y="145dp"
         android:background="@drawable/tlo_obrazka"
         android:onClick="zmien_haslo"
         android:text="@string/zmien_haslo" />
@@ -83,9 +74,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_x="190dp"
-        android:layout_y="146dp"
+        android:layout_y="145dp"
         android:background="@drawable/tlo_obrazka"
         android:onClick="wyloguj"
         android:text="wyloguj" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="82dp"
+        android:layout_y="0dp"
+        android:padding="15dip"
+        android:text="@string/profil"
+        android:textSize="28sp" />
 
 </AbsoluteLayout>
