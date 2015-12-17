@@ -2,6 +2,7 @@
 <AbsoluteLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/tlo"
     android:orientation="vertical" >
 
     <!-- Screen Design for the SONGS -->
@@ -14,16 +15,6 @@
         android:padding="15dip"
         android:text="@string/profil"
         android:textSize="18dip" />
-
-    <Button
-        android:id="@+id/button1"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_x="202dp"
-        android:layout_y="0dp"
-        android:onClick="wyloguj"
-        android:text="wyloguj" />
 
     <TextView
         android:id="@+id/textView1"
@@ -82,7 +73,19 @@
         android:layout_height="wrap_content"
         android:layout_x="17dp"
         android:layout_y="148dp"
-        android:text="@string/zmien_haslo" 
-        android:onClick="zmien_haslo"/>
+        android:background="@drawable/tlo_obrazka"
+        android:onClick="zmien_haslo"
+        android:text="@string/zmien_haslo" />
+
+    <Button
+        android:id="@+id/button1"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="190dp"
+        android:layout_y="146dp"
+        android:background="@drawable/tlo_obrazka"
+        android:onClick="wyloguj"
+        android:text="wyloguj" />
 
 </AbsoluteLayout>
