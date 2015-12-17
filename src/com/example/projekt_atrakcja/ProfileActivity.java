@@ -37,7 +37,7 @@ public class ProfileActivity extends Activity {
         if(wczytaj_pasy(getBaseContext()))
         {
         TextView uzytkownik = (TextView) findViewById(R.id.textView2);
-        uzytkownik.setText(user.getLogin());
+        uzytkownik.setText("Witaj "+user.getLogin());
         }
         else
         {

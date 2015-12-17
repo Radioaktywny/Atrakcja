@@ -41,7 +41,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="62dp"
         android:background="@drawable/tlo_obrazka"
-        android:minWidth="120dp"
+        android:minWidth="130dp"
         android:onClick="zarejestruj"
         android:text="@string/rejestracja"
         android:textColor="#FFFFFF" />
@@ -62,7 +62,7 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:background="@drawable/tlo_obrazka"
-        android:minWidth="120dp"
+        android:minWidth="130dp"
         android:onClick="zaloguj"
         android:text="@string/zaloguj"
         android:textColor="#FFFFFF" />

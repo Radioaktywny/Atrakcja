@@ -39,16 +39,6 @@
         android:text="@string/zdjecie"
         android:textColor="#FFFFFF" />
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="138dp"
-        android:layout_height="wrap_content"
-        android:layout_x="92dp"
-        android:layout_y="0dp"
-        android:padding="15dip"
-        android:text="oznacz"
-        android:textSize="28sp" />
-
     <Button
         android:id="@+id/oznacz"
         android:layout_width="140dp"
@@ -62,5 +52,16 @@
         android:onClick="oznacz"
         android:text="@string/oznacz"
         android:textColor="#FFFFFF" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="48dp"
+        android:layout_y="0dp"
+        android:gravity="center_vertical"
+        android:padding="15dip"
+        android:text="oznacz miejsce"
+        android:textSize="28sp" />
 
 </AbsoluteLayout>

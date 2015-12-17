@@ -7,15 +7,6 @@
 
     <!-- Screen Design for the SONGS -->
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_x="20dp"
-        android:layout_y="80dp"
-        android:text="Witaj :"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
     <EditText
         android:id="@+id/nowe_haslo1"
         android:layout_width="wrap_content"
@@ -51,9 +42,9 @@
 
     <TextView
         android:id="@+id/textView2"
-		android:layout_width="wrap_content"
+        android:layout_width="104dp"
         android:layout_height="wrap_content"
-        android:layout_x="100dp"
+        android:layout_x="22dp"
         android:layout_y="80dp"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 

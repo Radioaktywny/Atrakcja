@@ -56,7 +56,7 @@ public class Logowanie extends Activity
 	    
 		//startActivity(new Intent(Logowanie.this,Rejestracja.class));
 		
-	    startActivity(new Intent(Logowanie.this,MainActivity.class));
+	    startActivity(new Intent(Logowanie.this,Rejestracja.class));
 	    finish();
 				
 	}	
