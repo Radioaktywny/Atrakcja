@@ -31,6 +31,7 @@ public class Miejsca extends Activity
             Log.d("id_blad", e.getMessage());
             e.printStackTrace();
         }        
+        
         pobierz_sqlite(db);
         
         db.close();
@@ -65,4 +66,46 @@ public class Miejsca extends Activity
             }        
         db.close();
      }
+    public int get_id()
+    {
+        return id;
+    }
+    public void dopisz_do_SQLite() throws InterruptedException, ExecutionException
+    {
+        SQLiteDatabase db = openOrCreateDatabase("cache",Context.MODE_PRIVATE,null);
+        ExecutorService exe = Executors.newFixedThreadPool(1);
+        String lokacja="";
+        String nazwa="";
+        String opis="";
+        String user="";
+        int id_bazy=sprawdz_idbazy();
+        for(int i=id;i<id_bazy;i++ )
+        {
+        Future <String> nazwa_f= exe.submit(new Baza("SELECT `nazwa` FROM `miejsca` where `id`=\""+i+"\"", "zwroc2"));
+        Future <String> lokalizacja_f= exe.submit(new Baza("SELECT `lokalizacja` FROM `miejsca` where `id`=\""+i+"\"", "zwroc2"));
+        Future <String> user_f= exe.submit(new Baza("SELECT `uzytkownik` FROM `miejsca` where `id`=\""+i+"\"", "zwroc2"));
+        Future <String> opis_f= exe.submit(new Baza("SELECT `Opis` FROM `miejsca` where `id`=\""+i+"\"", "zwroc2"));
+        nazwa=nazwa_f.get();
+        lokacja=lokalizacja_f.get();
+        user=user_f.get();
+        opis=opis_f.get();
+        db.execSQL("INSERT INTO `miejsca`(`id` ,`nazwa`, `lokalizacja`, `uzytkownik`, `opis`) VALUES ("+id+",\""+nazwa+"\",\""+lokacja+"\",\""+user+"\",\""+opis+"\");");
+        }
+        
+        
+       
+    db.close();
+        
+    }
+    private int sprawdz_idbazy() throws NumberFormatException, InterruptedException, ExecutionException {
+        ExecutorService exe = Executors.newFixedThreadPool(1);
+        Future<String> fut=exe.submit(new Baza("SELECT `id` from `miejsca` ORDER BY `id` DESC LIMIT 1", "zwroc2"));
+        Log.d("id_zwrot_fut", fut.get());
+        int i=fut.get().charAt(0)-47;
+        Log.d("id_zwrot_i", fut.get());
+        if(fut.get().length()>0)
+        return i;
+        else
+            return 0;
+    }
 }
