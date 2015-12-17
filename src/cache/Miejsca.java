@@ -15,29 +15,80 @@ import android.database.sqlite.SQLiteDatabaseLockedException;
 import android.util.Log;
 import logowanie.Baza;
 
-public class Miejsca extends Activity
+public class Miejsca 
 {
     private int id=0;
     private List<String[]> miejsca = new ArrayList<String[]>();
-    public Miejsca(Context context)
-    {
-        SQLiteDatabase db = openOrCreateDatabase("cache",context.MODE_PRIVATE,null);
-        db.execSQL("CREATE TABLE `egzamin`.`miejsca` ( `id` VARCHAR(4) NOT NULL , `nazwa` TEXT NOT NULL , `lokalizacja` TEXT NOT NULL , `uzytkownik` TEXT NOT NULL , `opis` TEXT NOT NULL , PRIMARY KEY (`id`));");
+    SQLiteDatabase db;
+    public Miejsca(SQLiteDatabase db)
+    
+    {	
+    	Log.d("wysypal sie", "przed konstrukorze");
+    this.db=db;    
+    Log.d("wysypal sie", "po konstrukorze");
+    	
+    	
+    
+        db.execSQL("CREATE TABLE if not exists `miejsca` ( `id` VARCHAR(4) NOT NULL , `nazwa` TEXT NOT NULL , `lokalizacja` TEXT NOT NULL , `uzytkownik` TEXT NOT NULL , `opis` TEXT NOT NULL , PRIMARY KEY (`id`));");
+      
         try {
+        	 Log.d("Miejsca id_przed", String.valueOf(id));
             id=sprawdz_id(db);
+            Log.d("Miejsca id_po", String.valueOf(id));
         } catch (NumberFormatException | InterruptedException
                 | ExecutionException e) {
-            // TODO Auto-generated catch block
-            Log.d("id_blad", e.getMessage());
-            e.printStackTrace();
-        }        
-        
-        pobierz_sqlite(db);
-        
+            Log.d("Miejsca_id_blad", e.getMessage());
+        }
+        Log.d("Miejsca_jestem", "TU jestem1");
+        if(sprawdz_czy_aktualna())
+        {
+        	 Log.d("Miejsca_id_blad", "jest aktualna");
+        }
+        else
+        {
+        	//dodaj_nie_aktualne();
+        	Log.d("Miejsca_jestem", "TU jestem2");
+        	try {
+				dopisz_do_SQLite(db);
+				Log.d("Miejsca_jestem", "TU jestem3 i mam dopiszwanie");
+			} catch (InterruptedException | ExecutionException e) {
+				Log.d("Miejsca dopisz_wysypal:", e.getMessage());
+				
+			}
+        	pobierz_sqlite(db);
+        	
+        }
+        test();
         db.close();
 }    
-    private int sprawdz_id(SQLiteDatabase db) throws NumberFormatException, InterruptedException, ExecutionException {
-        Cursor cursor = db.rawQuery("SELECT id from miejsca order by id DESC LIMIT 1;", null);
+    private void test() {
+    	
+		Log.d("takie lokacje wczytalo :", miejsca.get(0).toString());
+		Log.d("takie lokacje wczytalo :", miejsca.get(1).toString());
+		Log.d("takie lokacje wczytalo :", miejsca.get(2).toString());
+		
+	}
+	private void dodaj_nie_aktualne() {
+		// TODO Auto-generated method stub
+		
+	}
+	private boolean sprawdz_czy_aktualna()  {
+    	try {
+			if(id==sprawdz_idbazy())
+			{
+				return true;
+			}else
+				return false;
+			} catch (NumberFormatException | InterruptedException | ExecutionException e){
+			Log.d("Miejsca sprawdz_cz_blad", e.getMessage());
+			return false;
+		}
+	
+	}
+	private int sprawdz_id(SQLiteDatabase db) throws NumberFormatException, InterruptedException, ExecutionException {
+        
+    	try{
+    	Cursor cursor = db.rawQuery("SELECT id from miejsca order by id DESC LIMIT 1;", null);
         cursor.moveToFirst();
         String s = cursor.getString(cursor.getColumnIndex("id"));
         int id= Integer.valueOf(s.toString());
@@ -48,32 +99,39 @@ public class Miejsca extends Activity
             return id;
         else
             return 0;        
-    }
+    	}
+    	catch(Exception e)
+    	{
+    		Log.d("id_curso_sie_wysypal", e.getMessage());
+    		return 0;
+    	}
+    	}
     private void pobierz_sqlite(SQLiteDatabase db)
     {
         Cursor cursor = db.rawQuery("SELECT * from miejsca order by id ASC LIMIT 1;", null);
         cursor.moveToFirst();
         String s[]= new String[5];
-        while(!cursor.isAfterLast())
+        while(!cursor.isLast())
             {            
-            s[0]=cursor.getString(cursor.getColumnIndex("id"));
-            s[1]=cursor.getString(cursor.getColumnIndex("nazwa"));
-            s[2]=cursor.getString(cursor.getColumnIndex("lokalizacja"));
-            s[3]=cursor.getString(cursor.getColumnIndex("uzytkownik"));
-            s[4]=cursor.getString(cursor.getColumnIndex("opis"));
-            miejsca.add(s); 
-            cursor.moveToNext();               
+	            s[0]=cursor.getString(cursor.getColumnIndex("id"));
+	            s[1]=cursor.getString(cursor.getColumnIndex("nazwa"));
+	            s[2]=cursor.getString(cursor.getColumnIndex("lokalizacja"));
+	            s[3]=cursor.getString(cursor.getColumnIndex("uzytkownik"));
+	            s[4]=cursor.getString(cursor.getColumnIndex("opis"));
+	            miejsca.add(s); 
+	            cursor.moveToNext();               
             }        
         db.close();
+        
      }
     public int get_id()
     {
         return id;
     }
-    public void dopisz_do_SQLite() throws InterruptedException, ExecutionException
+    public void dopisz_do_SQLite(SQLiteDatabase db) throws InterruptedException, ExecutionException
     {
-        SQLiteDatabase db = openOrCreateDatabase("cache",Context.MODE_PRIVATE,null);
-        ExecutorService exe = Executors.newFixedThreadPool(1);
+       
+        ExecutorService exe = Executors.newFixedThreadPool(4);
         String lokacja="";
         String nazwa="";
         String opis="";
@@ -89,8 +147,9 @@ public class Miejsca extends Activity
         lokacja=lokalizacja_f.get();
         user=user_f.get();
         opis=opis_f.get();
+        Log.d("miejsca z bazysgllite", nazwa+lokacja+user+opis);
         db.execSQL("INSERT INTO `miejsca`(`id` ,`nazwa`, `lokalizacja`, `uzytkownik`, `opis`) VALUES ("+id+",\""+nazwa+"\",\""+lokacja+"\",\""+user+"\",\""+opis+"\");");
-        
+        Log.d("miejsca z bazysgllite", "po insercie" );
         }
         
         

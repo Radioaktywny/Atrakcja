@@ -14,6 +14,7 @@ import com.example.projekt_atrakcja.R;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -33,17 +34,28 @@ public class Logowanie extends Activity
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
 	{
+		
 		super.onCreate(savedInstanceState);
-		Miejsca m = new Miejsca(getBaseContext());
-        try {
-            m.dopisz_do_SQLite();
-        } catch (InterruptedException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        } catch (ExecutionException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        }
+		final SQLiteDatabase db = openOrCreateDatabase("cache",MODE_PRIVATE,null);
+		new Thread(new Runnable() {
+			public void run() {
+				
+				Miejsca m = new Miejsca(db);
+			}
+		}).start(); 
+		
+		
+		
+		
+//        try {
+//            m.dopisz_do_SQLite(db);
+//        } catch (InterruptedException e1) {
+//            // TODO Auto-generated catch block
+//            e1.printStackTrace();
+//        } catch (ExecutionException e1) {
+//            // TODO Auto-generated catch block
+//            e1.printStackTrace();
+//        }
 		// sprawdzenie czy istnieje plik z danymi do logowania jesli istnieje to proba zalogowania
 		if(wczytaj_pasy(getApplicationContext()))
             try 
