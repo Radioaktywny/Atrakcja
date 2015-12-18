@@ -19,7 +19,7 @@ public class Miejsca extends Thread
 {
     private int id_sql_lita=0;
     private int id_globala=0;
-    private List<String[]> miejsca = new ArrayList<String[]>();
+    public List<String[]> miejsca = new ArrayList<String[]>();
     SQLiteDatabase db;
     public Miejsca(SQLiteDatabase db)
     {	

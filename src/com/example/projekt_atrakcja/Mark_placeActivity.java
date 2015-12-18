@@ -32,7 +32,7 @@ public class Mark_placeActivity extends Activity {
     private User user;
     Location lokalizacja;
     private int id=0;
-    protected Miejsca m = Logowanie.getMiejsca();
+    protected Miejsca m;
     
     public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);

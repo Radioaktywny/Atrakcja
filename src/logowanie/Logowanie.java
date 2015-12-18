@@ -31,13 +31,13 @@ public class Logowanie extends Activity
 {
     private  String login;
     private  String haslo;
-    final SQLiteDatabase db = openOrCreateDatabase("cache",MODE_PRIVATE,null);
-    protected static  Miejsca m;
+   
+    protected  Miejsca m;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
-		 utworz();		
+		utworz();		
 		if(wczytaj_pasy(getApplicationContext()))
             try 
 		    {
@@ -56,23 +56,14 @@ public class Logowanie extends Activity
 	}	
 	
 	private void utworz() {
+		 final SQLiteDatabase db = openOrCreateDatabase("cache",MODE_PRIVATE,null);
 		new Thread(new Runnable() {
 			public void run() {
 				m = new Miejsca(db);
 			}
-		}).start(); 
-		
+		}).start();
 	}
 	
-	public static  Miejsca getMiejsca()
-	{
-		
-		
-		if(!m.isAlive())
-		return m;
-	else
-		return null;
-	}
 	public void zarejestruj(View view)
 	{	//testy 
 	    
