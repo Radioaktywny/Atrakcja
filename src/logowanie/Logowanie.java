@@ -31,32 +31,13 @@ public class Logowanie extends Activity
 {
     private  String login;
     private  String haslo;
+    final SQLiteDatabase db = openOrCreateDatabase("cache",MODE_PRIVATE,null);
+    protected static  Miejsca m;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
 	{
-		
 		super.onCreate(savedInstanceState);
-		final SQLiteDatabase db = openOrCreateDatabase("cache",MODE_PRIVATE,null);
-		new Thread(new Runnable() {
-			public void run() {
-				
-				Miejsca m = new Miejsca(db);
-			}
-		}).start(); 
-		
-		
-		
-		
-//        try {
-//            m.dopisz_do_SQLite(db);
-//        } catch (InterruptedException e1) {
-//            // TODO Auto-generated catch block
-//            e1.printStackTrace();
-//        } catch (ExecutionException e1) {
-//            // TODO Auto-generated catch block
-//            e1.printStackTrace();
-//        }
-		// sprawdzenie czy istnieje plik z danymi do logowania jesli istnieje to proba zalogowania
+		 utworz();		
 		if(wczytaj_pasy(getApplicationContext()))
             try 
 		    {
@@ -65,7 +46,7 @@ public class Logowanie extends Activity
                     | IOException e)
 		    {
                 setContentView(R.layout.activity_logowanie);
-                finish();
+          //      finish();
                 e.printStackTrace();
             }
 		else
@@ -74,6 +55,24 @@ public class Logowanie extends Activity
             //jesli sie nie udalo wczytaj hasla i loginu to zaladuj normalny widok do logowania	
 	}	
 	
+	private void utworz() {
+		new Thread(new Runnable() {
+			public void run() {
+				m = new Miejsca(db);
+			}
+		}).start(); 
+		
+	}
+	
+	public static  Miejsca getMiejsca()
+	{
+		
+		
+		if(!m.isAlive())
+		return m;
+	else
+		return null;
+	}
 	public void zarejestruj(View view)
 	{	//testy 
 	    

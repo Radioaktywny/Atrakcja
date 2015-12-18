@@ -18,6 +18,7 @@ public class MainActivity extends TabActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
+        getIntent().getExtras();
         setContentView(R.layout.activity_main);
         TabHost tabHost = getTabHost();
        

@@ -23,6 +23,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
+import cache.Miejsca;
 import cache.User;
 import logowanie.Baza;
 import logowanie.Logowanie;
@@ -31,7 +32,7 @@ public class Mark_placeActivity extends Activity {
     private User user;
     Location lokalizacja;
     private int id=0;
-    
+    protected Miejsca m = Logowanie.getMiejsca();
     
     public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
@@ -56,6 +57,8 @@ public class Mark_placeActivity extends Activity {
 	            finish();
 	        }
         } 
+    	
+    	
     }
     private boolean sprawdz_czy_juz_nie_dodane() {
     	try{

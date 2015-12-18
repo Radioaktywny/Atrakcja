@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
+import cache.Miejsca;
 import cache.User;
 import logowanie.Baza;
 import logowanie.Logowanie;
@@ -44,6 +45,7 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 	private int id=0;
 	private double x=0;
 	private double y=0;
+	protected Miejsca m = Logowanie.getMiejsca();
 	protected static Location Aktualna_Lokalizacja=null;
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,21 +74,34 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 //najwazniejsza funkcja
     @Override
     public void onMapReady(GoogleMap map) {
-   
     	gps = new GPSLocation(SearchActivity.this);
     	Aktualna_Lokalizacja=gps.getLocation();
     	LatLng polozenie = new LatLng(gps.getLatitude(), gps.getLongitude());
-		try {
-		pobierz_lokalizacje(map);
-		} catch (InterruptedException | ExecutionException e) {
-			Log.d("wysiadlo ladowanie", e.getMessage());
-		}
-				
+		pobierz_lokalizacje_sql(map);
 		map.addMarker(new MarkerOptions().position(polozenie).title("Tu jestes!"));
 	   	map.moveCamera(CameraUpdateFactory.newLatLngZoom(polozenie, 16));
 	   	rysuj(map,gps,"Tu jeste≈õ !");
     } 	
-    //nazwa=\"z\""
+    private void pobierz_lokalizacje_sql(GoogleMap map) {
+    	String lokacja="";
+    	String nazwa="";
+    	String opis="";
+    	String user="";
+    	for(int i=0; i<m.getLastId();i++)
+    	{
+    		lokacja=m.getLokalizajca(i);
+    		nazwa=m.getNazwa(i);
+    		opis=m.getOpis(i);
+    		user=m.getUrzytkownik(i);
+    		przerob_lokacje(lokacja);
+    		rysuj_innych(map,user,opis,nazwa);
+    		
+    	}
+    	
+    		
+	
+}
+	//nazwa=\"z\""
     private void pobierz_lokalizacje(GoogleMap map ) throws InterruptedException, ExecutionException {
     	ExecutorService exe = Executors.newFixedThreadPool(4);
     	String lokacja="";
@@ -121,7 +136,7 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 		{
 			if(string.startsWith("x", i))
 			{	
-				while(!string.startsWith("y", koniec))//dopÛki nie napotkam kolejnej liczby
+				while(!string.startsWith("y", koniec))//dopÔøΩki nie napotkam kolejnej liczby
 				{
 	   			 koniec++;
 				}
