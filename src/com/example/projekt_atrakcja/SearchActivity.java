@@ -34,6 +34,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
 //---wszystko do poprawy XD
 
 
@@ -62,7 +63,7 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
         if(wczytaj_pasy(getBaseContext()))
         {
         Log.d("ustaw", "ustawianie");
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+        com.google.android.gms.maps.SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         Log.d("ustaw", "chyba mapa");
@@ -79,25 +80,32 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
     	gps = new GPSLocation(SearchActivity.this);
     	Aktualna_Lokalizacja=gps.getLocation();
     	LatLng polozenie = new LatLng(gps.getLatitude(), gps.getLongitude());
-		pobierz_lokalizacje_sqllite(map);
+		try {
+			pobierz_lokalizacje_sqllite(map);
+		} catch (NumberFormatException | InterruptedException | ExecutionException e) {
+			// TODO Auto-generated catch block
+			Log.d("znalezione lokalizacje", "nic nie znalazlo wysyapl sie bo "+e.getMessage());
+		}
 		map.addMarker(new MarkerOptions().position(polozenie).title("Tu jestes!"));
 	   	map.moveCamera(CameraUpdateFactory.newLatLngZoom(polozenie, 16));
-	   	rysuj(map,gps,"Tu jesteś !");
+	   	//rysuj(map,gps,"Tu jesteś !");
     } 	
-    private void pobierz_lokalizacje_sqllite(GoogleMap map) {
+    private void pobierz_lokalizacje_sqllite(GoogleMap map) throws NumberFormatException, InterruptedException, ExecutionException {
+    	m= new Miejsca(getBaseContext());//inicjalizacja miejsca 
     	String lokacja="";
     	String nazwa="";
     	String opis="";
     	String user="";
     	Double [] d= new Double[2];
     	int p=0;
-    	for(int i=0; i<m.getLastId();i++)
+    	for(int i=0; i<=m.getLastId();i++)
     	{p++;
     		lokacja=m.getLokalizajca(i);
     		nazwa=m.getNazwa(i);
     		opis=m.getOpis(i);
-    		user=m.getUrzytkownik(i);
+    		user=m.getUzytkownik(i);
     		d=przerob_lokacje(lokacja);
+    		Log.d("znalezione lokacje:", lokacja+nazwa+opis+user+d);
     		rysuj_innych(map,user,opis,nazwa,d[0],d[1]);
     		
     	}
@@ -221,12 +229,7 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 
 	}
 	private void utworz() {
-		 final SQLiteDatabase db = openOrCreateDatabase("cache",MODE_PRIVATE,null);
-		new Thread(new Runnable() {
-			public void run() {
-				m = new Miejsca(db);
-			}
-		}).start();
+	
 	}
 	
 }

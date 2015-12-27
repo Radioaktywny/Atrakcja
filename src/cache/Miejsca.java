@@ -2,6 +2,7 @@ package cache;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -12,18 +13,24 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabaseLockedException;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import logowanie.Baza;
 
-public class Miejsca extends Thread 
+public class Miejsca extends SQLiteOpenHelper implements Callable<String>
 {
     private int id_sql_lita=0;
     private int id_globala=0;
     public List<String[]> miejsca = new ArrayList<String[]>();
     SQLiteDatabase db;
-    public Miejsca(SQLiteDatabase db)
+    
+    public Miejsca(Context context)
+    {
+    	super(context,"miejsca",null,1);
+    }
+    public void  stworz(SQLiteDatabase db)
     {	
-    	this.db=db;    
+    	this.db=db;
     	db.execSQL("CREATE TABLE if not exists miejsca ( id INT NOT NULL, nazwa TEXT NOT NULL , lokalizacja TEXT NOT NULL , uzytkownik TEXT NOT NULL , opis TEXT NOT NULL );");
     	try {
 	             id_sql_lita=sprawdz_id(db);
@@ -48,36 +55,90 @@ public class Miejsca extends Thread
         		
         		
         	}
-        	pobierz_sqlite(db);//i sa juz w arrajliscie
+        	db.close();
+       // 	pobierz_sqlite(db);//i sa juz w arrajliscie
 }    
-    public String[] getRekord(int j) {
-    	
-    	return miejsca.get(j);
+    public String[] getRekord2(int j) {
+    	Log.d("Miejsce getRekord","poczatke");
+    	SQLiteDatabase db= this.getReadableDatabase();
+    	Cursor cursor = db.rawQuery("SELECT * FROM MIEJSCA",null);
+        cursor.moveToFirst();
+        String s[]= new String[5];
+        
+                Log.d("Zarzadca_bazy pobierz_sqlita", "wszedl do whila");
+	            s[0]=cursor.getString(cursor.getColumnIndex("id"));
+	            s[1]=cursor.getString(cursor.getColumnIndex("nazwa"));
+	            s[2]=cursor.getString(cursor.getColumnIndex("lokalizacja"));
+	            s[3]=cursor.getString(cursor.getColumnIndex("uzytkownik"));
+	            s[4]=cursor.getString(cursor.getColumnIndex("opis"));
+	            
+	            cursor.moveToNext();
+        return s;
 	}
-    public  String getUrzytkownik(int j) {
-    	String[] cos=miejsca.get(j);
-    	return cos[3];
+    
+    public String[] getRekord(int j) {
+    	Log.d("Miejsce getRekord","poczatke");
+   try{
+    SQLiteDatabase db= getReadableDatabase();
+    Cursor cursor = db.rawQuery("SELECT * FROM miejsca where id = "+j+"",null);
+    cursor.moveToFirst();
+    String s[]= new String[5];
+            s[0]=cursor.getString(cursor.getColumnIndex("id"));
+            s[1]=cursor.getString(cursor.getColumnIndex("nazwa"));
+            s[2]=cursor.getString(cursor.getColumnIndex("lokalizacja"));
+            s[3]=cursor.getString(cursor.getColumnIndex("uzytkownik"));
+            s[4]=cursor.getString(cursor.getColumnIndex("opis"));
+            
+            cursor.moveToNext();
+            return s;
+   }catch(Exception e)
+   {
+	   Log.d("Miejsca getRekord tworznie sql", e.getMessage());
+	   String [] s=test();
+	   return s;
+   }
+   
+}
+    private String [] test() {
+		String [] s= new String[5];
+		s[0]="dupa";
+		s[1]="dupa";
+		s[2]="dupa";
+		s[3]="dupa";
+		s[4]="dupa";
+		return s;
+	}
+	public  String getUzytkownik(int j) {
+		String cos=pobierz_(j,"uzytkownik");
+    	return cos;
 	}
     public String getOpis(int j) {
-    	String[] cos=miejsca.get(j);
-    	    return cos[4];
+    	String cos=pobierz_(j,"opis");
+    	return cos;
     }
     public String getLokalizajca(int j) {
-    	String[] cos=miejsca.get(j);
-	    return cos[2];
+    	String cos=pobierz_(j,"lokalizacja");
+    	return cos;
     }
-    public String getNazwa(int j) {
-    	String[] cos=miejsca.get(j);
-	    return cos[1];
+	public String getNazwa(int j) {
+		String cos=pobierz_(j,"nazwa");
+    	return cos;
     }
     public String getId(int j) {
-    	String[] cos=miejsca.get(j);
-	    return cos[0];
+    	String cos=pobierz_(j,"id");
+    	return cos;
     }
-    public int getLastId()
-    {
-    	return id_sql_lita;
+    public int getLastId() throws NumberFormatException, InterruptedException, ExecutionException{
+    	SQLiteDatabase db= getReadableDatabase();
+    	return sprawdz_id(db);
     }
+    private String pobierz_(int j, String string) {
+    	SQLiteDatabase db= getReadableDatabase();
+	    Cursor cursor = db.rawQuery("SELECT * FROM miejsca where id = "+j+"",null);
+	    cursor.moveToFirst();
+		return cursor.getString(cursor.getColumnIndex(string));
+		
+	}
  public void setRekord(String id,String nazwa,String lokacja, String user, String opis) {
 	 	db.execSQL("INSERT INTO miejsca  (id, nazwa , lokalizacja , uzytkownik , opis ) VALUES ('"+id_sql_lita+"','"+nazwa+"','"+lokacja+"','"+user+"','"+opis+"');");
 	 	String [] cos= new String[5];
@@ -95,7 +156,7 @@ public class Miejsca extends Thread
     	Cursor cursor = db.rawQuery("SELECT id from miejsca order by id DESC LIMIT 1;", null);
         cursor.moveToFirst();
         String s = cursor.getString(cursor.getColumnIndex("id"));
-        int id=Integer.parseInt(s.replaceAll("[\\D]",""));////trza przetescic
+        int id=Integer.parseInt(s.replaceAll("[\\D]",""));////dziala dobrze !!!
         Log.d("Miejsce_id_sql_lita", String.valueOf(id));
         if(id>0)
             return id;
@@ -159,4 +220,21 @@ public class Miejsca extends Thread
         else
             return 0;
     }
+	@Override
+	public void onCreate(SQLiteDatabase db) {
+		// TODO Auto-generated method stub
+		Log.d("Miejsce onCreate", "wszedl do metody onCreate");
+		
+	}
+	@Override
+	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		// TODO Auto-generated method stub
+		Log.d("Miejsce onUpgrade", "wszedl do metody onUpgrade");
+		
+	}
+	@Override
+	public String call() throws Exception {
+		
+		return null;
+	}
 }

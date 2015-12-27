@@ -33,11 +33,22 @@ public class Logowanie extends Activity
     private  String haslo;
    
     protected  Miejsca m;
+    
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
-	{
-		super.onCreate(savedInstanceState);
-		utworz();		
+	{	 final SQLiteDatabase db = openOrCreateDatabase("miejsca", MODE_PRIVATE, null);
+	     super.onCreate(savedInstanceState);
+		
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				
+				new Miejsca(getBaseContext()).stworz(db);
+				
+			}
+		}).start();
+		
 		if(wczytaj_pasy(getApplicationContext()))
             try 
 		    {
@@ -55,23 +66,26 @@ public class Logowanie extends Activity
             //jesli sie nie udalo wczytaj hasla i loginu to zaladuj normalny widok do logowania	
 	}	
 	
-	private void utworz() {
-		 final SQLiteDatabase db = openOrCreateDatabase("cache",MODE_PRIVATE,null);
-		new Thread(new Runnable() {
-			public void run() {
-				m = new Miejsca(db);
-			}
-		}).start();
-	}
 	
-	public void zarejestruj(View view)
-	{	//testy 
-	    
-		//startActivity(new Intent(Logowanie.this,Rejestracja.class));
+	int i=0;
+	public void zarejestruj(View view) throws NumberFormatException, InterruptedException, ExecutionException
+	{	m=new Miejsca(getBaseContext());
+		int id=m.getLastId();
+		id++;
+	//testy 
+		//Toast("KURWA DZIALA");
+	Log.d("i", String.valueOf(i));
+				String [] s= m.getRekord(i);
+				Toast(s[0]+"\n"+s[1]+s[2]+s[3]);
+				i++;
+				if(i==id)
+				{
+					i=0;
+				}
+			
 		
-	    startActivity(new Intent(Logowanie.this,Rejestracja.class));
-	    finish();
-				
+		
+			
 	}	
 	public void zaloguj(View view) throws InterruptedException, ExecutionException, IOException 
 	{
@@ -79,6 +93,8 @@ public class Logowanie extends Activity
 		EditText edittext2 =(EditText) findViewById(R.id.text_haslo);
 		login=edittext1.getText().toString();
 		haslo=edittext2.getText().toString();	
+	//	Intent activity = new Intent(Logowanie.this, MainActivity.class);  
+     //   startActivity(activity);
 		zaloguj_do_bazy(true);
 		
 		

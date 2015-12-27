@@ -16,12 +16,15 @@ import android.R.integer;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 import cache.Miejsca;
 import cache.User;
@@ -60,6 +63,24 @@ public class Mark_placeActivity extends Activity {
     	
     	
     }
+    public void zrob_zdjecie(View view)
+    {
+    	//Obsluga_zdjecia ob=new Obsluga_zdjecia();
+    	Intent zdjecie=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+    	startActivityForResult(zdjecie, 1);
+    }
+    
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    	// TODO Auto-generated method stub
+    	ImageView miniaturka =(ImageView) findViewById(R.id.imageView1);
+    	if(requestCode == 1 && resultCode == RESULT_OK)
+    	{
+    		Bitmap photo = (Bitmap) data.getExtras().get("data"); 
+    		miniaturka.setImageBitmap(photo);
+    	}
+    }
+    
     private boolean sprawdz_czy_juz_nie_dodane() {
     	try{
     	  ExecutorService exe = Executors.newFixedThreadPool(1);
@@ -142,7 +163,7 @@ public class Mark_placeActivity extends Activity {
     	ExecutorService exe = Executors.newFixedThreadPool(1);
     	try{ 
     		exe.submit(new Baza("INSERT INTO `miejsca`(`id` ,`nazwa`, `lokalizacja`, `uzytkownik`, `Opis`) VALUES ("+id+",\""+nazwa_miejsca+"\",\""+lokal+"\",\""+user.getLogin()+"\",\""+opis+"\");", "dodaj"));
-    		Log.d("dodaj_lokalizacje","INSERT INTO `miejsca`(`nazwa`, `lokalizacja`, `uzytkownik`, `Opis`) VALUES (\""+nazwa_miejsca+"\",\""+lokal+"\",\""+user.getLogin()+"\",\""+opis+"\");");
+    		Log.d("dodaj_lokalizacje","INSERT INTO `miejsca`(`id` , `nazwa`, `lokalizacja`, `uzytkownik`, `Opis`) VALUES ("+id+",\""+nazwa_miejsca+"\",\""+lokal+"\",\""+user.getLogin()+"\",\""+opis+"\");");
     		}catch(Exception e)
     	{
     		Log.d("dodaj_lokalizacje", e.getMessage());
@@ -157,8 +178,9 @@ public class Mark_placeActivity extends Activity {
 		ExecutorService exe = Executors.newFixedThreadPool(1);
 		Future<String> fut=exe.submit(new Baza("SELECT `id` from `miejsca` ORDER BY `id` DESC LIMIT 1", "zwroc2"));
 		Log.d("id_zwrot_fut", fut.get());
-		int i=Integer.valueOf(fut.get());
-		Log.d("id_zwrot_i", fut.get());
+		int i=Integer.parseInt(fut.get().replaceAll("[\\D]",""));
+		i++;
+		Log.d("id_zwrot_i", String.valueOf(i));
 		if(fut.get().length()>0)
 		return i;
 		else

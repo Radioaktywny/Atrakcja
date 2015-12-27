@@ -7,27 +7,6 @@
 
     <!-- Screen Design for the SONGS -->
 
-    <EditText
-        android:id="@+id/opis"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_x="1dp"
-        android:layout_y="152dp"
-        android:ems="10"
-        android:hint="Opis miejsca" >
-
-        <requestFocus />
-    </EditText>
-
-    <EditText
-        android:id="@+id/nazwa_miejsca"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_x="1dp"
-        android:layout_y="246dp"
-        android:ems="10"
-        android:hint="Nazwa Miejsca" />
-
     <Button
         android:id="@+id/zdjecie"
         android:layout_width="132dp"
@@ -37,7 +16,8 @@
         android:background="@drawable/tlo_obrazka"
         android:minWidth="130dp"
         android:text="@string/zdjecie"
-        android:textColor="#FFFFFF" />
+        android:textColor="#FFFFFF" 
+        android:onClick="zrob_zdjecie"/>
 
     <Button
         android:id="@+id/oznacz"
@@ -63,5 +43,34 @@
         android:padding="15dip"
         android:text="oznacz miejsce"
         android:textSize="28sp" />
+
+    <EditText
+        android:id="@+id/opis"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_x="0dp"
+        android:layout_y="288dp"
+        android:ems="10"
+        android:hint="Opis miejsca" />
+
+    <EditText
+        android:id="@+id/nazwa_miejsca"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_x="2dp"
+        android:layout_y="172dp"
+        android:ems="10"
+        android:hint="Nazwa Miejsca" >
+
+        <requestFocus />
+    </EditText>
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="94dp"
+        android:layout_height="94dp"
+        android:layout_x="19dp"
+        android:layout_y="53dp"
+        android:src="@drawable/cast_ic_notification_0" />
 
 </AbsoluteLayout>
