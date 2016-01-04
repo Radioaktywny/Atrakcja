@@ -43,13 +43,10 @@ public class Logowanie extends Activity
 	protected void onCreate(Bundle savedInstanceState) 
 	{	 final SQLiteDatabase db = openOrCreateDatabase("miejsca", MODE_PRIVATE, null);
 	     super.onCreate(savedInstanceState);
-	     
 	     new Thread(new Runnable() {
-			
 			@Override
 			public void run() {
 				 aktualizuj_sqllita(db);
-				
 			}
 		}).start();
 	    
@@ -184,7 +181,17 @@ public class Logowanie extends Activity
              
                 if(dane_usera.startsWith(haslo, 0))//---jezeli podal login i haslo i sa prawidlowe
                 {           
-                	Czekaj_na_odczyt_z_bazy();                      
+                	   new Thread(new Runnable() {
+						@Override
+						public void run() {
+							try {
+								Czekaj_na_odczyt_z_bazy();
+							} catch (IOException e) {
+								Log.d("Logowanie czeka", e.getMessage());
+							}
+							
+						}
+					}).start();                  
                 }
                 else
                 {	kolo("wylacz");
@@ -199,20 +206,17 @@ public class Logowanie extends Activity
         }
 	}
 	private void Czekaj_na_odczyt_z_bazy() throws IOException {
-		        
+		       
             //bez sensu troche ale nie mam pomyslu na teraz xd
-            if(Czy_zczytalo_baze()){
-            	if(true)//nie wiem czy tak moze byc ale tam widzialem ze3 true przesylasz xd
+            while(Czy_zczytalo_baze() == false){
+            }
+            if(true)//nie wiem czy tak moze byc ale tam widzialem ze3 true przesylasz xd
                 zapisz_uzytkownika(getBaseContext());  
                  User user = new User(haslo,login);  
             Intent activity = new Intent(Logowanie.this, MainActivity.class);
             activity.putExtra("nazwa","dupa"); // tutaj trzeba wyslac dane usera nie wiem jak :CCC
             startActivity(activity);   
             finish();
-            }else{
-            	Czekaj_na_odczyt_z_bazy();
-            }  
-		
 	}
 
 	private boolean Czy_zczytalo_baze(){
