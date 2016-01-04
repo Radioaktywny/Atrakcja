@@ -67,4 +67,12 @@
         android:text="@string/zaloguj"
         android:textColor="#FFFFFF" />
 
+    <ProgressBar
+        android:id="@+id/kolo_ladowania"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/text_haslo"
+        android:layout_centerHorizontal="true" />
+
 </RelativeLayout>

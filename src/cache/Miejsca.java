@@ -21,16 +21,23 @@ public class Miejsca extends SQLiteOpenHelper implements Callable<String>
 {
     private int id_sql_lita=0;
     private int id_globala=0;
+    private boolean Czy_zakonczona=false;
+    private String komenda;
     public List<String[]> miejsca = new ArrayList<String[]>();
     SQLiteDatabase db;
     
+    public Miejsca(Context context,String komenda, SQLiteDatabase db)
+    {
+    	super(context,"miejsca",null,1);
+    	this.komenda=komenda;
+    	this.db=db;
+    }
     public Miejsca(Context context)
     {
     	super(context,"miejsca",null,1);
     }
     public void  stworz(SQLiteDatabase db)
     {	
-    	this.db=db;
     	db.execSQL("CREATE TABLE if not exists miejsca ( id INT NOT NULL, nazwa TEXT NOT NULL , lokalizacja TEXT NOT NULL , uzytkownik TEXT NOT NULL , opis TEXT NOT NULL );");
     	try {
 	             id_sql_lita=sprawdz_id(db);
@@ -56,6 +63,7 @@ public class Miejsca extends SQLiteOpenHelper implements Callable<String>
         		
         	}
         	db.close();
+        	Czy_zakonczona=true;
        // 	pobierz_sqlite(db);//i sa juz w arrajliscie
 }    
     public String[] getRekord2(int j) {
@@ -234,7 +242,11 @@ public class Miejsca extends SQLiteOpenHelper implements Callable<String>
 	}
 	@Override
 	public String call() throws Exception {
-		
-		return null;
+		if (komenda.equals("aktualizuj"))
+		{
+			stworz(db);
+		}
+		Log.d("Miejsca_callable", "LOL zakonczylo");
+		return "zakonczono";
 	}
 }

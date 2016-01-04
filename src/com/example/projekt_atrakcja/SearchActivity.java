@@ -51,7 +51,6 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 	protected static Location Aktualna_Lokalizacja=null;
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
-		utworz();
 		try {
 			id=sprawdz_id();
 		} catch (InterruptedException | ExecutionException e) {
@@ -59,7 +58,9 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 			Log.d("znalezione lokacje:", e.getMessage());
 		}
         super.onCreate(savedInstanceState);
+        Log.d("Search_onCreate:", "start");
         setContentView(R.layout.search_layout);
+        Log.d("Search_onCreate:", "start");
         if(wczytaj_pasy(getBaseContext()))
         {
         Log.d("ustaw", "ustawianie");
@@ -88,10 +89,9 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 		}
 		map.addMarker(new MarkerOptions().position(polozenie).title("Tu jestes!"));
 	   	map.moveCamera(CameraUpdateFactory.newLatLngZoom(polozenie, 16));
-	   	//rysuj(map,gps,"Tu jesteś !");
     } 	
     private void pobierz_lokalizacje_sqllite(GoogleMap map) throws NumberFormatException, InterruptedException, ExecutionException {
-    	m= new Miejsca(getBaseContext());//inicjalizacja miejsca 
+    	m= new Miejsca(getBaseContext(),null,null);//inicjalizacja miejsca 
     	String lokacja="";
     	String nazwa="";
     	String opis="";
@@ -227,9 +227,5 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 	public static Location getLokalizacja() {
 		return Aktualna_Lokalizacja;
 
-	}
-	private void utworz() {
-	
-	}
-	
+	} 	
 }

@@ -12,6 +12,7 @@ import java.util.concurrent.Future;
 import com.example.projekt_atrakcja.MainActivity;
 import com.example.projekt_atrakcja.R;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
@@ -21,8 +22,12 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import cache.Miejsca;
 import cache.User;
@@ -31,24 +36,23 @@ public class Logowanie extends Activity
 {
     private  String login;
     private  String haslo;
-   
     protected  Miejsca m;
-    
+    private ProgressBar proces;
+    private String Zaladowany_sqllite="";
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
 	{	 final SQLiteDatabase db = openOrCreateDatabase("miejsca", MODE_PRIVATE, null);
 	     super.onCreate(savedInstanceState);
-		
-		new Thread(new Runnable() {
+	     
+	     new Thread(new Runnable() {
 			
 			@Override
 			public void run() {
-				
-				new Miejsca(getBaseContext()).stworz(db);
+				 aktualizuj_sqllita(db);
 				
 			}
 		}).start();
-		
+	    
 		if(wczytaj_pasy(getApplicationContext()))
             try 
 		    {
@@ -62,46 +66,101 @@ public class Logowanie extends Activity
             }
 		else
 		    setContentView(R.layout.activity_logowanie);
-        
+		kolo("utworz");
             //jesli sie nie udalo wczytaj hasla i loginu to zaladuj normalny widok do logowania	
 	}	
 	
+	private void kolo(String info) {
+		if(info.equals("utworz"))
+		{
+			proces=(ProgressBar)findViewById(R.id.kolo_ladowania);
+		    proces.setVisibility(View.GONE);
+		}
+		else if(info.equals("wlacz"))
+		{
+			proces.setVisibility(View.VISIBLE);
+		}
+		else if(info.equals("wylacz"))
+		{
+			proces.setVisibility(View.GONE);
+		}
+	}
+
+	void aktualizuj_sqllita(final SQLiteDatabase db){
+		
+		ExecutorService exe = Executors.newFixedThreadPool(1);
+		Future <String> zwrot=exe.submit(new Miejsca(getBaseContext(),"aktualizuj",db));
+		try {
+			Zaladowany_sqllite=zwrot.get();
+		} catch (InterruptedException | ExecutionException e) {
+			// TODO Auto-generated catch block
+			Log.d("Logowanie aktualizacja sqllita", e.getMessage());
+			Zaladowany_sqllite="jeszcze nie ";
+		}
+		
+		
+	}
 	
-	int i=0;
+	
+//	int i=0;
 	public void zarejestruj(View view) throws NumberFormatException, InterruptedException, ExecutionException
-	{	m=new Miejsca(getBaseContext());
-		int id=m.getLastId();
-		id++;
-	//testy 
-		//Toast("KURWA DZIALA");
-	Log.d("i", String.valueOf(i));
-				String [] s= m.getRekord(i);
-				Toast(s[0]+"\n"+s[1]+s[2]+s[3]);
-				i++;
-				if(i==id)
-				{
-					i=0;
-				}
+	{	
+		kolo("wlacz");
+		Intent activity = new Intent(Logowanie.this, Rejestracja.class);  
+        startActivity(activity);
+        
+// wyswietlalo przy kliknieciu zawartosc sqllita		
+//        m=new Miejsca(getBaseContext());
+//		int id=m.getLastId();
+//		id++;
+//	//testy 
+//		//Toast("KURWA DZIALA");
+//	Log.d("i", String.valueOf(i));
+//				String [] s= m.getRekord(i);
+//				Toast(s[0]+"\n"+s[1]+s[2]+s[3]);
+//				i++;
+//				if(i==id)
+//				{
+//					i=0;
+//				}
 			
 		
 		
 			
 	}	
 	public void zaloguj(View view) throws InterruptedException, ExecutionException, IOException 
-	{
+	{	chowaj_klawiature(view);
+	    kolo("wlacz");
 		EditText edittext1 =(EditText) findViewById(R.id.text_login);
 		EditText edittext2 =(EditText) findViewById(R.id.text_haslo);
 		login=edittext1.getText().toString();
 		haslo=edittext2.getText().toString();	
-	//	Intent activity = new Intent(Logowanie.this, MainActivity.class);  
+	 //	Intent activity = new Intent(Logowanie.this, MainActivity.class);  
      //   startActivity(activity);
-		zaloguj_do_bazy(true);
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					zaloguj_do_bazy(true);
+				} catch (InterruptedException | ExecutionException | IOException e) {
+					// TODO Auto-generated catch block
+					Log.d("Logowanie zaloduj do bazy", e.getMessage());
+				}	
+			}
+		}).start();
+		
 		
 		
 		
 	}
+	private void chowaj_klawiature(View view) {
+		InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+	    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+		
+	}
+
 	private void zaloguj_do_bazy(boolean czy_zapisywac) throws InterruptedException, ExecutionException, IOException
-	{	    
+	{	   
 	    Log.d("polaczenie", String.valueOf(test_polaczenia())); //---jest polaczenie z internetem        
         if(test_polaczenia())
         {
@@ -110,31 +169,25 @@ public class Logowanie extends Activity
         String dane_usera=Czy_istnieje_login.get();//pobieram haslo i meil uzytkownika  
         
         if(dane_usera.equals(""))//---jezeli nie podal loginu    
-        {
+        {		kolo("wylacz");
                 Toast("Uzytkownik o takim loginie nie istnieje");
+                
         }
         else
         {  
             if(haslo.equals("")) //---jezeli nie podal haslo
-            {   
+            {   kolo("wylacz");
                 Toast("Podaj haslo !");
             }
             else
             {
              
                 if(dane_usera.startsWith(haslo, 0))//---jezeli podal login i haslo i sa prawidlowe
-                {           if(czy_zapisywac)
-                        zapisz_uzytkownika(getBaseContext());  
-                        User user = new User(haslo,login);
-                        Intent activity = new Intent(Logowanie.this, MainActivity.class);
-                        
-                        activity.putExtra("nazwa","dupa"); // tutaj trzeba wyslac dane usera nie wiem jak :CCC
-                        
-                        startActivity(activity);                        
-                        finish();                        
+                {           
+                	Czekaj_na_odczyt_z_bazy();                      
                 }
                 else
-                {
+                {	kolo("wylacz");
                     Toast("Nie poprawne haslo");
                 }
             }
@@ -144,6 +197,32 @@ public class Logowanie extends Activity
     else{
             Toast("Brak polaczenia z internetem");
         }
+	}
+	private void Czekaj_na_odczyt_z_bazy() throws IOException {
+		        
+            //bez sensu troche ale nie mam pomyslu na teraz xd
+            if(Czy_zczytalo_baze()){
+            	if(true)//nie wiem czy tak moze byc ale tam widzialem ze3 true przesylasz xd
+                zapisz_uzytkownika(getBaseContext());  
+                 User user = new User(haslo,login);  
+            Intent activity = new Intent(Logowanie.this, MainActivity.class);
+            activity.putExtra("nazwa","dupa"); // tutaj trzeba wyslac dane usera nie wiem jak :CCC
+            startActivity(activity);   
+            finish();
+            }else{
+            	Czekaj_na_odczyt_z_bazy();
+            }  
+		
+	}
+
+	private boolean Czy_zczytalo_baze(){
+		
+		if (Zaladowany_sqllite.equals("zakonczono"))
+		{
+			return true;
+		}
+		return false;
+		
 	}
 	private void zapisz_uzytkownika(Context context) throws IOException
     {
