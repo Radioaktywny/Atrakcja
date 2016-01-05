@@ -41,7 +41,9 @@ public class Logowanie extends Activity
     private String Zaladowany_sqllite="";
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
-	{	 final SQLiteDatabase db = openOrCreateDatabase("miejsca", MODE_PRIVATE, null);
+	{	
+	    kolo("utworz");
+ 	    final SQLiteDatabase db = openOrCreateDatabase("miejsca", MODE_PRIVATE, null);
 	     super.onCreate(savedInstanceState);
 	     new Thread(new Runnable() {
 			@Override
@@ -63,24 +65,23 @@ public class Logowanie extends Activity
             }
 		else
 		    setContentView(R.layout.activity_logowanie);
-		kolo("utworz");
             //jesli sie nie udalo wczytaj hasla i loginu to zaladuj normalny widok do logowania	
 	}	
 	
 	private void kolo(String info) {
-		if(info.equals("utworz"))
-		{
-			proces=(ProgressBar)findViewById(R.id.kolo_ladowania);
-		    proces.setVisibility(View.GONE);
-		}
-		else if(info.equals("wlacz"))
-		{
-			proces.setVisibility(View.VISIBLE);
-		}
-		else if(info.equals("wylacz"))
-		{
-			proces.setVisibility(View.GONE);
-		}
+//		if(info.equals("utworz"))
+//		{
+//			proces=(ProgressBar)findViewById(R.id.kolo_ladowania);
+//		    proces.setVisibility(View.GONE);
+//		}
+//		else if(info.equals("wlacz"))
+//		{
+//			proces.setVisibility(View.VISIBLE);
+//		}
+//		else if(info.equals("wylacz"))
+//		{
+//			proces.setVisibility(View.GONE);
+//		}
 	}
 
 	void aktualizuj_sqllita(final SQLiteDatabase db){
