@@ -76,6 +76,7 @@ public class Mark_placeActivity extends Activity {
     }
     public void zrob_zdjecie(View view)
     {
+        
     	//Obsluga_zdjecia ob=new Obsluga_zdjecia();
     	Intent zdjecie=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
     	startActivityForResult(zdjecie, 1);
@@ -152,7 +153,7 @@ public class Mark_placeActivity extends Activity {
             {
                 FTP serwerftp= new FTP();
                 try {
-                    serwerftp.wyslij(photo,nazwa_miejsca);
+                    serwerftp.wyslij(photo,String.valueOf(id));
                 } catch (FileNotFoundException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
@@ -170,7 +171,7 @@ public class Mark_placeActivity extends Activity {
         else{
         	Toast("brak polaczenie z internetem");
         }
-        }
+}
       
 
        
