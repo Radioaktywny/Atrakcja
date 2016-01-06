@@ -153,7 +153,7 @@ public class Mark_placeActivity extends Activity {
             {
                 FTP serwerftp= new FTP();
                 try {
-                    serwerftp.wyslij(photo,String.valueOf(id));
+                    serwerftp.wyslijMiejsce(photo,String.valueOf(id));
                 } catch (FileNotFoundException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
@@ -223,7 +223,7 @@ public class Mark_placeActivity extends Activity {
         try {
             File plik = new File(context.getFilesDir().getAbsolutePath() + "/" + "userpass" +".txt");
             Scanner in = new Scanner(plik);
-            user= new User(in.nextLine(),in.nextLine());  
+            user= new User(in.nextLine(),in.nextLine(),in.nextLine());  
             in.close();
             return true;
             } catch (IOException e) {   

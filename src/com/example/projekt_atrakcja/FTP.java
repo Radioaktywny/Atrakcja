@@ -36,7 +36,7 @@ public class FTP {
             }
         }
     }
-    public void wyslij(Bitmap photo, String nazwa_miejsca) throws FileNotFoundException {
+    public void wyslijMiejsce(Bitmap photo, String nazwa_miejsca) throws FileNotFoundException {
         
         //policy 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -72,6 +72,61 @@ public class FTP {
             ex.printStackTrace();
         }
     }
+    public void wyslijZdjecie(String login,Bitmap photo,Context context)
+    {
+        //policy 
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);      
+        
+        
+        FTPClient ftpClient = new FTPClient();
+    
+        try {
+            ftpClient.connect(server, port);
+           
+            showServerReply(ftpClient);
+            int replyCode = ftpClient.getReplyCode();
+            if (!FTPReply.isPositiveCompletion(replyCode)) {
+                System.out.println("Operation failed. Server reply code: " + replyCode);
+                return;
+            }
+            boolean success = ftpClient.login(user, pass);
+            showServerReply(ftpClient);
+            if (!success) {
+                System.out.println("Could not login to the server");
+                return;
+            } else {
+                System.out.println("LOGGED IN SERVER"); 
+                ftpClient.changeWorkingDirectory("Projekt/uzytkownicy/");
+                ftpClient.setFileType(ftpClient.BINARY_FILE_TYPE, ftpClient.BINARY_FILE_TYPE);
+                ftpClient.setFileTransferMode(ftpClient.BINARY_FILE_TYPE);
+                ftpClient.storeFile(login+".png", bitmapToSend(photo));
+                ftpClient.logout();
+            }
+        } catch (IOException ex) {
+            System.out.println("Oops! Something wrong happened");
+            ex.printStackTrace();
+        }
+               FileOutputStream fos = null;
+        try {
+            fos = context.openFileOutput(login + ".png",Context.MODE_PRIVATE);
+            photo.compress(Bitmap.CompressFormat.PNG, 100, fos); // w miejscu 100 wpisujemy kompresje (mniejsza wartoœæ = silniejsza kompresja)
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally{
+            try {
+                if (fos != null) {
+                    fos.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        
+    }
+        
+        
+    
     private ByteArrayInputStream bitmapToSend(Bitmap photo)
     {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -96,7 +151,6 @@ public class FTP {
 }
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);     
-        Bitmap zdjecie=null;
         ByteArrayInputStream bs=null;
         FTPClient ftpClient = new FTPClient();
         try {

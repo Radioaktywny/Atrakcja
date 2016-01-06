@@ -36,6 +36,7 @@ public class Logowanie extends Activity
 {
     private  String login;
     private  String haslo;
+    private Boolean zdjecie=false;
     protected  Miejsca m;
     private ProgressBar proces;
     private String Zaladowany_sqllite="";
@@ -182,6 +183,15 @@ public class Logowanie extends Activity
              
                 if(dane_usera.startsWith(haslo, 0))//---jezeli podal login i haslo i sa prawidlowe
                 {           
+                    if(dane_usera.substring(dane_usera.length()-4,dane_usera.length()-1).equals("tak"))
+                        {
+                        zdjecie=true;
+                        Log.d("KURWA", "dziala");
+                        }
+                    else
+                    {
+                        System.out.print("LOL "+dane_usera.substring(dane_usera.length()-4)+"LOLOLO");
+                        }
                 	   new Thread(new Runnable() {
 						@Override
 						public void run() {
@@ -213,7 +223,6 @@ public class Logowanie extends Activity
             }
             if(true)//nie wiem czy tak moze byc ale tam widzialem ze3 true przesylasz xd
                 zapisz_uzytkownika(getBaseContext());  
-                 User user = new User(haslo,login);  
             Intent activity = new Intent(Logowanie.this, MainActivity.class);
             activity.putExtra("nazwa","dupa"); // tutaj trzeba wyslac dane usera nie wiem jak :CCC
             startActivity(activity);   
@@ -235,6 +244,10 @@ public class Logowanie extends Activity
         PrintWriter zapis = new PrintWriter(context.getFilesDir().getAbsolutePath() + "/" + "userpass" +".txt");
         zapis.println(login);
         zapis.println(haslo);
+        if(zdjecie)
+            zapis.println("tak");
+        else
+            zapis.println("nie");
         if(czy_zapisac.isChecked())
         {
             zapis.println("1");
@@ -252,7 +265,8 @@ public class Logowanie extends Activity
             File plik = new File(context.getFilesDir().getAbsolutePath() + "/" + "userpass" +".txt");
             Scanner in = new Scanner(plik);
             login=in.nextLine();        
-            haslo=in.nextLine();            
+            haslo=in.nextLine();
+            in.nextLine();
             if(in.nextLine().startsWith("0"))
             { in.close(); 
                 return false;

@@ -38,7 +38,7 @@ public class ChallengeActivity extends Activity {
         try {
             File plik = new File(context.getFilesDir().getAbsolutePath() + "/" + "userpass" +".txt");
             Scanner in = new Scanner(plik);
-            user= new User(in.nextLine(),in.nextLine());  
+            user= new User(in.nextLine(),in.nextLine(),in.nextLine());  
             in.close();
             return true;
             } catch (IOException e) {   

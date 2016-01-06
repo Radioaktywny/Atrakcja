@@ -36,7 +36,7 @@ public class Miejsca extends SQLiteOpenHelper implements Callable<String>
     {
     	super(context,"miejsca",null,1);
     }
-    public void  stworz(SQLiteDatabase db)
+    public void stworz(SQLiteDatabase db)
     {	
     	db.execSQL("CREATE TABLE if not exists miejsca ( id INT NOT NULL, nazwa TEXT NOT NULL , lokalizacja TEXT NOT NULL , uzytkownik TEXT NOT NULL , opis TEXT NOT NULL );");
     	try {
