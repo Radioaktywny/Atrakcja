@@ -50,8 +50,8 @@ public class Logowanie extends Activity
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
 	{	
-	    kolo("utworz");
- 	    final SQLiteDatabase db = openOrCreateDatabase("miejsca", MODE_PRIVATE, null);
+		
+		 final SQLiteDatabase db = openOrCreateDatabase("miejsca", MODE_PRIVATE, null);
 	     super.onCreate(savedInstanceState);
 	     if(test_polaczenia()){
 	     new Thread(new Runnable() {
@@ -71,31 +71,33 @@ public class Logowanie extends Activity
             try 
 		    {
                 zaloguj_do_bazy(false);
-            } catch ( Exception e)
+            } catch ( InterruptedException | ExecutionException
+            		  | IOException e)
 		    {
                 setContentView(R.layout.activity_logowanie);
           //      finish();
-                e.printStackTrace();
+                Log.d("Logowanie onCreate wczytywanie pasow", e.getMessage());
             }
 		else
 		    setContentView(R.layout.activity_logowanie);
             //jesli sie nie udalo wczytaj hasla i loginu to zaladuj normalny widok do logowania	
+		kolo("utworz");///musi byc ostatnie bo trza leyout zaladowac
 	}	
 	
 	private void kolo(String info) {
-//		if(info.equals("utworz"))
-//		{
-//			proces=(ProgressBar)findViewById(R.id.kolo_ladowania);
-//		    proces.setVisibility(View.GONE);
-//		}
-//		else if(info.equals("wlacz"))
-//		{
-//			proces.setVisibility(View.VISIBLE);
-//		}
-//		else if(info.equals("wylacz"))
-//		{
-//			proces.setVisibility(View.GONE);
-//		}
+		if(info.equals("utworz"))
+		{
+			proces=(ProgressBar)findViewById(R.id.kolo_ladowania);
+		    proces.setVisibility(View.GONE);
+		}
+		else if(info.equals("wlacz"))
+		{
+			proces.setVisibility(View.VISIBLE);
+		}
+		else if(info.equals("wylacz"))
+		{
+			proces.setVisibility(View.GONE);
+		}
 	}
 
 	void aktualizuj_sqllita(final SQLiteDatabase db){
@@ -142,7 +144,7 @@ public class Logowanie extends Activity
 			
 	}	
 	public void zaloguj(View view) throws InterruptedException, ExecutionException, IOException 
-	{	
+	{	kolo("utworz");
 		chowaj_klawiature(view);
 	    kolo("wlacz");
 		EditText edittext1 =(EditText) findViewById(R.id.text_login);
@@ -155,7 +157,7 @@ public class Logowanie extends Activity
 			@Override
 			public void run() {
 				try {
-					zaloguj_do_bazy(Czy_zczytalo_baze());
+					zaloguj_do_bazy(true);
 				} catch (Exception e) {
 					Log.d("Logowanie zaloduj do bazy", e.getMessage());
 					kolo("wylacz");
@@ -170,13 +172,15 @@ public class Logowanie extends Activity
 		
 	}
 
-	private void zaloguj_do_bazy(final boolean czy_zapisywac) throws InterruptedException, ExecutionException, IOException , Exception
-	{	   
+	private void zaloguj_do_bazy(boolean czy_zapisywac) throws InterruptedException, ExecutionException, IOException 
+	{	
+		if(czy_zapisywac)//nie wiem czy tak moze byc ale tam widzialem ze3 true przesylasz xd
+	    zapisz_uzytkownika(getBaseContext());    
 	    Log.d("polaczenie", String.valueOf(test_polaczenia())); //---jest polaczenie z internetem        
         if(test_polaczenia())
         {
         ExecutorService exe = Executors.newFixedThreadPool(1);
-        Future <String> Czy_istnieje_login= exe.submit(new Baza("select * from `uzytkownicy` where login=\""+login+"\"", "zwroc"));
+        Future <String> Czy_istnieje_login= exe.submit(new Baza("select haslo from `uzytkownicy` where login=\""+login+"\"", "zwroc2"));
         String dane_usera=Czy_istnieje_login.get();//pobieram haslo i meil uzytkownika  
       //  Log.d(tag, msg);
         if(login.equals(""))//---jezeli nie podal loginu    
@@ -219,7 +223,7 @@ public class Logowanie extends Activity
 						@Override
 						public void run() {
 							try {
-								Czekaj_na_odczyt_z_bazy(czy_zapisywac);
+								Czekaj_na_odczyt_z_bazy();
 							} catch (IOException | InterruptedException e) {
 								Log.d("Logowanie czeka wysypalo sie", e.getMessage());
 							}
@@ -253,14 +257,12 @@ public class Logowanie extends Activity
     	
         }
 	}
-	private void Czekaj_na_odczyt_z_bazy(boolean czy_zapisywac) throws IOException, InterruptedException {
+	private void Czekaj_na_odczyt_z_bazy() throws IOException, InterruptedException {
 		       
             //bez sensu troche ale nie mam pomyslu na teraz xd
             while(Czy_zczytalo_baze() == false){
             	Thread.sleep(100);
             }
-            if(czy_zapisywac)//nie wiem czy tak moze byc ale tam widzialem ze3 true przesylasz xd
-                zapisz_uzytkownika(getBaseContext());  
             Intent activity = new Intent(Logowanie.this, MainActivity.class);
             activity.putExtra("nazwa","dupa"); // tutaj trzeba wyslac dane usera nie wiem jak :CCC
             startActivity(activity);   
@@ -315,7 +317,7 @@ public class Logowanie extends Activity
                 return true;
             }           
             } catch (IOException e) {   
-                e.printStackTrace();
+              //  e.printStackTrace();
                 return false;
             }           
                  
@@ -355,16 +357,11 @@ public class Logowanie extends Activity
 	
 	private void Toast(String informacja)
 	{
-		try{
-		Toast info = Toast.makeText(Logowanie.this, informacja, Toast.LENGTH_LONG);
+		
+		Toast info = Toast.makeText(Logowanie.this, informacja, Toast.LENGTH_SHORT);
 		info.setGravity(Gravity.CENTER, 0, 0);
 		info.show();
-		}catch(Exception e)
-		{
-			Toast info = Toast.makeText(Logowanie.this, "cos poszlo nie tak", Toast.LENGTH_LONG);
-			info.setGravity(Gravity.CENTER, 0, 0);
-			info.show();
-		}
+		
 	}
 
 	@Override
