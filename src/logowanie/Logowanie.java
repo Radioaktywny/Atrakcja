@@ -54,6 +54,7 @@ public class Logowanie extends Activity
 		}).start();
 	    
 		if(wczytaj_pasy(getApplicationContext()))
+		{
             try 
 		    {
                 zaloguj_do_bazy(false);
@@ -64,6 +65,7 @@ public class Logowanie extends Activity
           //      finish();
                 e.printStackTrace();
             }
+		}
 		else
 		    setContentView(R.layout.activity_logowanie);
             //jesli sie nie udalo wczytaj hasla i loginu to zaladuj normalny widok do logowania	
@@ -184,14 +186,9 @@ public class Logowanie extends Activity
                 if(dane_usera.startsWith(haslo, 0))//---jezeli podal login i haslo i sa prawidlowe
                 {           
                     if(dane_usera.substring(dane_usera.length()-4,dane_usera.length()-1).equals("tak"))
-                        {
+                        
                         zdjecie=true;
-                        Log.d("KURWA", "dziala");
-                        }
-                    else
-                    {
-                        System.out.print("LOL "+dane_usera.substring(dane_usera.length()-4)+"LOLOLO");
-                        }
+                     
                 	   new Thread(new Runnable() {
 						@Override
 						public void run() {

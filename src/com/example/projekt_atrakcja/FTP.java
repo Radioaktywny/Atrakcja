@@ -27,6 +27,8 @@ public class FTP {
     private int port = 21;
     private String user = "a7583522";
     private String pass = "testtest";
+    private FTPClient ftpClient;
+    private int returnCode;
     private static void showServerReply(FTPClient ftpClient) 
     {
         String[] replies = ftpClient.getReplyStrings();
@@ -79,7 +81,7 @@ public class FTP {
         StrictMode.setThreadPolicy(policy);      
         
         
-        FTPClient ftpClient = new FTPClient();
+        ftpClient = new FTPClient();
     
         try {
             ftpClient.connect(server, port);
@@ -136,7 +138,7 @@ public class FTP {
         
         return bs;        
     }
-    public void pobierz(Context context,String folderToADD)
+    public void pobierz(Context context,String folderToADD,String name)
     {
         File folder = new File(context.getFilesDir() + 
                 File.separator + folderToADD);
@@ -145,14 +147,14 @@ public class FTP {
             success = folder.mkdir();
         }
         if (success) {
-            // Do something on success
+            // Do so1mething on success
         } else {
             // Do something else on failure 
 }
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);     
         ByteArrayInputStream bs=null;
-        FTPClient ftpClient = new FTPClient();
+        ftpClient = new FTPClient();
         try {
  
             ftpClient.connect(server, port);
@@ -161,12 +163,15 @@ public class FTP {
             ftpClient.setFileType(ftpClient.BINARY_FILE_TYPE);
             
             // using InputStream retrieveFileStream(String)
-            String remoteFile2 = "/Projekt/miejsca/LOL.png";
-            File downloadFile2 = new File(folder.getAbsolutePath(),"LOL.png");
+            String remoteFile2 = "/Projekt/miejsca/"+name+".png";
+            File downloadFile2 = new File(folder.getAbsolutePath(),name+".png");
             OutputStream outputStream2 = new BufferedOutputStream(new FileOutputStream(downloadFile2));
             InputStream inputStream = ftpClient.retrieveFileStream(remoteFile2);
             byte[] bytesArray = new byte[4096];
             int bytesRead = -1;
+            
+            //if(checkFileExists("/Projekt/miejsca/"+name+".png"))
+            {
             while ((bytesRead = inputStream.read(bytesArray)) != -1) {
                 outputStream2.write(bytesArray, 0, bytesRead);
             }
@@ -176,9 +181,9 @@ public class FTP {
                 System.out.println("File #2 has been downloaded successfully.");
             }
             outputStream2.close();
-            inputStream.close();
- 
-        } catch (IOException ex) {
+            inputStream.close(); 
+        }}
+            catch (IOException ex) {
             System.out.println("Error: " + ex.getMessage());
             ex.printStackTrace();
         } finally {
@@ -193,6 +198,15 @@ public class FTP {
         }
        
     }
+    boolean checkFileExists(String filePath) throws IOException {
+        InputStream inputStream = ftpClient.retrieveFileStream(filePath);
+        returnCode = ftpClient.getReplyCode();
+        if (inputStream == null || returnCode == 550) {
+            return false;
+        }
+        return true;
+    }
+        
     private Bitmap wczytaj(String name) 
     {
         
