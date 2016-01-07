@@ -80,9 +80,9 @@ public class Logowanie extends Activity
                 Log.d("Logowanie onCreate wczytywanie pasow", e.getMessage());
             }
 		}
-		else
-		    setContentView(R.layout.activity_logowanie);
-            //jesli sie nie udalo wczytaj hasla i loginu to zaladuj normalny widok do logowania	
+//		else
+//		    setContentView(R.layout.activity_logowanie);
+		setContentView(R.layout.activity_logowanie);    //jesli sie nie udalo wczytaj hasla i loginu to zaladuj normalny widok do logowania	
 		kolo("utworz");///musi byc ostatnie bo trza leyout zaladowac
 	}	
 	
