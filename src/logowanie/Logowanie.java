@@ -12,11 +12,17 @@ import java.util.concurrent.Future;
 import com.example.projekt_atrakcja.MainActivity;
 import com.example.projekt_atrakcja.R;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -39,23 +45,30 @@ public class Logowanie extends Activity
     protected  Miejsca m;
     private ProgressBar proces;
     private String Zaladowany_sqllite="";
+    private Handler handler = new Handler();
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
 	{	 final SQLiteDatabase db = openOrCreateDatabase("miejsca", MODE_PRIVATE, null);
 	     super.onCreate(savedInstanceState);
+	     if(test_polaczenia()){
 	     new Thread(new Runnable() {
 			@Override
 			public void run() {
 				 aktualizuj_sqllita(db);
 			}
-		}).start();
+		}).start();}else{
+			
+			buildDialog(Logowanie.this).show();
+			//tu trzeba dodac activity
+			//finish();
+			
+		}
 	    
 		if(wczytaj_pasy(getApplicationContext()))
             try 
 		    {
                 zaloguj_do_bazy(false);
-            } catch (InterruptedException | ExecutionException
-                    | IOException e)
+            } catch ( Exception e)
 		    {
                 setContentView(R.layout.activity_logowanie);
           //      finish();
@@ -63,7 +76,6 @@ public class Logowanie extends Activity
             }
 		else
 		    setContentView(R.layout.activity_logowanie);
-		kolo("utworz");
             //jesli sie nie udalo wczytaj hasla i loginu to zaladuj normalny widok do logowania	
 	}	
 	
@@ -105,6 +117,7 @@ public class Logowanie extends Activity
 		kolo("wlacz");
 		Intent activity = new Intent(Logowanie.this, Rejestracja.class);  
         startActivity(activity);
+        kolo("wylacz");
         
 // wyswietlalo przy kliknieciu zawartosc sqllita		
 //        m=new Miejsca(getBaseContext());
@@ -126,7 +139,8 @@ public class Logowanie extends Activity
 			
 	}	
 	public void zaloguj(View view) throws InterruptedException, ExecutionException, IOException 
-	{	chowaj_klawiature(view);
+	{	
+		chowaj_klawiature(view);
 	    kolo("wlacz");
 		EditText edittext1 =(EditText) findViewById(R.id.text_login);
 		EditText edittext2 =(EditText) findViewById(R.id.text_haslo);
@@ -138,17 +152,14 @@ public class Logowanie extends Activity
 			@Override
 			public void run() {
 				try {
-					zaloguj_do_bazy(true);
-				} catch (InterruptedException | ExecutionException | IOException e) {
-					// TODO Auto-generated catch block
+					zaloguj_do_bazy(Czy_zczytalo_baze());
+				} catch (Exception e) {
 					Log.d("Logowanie zaloduj do bazy", e.getMessage());
+					kolo("wylacz");
+					e=null;
 				}	
 			}
 		}).start();
-		
-		
-		
-		
 	}
 	private void chowaj_klawiature(View view) {
 		InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -156,7 +167,7 @@ public class Logowanie extends Activity
 		
 	}
 
-	private void zaloguj_do_bazy(boolean czy_zapisywac) throws InterruptedException, ExecutionException, IOException
+	private void zaloguj_do_bazy(final boolean czy_zapisywac) throws InterruptedException, ExecutionException, IOException , Exception
 	{	   
 	    Log.d("polaczenie", String.valueOf(test_polaczenia())); //---jest polaczenie z internetem        
         if(test_polaczenia())
@@ -164,53 +175,88 @@ public class Logowanie extends Activity
         ExecutorService exe = Executors.newFixedThreadPool(1);
         Future <String> Czy_istnieje_login= exe.submit(new Baza("select * from `uzytkownicy` where login=\""+login+"\"", "zwroc"));
         String dane_usera=Czy_istnieje_login.get();//pobieram haslo i meil uzytkownika  
-        
-        if(dane_usera.equals(""))//---jezeli nie podal loginu    
-        {		kolo("wylacz");
-                Toast("Uzytkownik o takim loginie nie istnieje");
-                
+      //  Log.d(tag, msg);
+        if(login.equals(""))//---jezeli nie podal loginu    
+        {		
+        	handler.post(new Runnable() {
+        	    public void run() {
+        	    	kolo("wylacz");// tu sie wysypuje 
+        	    	Toast("Podaj Login !");
+        	    }
+        	        });
         }
         else
         {  
             if(haslo.equals("")) //---jezeli nie podal haslo
-            {   kolo("wylacz");
-                Toast("Podaj haslo !");
+            {   
+           
+            	handler.post(new Runnable() {
+            	    public void run() {
+            	    	kolo("wylacz");// tu sie wysypuje 
+            	    	Toast("Podaj haslo !");
+            	    }
+            	        });
+            	
             }
             else
             {
              
                 if(dane_usera.startsWith(haslo, 0))//---jezeli podal login i haslo i sa prawidlowe
                 {           
+                    if(dane_usera.substring(dane_usera.length()-4,dane_usera.length()-1).equals("tak"))
+                        {
+                        zdjecie=true;
+                        Log.d("KURWA", "dziala");
+                        }
+                    else
+                    {
+                        System.out.print("LOL "+dane_usera.substring(dane_usera.length()-4)+"LOLOLO");
+                        }
                 	   new Thread(new Runnable() {
 						@Override
 						public void run() {
 							try {
-								Czekaj_na_odczyt_z_bazy();
-							} catch (IOException e) {
-								Log.d("Logowanie czeka", e.getMessage());
+								Czekaj_na_odczyt_z_bazy(czy_zapisywac);
+							} catch (IOException | InterruptedException e) {
+								Log.d("Logowanie czeka wysypalo sie", e.getMessage());
 							}
 							
 						}
 					}).start();                  
                 }
                 else
-                {	kolo("wylacz");
-                    Toast("Nie poprawne haslo");
+                {	
+                	handler.post(new Runnable() {
+                	    public void run() {
+                	    	kolo("wylacz");
+                    		Toast("Nie poprawne haslo !");
+                	    }
+                	        });
                 }
             }
         }
         
         }   
     else{
-            Toast("Brak polaczenia z internetem");
+    	handler.post(new Runnable() {
+    	    public void run() {
+    	    	kolo("wylacz");
+    	    	//Toast("Brak polaczenia z internetem");
+
+    	    	buildDialog(Logowanie.this).show();
+    	    	
+    	    }
+    	        });
+    	
         }
 	}
-	private void Czekaj_na_odczyt_z_bazy() throws IOException {
+	private void Czekaj_na_odczyt_z_bazy(boolean czy_zapisywac) throws IOException, InterruptedException {
 		       
             //bez sensu troche ale nie mam pomyslu na teraz xd
             while(Czy_zczytalo_baze() == false){
+            	Thread.sleep(100);
             }
-            if(true)//nie wiem czy tak moze byc ale tam widzialem ze3 true przesylasz xd
+            if(czy_zapisywac)//nie wiem czy tak moze byc ale tam widzialem ze3 true przesylasz xd
                 zapisz_uzytkownika(getBaseContext());  
                  User user = new User(haslo,login);  
             Intent activity = new Intent(Logowanie.this, MainActivity.class);
@@ -267,30 +313,51 @@ public class Logowanie extends Activity
             }           
                  
     }
+    public AlertDialog.Builder buildDialog(final Context c) {
 
+        AlertDialog.Builder builder = new AlertDialog.Builder(c);
+        builder.setTitle("Brak Polaczenia z internetem");
+        builder.setMessage("Czy chcesz wlaczyc internet ?");
+
+        builder.setPositiveButton("Wifi", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            	Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
+				startActivity(intent);
+				
+            }
+        });
+        builder.setNegativeButton("Dane", new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				Intent intent = new Intent(Settings.ACTION_DATA_ROAMING_SETTINGS);
+				startActivity(intent);
+			}
+		});
+
+        return builder;
+    }
 
     private boolean test_polaczenia() {
-		try {
-			ExecutorService exe = Executors.newFixedThreadPool(1);
-			Future <String> Czy_istnieje_baza= exe.submit(new Baza("","sprawdz_polaczenie"));
-			
-			if(Czy_istnieje_baza.get().equals("polaczono"))
-			{
-				return true;
-			}else{
-				return false;
-			}
-		} catch (Exception e) {
-		return false;
-		}
-		
+    	 ConnectivityManager cm =(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+    	 NetworkInfo netInfo = cm.getActiveNetworkInfo();
+    	 return netInfo != null && netInfo.isConnectedOrConnecting();	
 	}
 	
 	private void Toast(String informacja)
 	{
+		try{
 		Toast info = Toast.makeText(Logowanie.this, informacja, Toast.LENGTH_LONG);
 		info.setGravity(Gravity.CENTER, 0, 0);
 		info.show();
+		}catch(Exception e)
+		{
+			Toast info = Toast.makeText(Logowanie.this, "cos poszlo nie tak", Toast.LENGTH_LONG);
+			info.setGravity(Gravity.CENTER, 0, 0);
+			info.show();
+		}
 	}
 
 	@Override
