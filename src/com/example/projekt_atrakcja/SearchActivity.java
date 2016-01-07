@@ -135,7 +135,7 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
     }
 	private void rysuj_innych(GoogleMap map, String user, String opis, String nazwa, Double d, Double d2) {
 		LatLng polozenie = new LatLng(d, d2);
-        map.addMarker(new MarkerOptions().position(polozenie).title(nazwa));
+        map.addMarker(new MarkerOptions().position(polozenie).title(nazwa));        
         Log.d("znalezione lokacje", "narysowalem dla :"+String.valueOf(x));
 	}
 	private Double[] przerob_lokacje(String string) {
@@ -215,7 +215,7 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
         try {
             File plik = new File(context.getFilesDir().getAbsolutePath() + "/" + "userpass" +".txt");
             Scanner in = new Scanner(plik);
-            user= new User(in.nextLine(),in.nextLine());  
+            user= new User(in.nextLine(),in.nextLine(),in.nextLine());  
             in.close();
             return true;
             } catch (IOException e) {   

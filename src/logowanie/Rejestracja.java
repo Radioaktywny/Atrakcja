@@ -54,7 +54,7 @@ public class Rejestracja extends Activity {
 				{	//--i hasla sa zgodne
 					if(haslo.equals(haslo_powtorz))
 					{
-						exe.submit(new Baza("INSERT INTO `uzytkownicy`(`login`, `haslo`, `email`) VALUES (\""+login+"\",\""+haslo+"\",\""+mail+"\")", "dodaj"));
+						exe.submit(new Baza("INSERT INTO `uzytkownicy`(`login`, `haslo`, `email`,'zdjecie') VALUES (\""+login+"\",\""+haslo+"\",\""+mail+"\",\"nie\")", "dodaj"));
 						startActivity(new Intent(Rejestracja.this, Logowanie.class));
 						finish();
 					}

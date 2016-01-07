@@ -9,18 +9,23 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.ThreadPoolExecutor;
 
 import com.example.projekt_atrakcja.R;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import cache.User;
@@ -30,6 +35,9 @@ import logowanie.Rejestracja;
  
 public class ProfileActivity extends Activity {
     protected User user ;
+    private Bitmap photo;
+    private FTP ftp= new FTP();
+
     public void onCreate(Bundle savedInstanceState) 
     {
         super.onCreate(savedInstanceState);
@@ -43,6 +51,15 @@ public class ProfileActivity extends Activity {
         {
         startActivity(new Intent(ProfileActivity.this,Logowanie.class));
         finish(); 
+        }
+     //   if(user.czy_jest_profilowe())
+        {
+            photo=BitmapFactory.decodeFile(this.getFilesDir().getAbsolutePath() + "/" + user.getLogin() + ".png");
+            if(photo!=null)
+            {
+                ImageView miniaturka =(ImageView) findViewById(R.id.imageView3);            
+                miniaturka.setImageBitmap(photo);  
+            }
         }
     }
     public void wyloguj(View view) throws FileNotFoundException
@@ -81,8 +98,7 @@ public class ProfileActivity extends Activity {
                         Future <String> dane_usera= exe.submit(new Baza("select * from `uzytkownicy` where login=\""+user.getLogin()+"\"", "zwroc"));
                         String haslo;
                         
-                            haslo = dane_usera.get().toString();
-                       
+                            haslo = dane_usera.get().toString();           
                          
                         if(haslo.startsWith(haslo, 0))
                         {
@@ -120,7 +136,7 @@ public class ProfileActivity extends Activity {
         try {
             File plik = new File(context.getFilesDir().getAbsolutePath() + "/" + "userpass" +".txt");
             Scanner in = new Scanner(plik);
-            user= new User(in.nextLine(),in.nextLine());  
+            user= new User(in.nextLine(),in.nextLine(),in.nextLine());  
             in.close();
             return true;
             } catch (IOException e) {   
@@ -135,11 +151,38 @@ public class ProfileActivity extends Activity {
         PrintWriter zapis = new PrintWriter(context.getFilesDir().getAbsolutePath() + "/" + "userpass" +".txt");
         zapis.println(login);
         zapis.println(haslo);
+        if(user.czy_jest_profilowe())
+            zapis.println("tak");
+        else
+            zapis.println("nie");
         {
             zapis.print("0");
         }
         zapis.close();
          
+    }
+    public void zmien_profilowe(View view)
+    {
+        Intent zdjecie=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(zdjecie, 1);        
+    }
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // TODO Auto-generated method stub
+                
+        if(requestCode == 1 && resultCode == RESULT_OK)
+        {
+            ImageView miniaturka =(ImageView) findViewById(R.id.imageView3);            
+            photo = (Bitmap) data.getExtras().get("data"); 
+            miniaturka.setImageBitmap(photo);  
+            zmienbaze();
+            ftp.wyslijZdjecie(user.getLogin(), photo,this.getApplicationContext());
+        }
+    }
+    private void zmienbaze() 
+    {        ExecutorService exe =Executors.newFixedThreadPool(1);
+        String sql="UPDATE uzytkownicy\r\n" + "SET uzytkownicy.zdjecie='tak'\r\n" +  "WHERE uzytkownicy.login='"+user.getLogin()+"'";
+        exe.submit(new Baza(sql, "dodaj"));
+        // TODO Auto-generated method stub        
     }
     private void Toast(String informacja)
     {

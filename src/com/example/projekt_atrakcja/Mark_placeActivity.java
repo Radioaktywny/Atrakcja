@@ -3,12 +3,15 @@ package com.example.projekt_atrakcja;
 
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+
+
 
 import com.example.projekt_atrakcja.R;
 
@@ -19,6 +22,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Gravity;
@@ -36,10 +40,11 @@ public class Mark_placeActivity extends Activity {
     Location lokalizacja;
     private int id=0;
     protected Miejsca m;
+    private Bitmap photo=null;
     
     public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
-    	
+    	wyslijcos();
     	Log.d("zwrot", String.valueOf(sprawdz_czy_juz_nie_dodane()));
     	if(sprawdz_czy_juz_nie_dodane())
         {	
@@ -63,8 +68,15 @@ public class Mark_placeActivity extends Activity {
     	
     	
     }
+    private void wyslijcos() 
+    {
+        
+                // TODO Auto-generated method stub
+        
+    }
     public void zrob_zdjecie(View view)
     {
+        
     	//Obsluga_zdjecia ob=new Obsluga_zdjecia();
     	Intent zdjecie=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
     	startActivityForResult(zdjecie, 1);
@@ -73,11 +85,15 @@ public class Mark_placeActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     	// TODO Auto-generated method stub
-    	ImageView miniaturka =(ImageView) findViewById(R.id.imageView1);
+        
+    	
     	if(requestCode == 1 && resultCode == RESULT_OK)
     	{
-    		Bitmap photo = (Bitmap) data.getExtras().get("data"); 
-    		miniaturka.setImageBitmap(photo);
+    	    ImageView miniaturka =(ImageView) findViewById(R.id.imageView1);
+            
+            photo = (Bitmap) data.getExtras().get("data"); 
+            miniaturka.setImageBitmap(photo); 
+            
     	}
     }
     
@@ -133,14 +149,29 @@ public class Mark_placeActivity extends Activity {
         }else
     	if(test_polaczenia())
         {
+    	    if(photo!=null)
+            {
+                FTP serwerftp= new FTP();
+                try {
+                    serwerftp.wyslijMiejsce(photo,String.valueOf(id));
+                } catch (FileNotFoundException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }                           
+            }
+            else
+            {
+                Toast("Brak zdjêcia :C");               
+            }
         	dodaj_lokalizacje(nazwa_miejsca, opis);
         	Toast("Miejsce zostalo dodane :) ");
+        	
         	setContentView(R.layout.mark_place_layout);
         }
         else{
         	Toast("brak polaczenie z internetem");
         }
-        }
+}
       
 
        
@@ -192,7 +223,7 @@ public class Mark_placeActivity extends Activity {
         try {
             File plik = new File(context.getFilesDir().getAbsolutePath() + "/" + "userpass" +".txt");
             Scanner in = new Scanner(plik);
-            user= new User(in.nextLine(),in.nextLine());  
+            user= new User(in.nextLine(),in.nextLine(),in.nextLine());  
             in.close();
             return true;
             } catch (IOException e) {   

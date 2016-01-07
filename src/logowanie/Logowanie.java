@@ -42,13 +42,16 @@ public class Logowanie extends Activity
 {
     private  String login;
     private  String haslo;
+    private Boolean zdjecie=false;
     protected  Miejsca m;
     private ProgressBar proces;
     private String Zaladowany_sqllite="";
     private Handler handler = new Handler();
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
-	{	 final SQLiteDatabase db = openOrCreateDatabase("miejsca", MODE_PRIVATE, null);
+	{	
+	    kolo("utworz");
+ 	    final SQLiteDatabase db = openOrCreateDatabase("miejsca", MODE_PRIVATE, null);
 	     super.onCreate(savedInstanceState);
 	     if(test_polaczenia()){
 	     new Thread(new Runnable() {
@@ -80,19 +83,19 @@ public class Logowanie extends Activity
 	}	
 	
 	private void kolo(String info) {
-		if(info.equals("utworz"))
-		{
-			proces=(ProgressBar)findViewById(R.id.kolo_ladowania);
-		    proces.setVisibility(View.GONE);
-		}
-		else if(info.equals("wlacz"))
-		{
-			proces.setVisibility(View.VISIBLE);
-		}
-		else if(info.equals("wylacz"))
-		{
-			proces.setVisibility(View.GONE);
-		}
+//		if(info.equals("utworz"))
+//		{
+//			proces=(ProgressBar)findViewById(R.id.kolo_ladowania);
+//		    proces.setVisibility(View.GONE);
+//		}
+//		else if(info.equals("wlacz"))
+//		{
+//			proces.setVisibility(View.VISIBLE);
+//		}
+//		else if(info.equals("wylacz"))
+//		{
+//			proces.setVisibility(View.GONE);
+//		}
 	}
 
 	void aktualizuj_sqllita(final SQLiteDatabase db){
@@ -258,7 +261,6 @@ public class Logowanie extends Activity
             }
             if(czy_zapisywac)//nie wiem czy tak moze byc ale tam widzialem ze3 true przesylasz xd
                 zapisz_uzytkownika(getBaseContext());  
-                 User user = new User(haslo,login);  
             Intent activity = new Intent(Logowanie.this, MainActivity.class);
             activity.putExtra("nazwa","dupa"); // tutaj trzeba wyslac dane usera nie wiem jak :CCC
             startActivity(activity);   
@@ -280,6 +282,10 @@ public class Logowanie extends Activity
         PrintWriter zapis = new PrintWriter(context.getFilesDir().getAbsolutePath() + "/" + "userpass" +".txt");
         zapis.println(login);
         zapis.println(haslo);
+        if(zdjecie)
+            zapis.println("tak");
+        else
+            zapis.println("nie");
         if(czy_zapisac.isChecked())
         {
             zapis.println("1");
@@ -297,7 +303,8 @@ public class Logowanie extends Activity
             File plik = new File(context.getFilesDir().getAbsolutePath() + "/" + "userpass" +".txt");
             Scanner in = new Scanner(plik);
             login=in.nextLine();        
-            haslo=in.nextLine();            
+            haslo=in.nextLine();
+            in.nextLine();
             if(in.nextLine().startsWith("0"))
             { in.close(); 
                 return false;
