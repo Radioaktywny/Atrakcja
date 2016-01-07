@@ -4,12 +4,15 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import cache.Miejsca;
 import cache.User;
 import logowanie.Baza;
@@ -32,6 +35,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -99,14 +104,15 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
     	Double [] d= new Double[2];
     	int p=0;
     	for(int i=0; i<=m.getLastId();i++)
-    	{p++;
+    	{
+    	    p++;
     		lokacja=m.getLokalizajca(i);
     		nazwa=m.getNazwa(i);
     		opis=m.getOpis(i);
     		user=m.getUzytkownik(i);
     		d=przerob_lokacje(lokacja);
     		Log.d("znalezione lokacje:", lokacja+nazwa+opis+user+d);
-    		rysuj_innych(map,user,opis,nazwa,d[0],d[1]);
+    		rysuj_innych(map,i,user,opis,nazwa,d[0],d[1]);
     		
     	}
     	}
@@ -133,9 +139,22 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
     	
     	}
     }
-	private void rysuj_innych(GoogleMap map, String user, String opis, String nazwa, Double d, Double d2) {
-		LatLng polozenie = new LatLng(d, d2);
-        map.addMarker(new MarkerOptions().position(polozenie).title(nazwa));        
+	private void rysuj_innych(GoogleMap map,int id, String user, String opis, String nazwa, Double d, Double d2) {
+	    LatLng polozenie = new LatLng(d, d2);
+//		FTP f = new FTP();
+//		                                                                            //przygotowanie pod zdjecia
+//        f.pobierz(this.getBaseContext(),"miejsca",String.valueOf(id));
+//        BitmapFactory.Options options = new BitmapFactory.Options();
+//        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+//        Bitmap bitmap = BitmapFactory.decodeFile(getFilesDir()+"/miejsca/"+String.valueOf(id)+".png", options);
+//        
+//        if(bitmap!=null)
+//        {
+//        BitmapDescriptor b = BitmapDescriptorFactory.fromBitmap(bitmap);
+//        map.addMarker(new MarkerOptions().position(polozenie).title(nazwa).snippet(opis));  
+//        }
+//        else
+        map.addMarker(new MarkerOptions().position(polozenie).title(nazwa).snippet(opis)); 
         Log.d("znalezione lokacje", "narysowalem dla :"+String.valueOf(x));
 	}
 	private Double[] przerob_lokacje(String string) {

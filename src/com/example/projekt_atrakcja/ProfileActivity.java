@@ -58,7 +58,8 @@ public class ProfileActivity extends Activity {
             if(photo!=null)
             {
                 ImageView miniaturka =(ImageView) findViewById(R.id.imageView3);            
-                miniaturka.setImageBitmap(photo);  
+                miniaturka.setImageBitmap(photo); 
+                miniaturka.setCameraDistance(2);
             }
         }
     }
@@ -68,6 +69,10 @@ public class ProfileActivity extends Activity {
         PrintWriter zapis = new PrintWriter(context.getFilesDir().getAbsolutePath() + "/" + "userpass" +".txt");
         zapis.println(user.getLogin());
         zapis.println(user.getPassword());
+        if(user.czy_jest_profilowe())
+            zapis.println("tak");
+        else
+            zapis.println("nie");
         zapis.println("0");
         zapis.close();
         startActivity(new Intent(ProfileActivity.this,Logowanie.class));

@@ -51,7 +51,7 @@ public class ChallengeActivity extends Activity {
     public void pobierz(View view)
     {
        // FTP f = new FTP();
-     //   f.pobierz(this.getBaseContext(),"miejsca");
+        //f.pobierz(this.getBaseContext(),"miejsca");
         
         ImageView miniaturka =(ImageView) findViewById(R.id.imageView2);
         BitmapFactory.Options options = new BitmapFactory.Options();
