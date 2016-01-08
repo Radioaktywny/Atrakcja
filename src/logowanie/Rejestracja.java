@@ -10,6 +10,7 @@ import com.example.projekt_atrakcja.R;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -54,7 +55,15 @@ public class Rejestracja extends Activity {
 				{	//--i hasla sa zgodne
 					if(haslo.equals(haslo_powtorz))
 					{
-						exe.submit(new Baza("INSERT INTO `uzytkownicy`(`login`, `haslo`, `email`,'zdjecie') VALUES (\""+login+"\",\""+haslo+"\",\""+mail+"\",\"nie\")", "dodaj"));
+						
+						Log.d("Rejestracja wysylaniie", "watek uruchamia");
+						try{
+						exe.submit(new Baza("INSERT INTO `uzytkownicy`(`login`, `haslo`, `email`,`zdjecie`) VALUES (\""+login+"\",\""+haslo+"\",\""+mail+"\",\"nie\")", "dodaj"));
+						}catch (Exception e)
+						{
+							Log.d("Rejestracja blad_wysylaniie", e.getMessage());
+							Toast("nie zarejestrowano watek sie sypnal");
+						}
 						startActivity(new Intent(Rejestracja.this, Logowanie.class));
 						finish();
 					}

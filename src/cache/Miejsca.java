@@ -26,7 +26,7 @@ public class Miejsca extends SQLiteOpenHelper implements Callable<String>
     public List<String[]> miejsca = new ArrayList<String[]>();
     SQLiteDatabase db;
     
-    public Miejsca(Context context,String komenda, SQLiteDatabase db)
+    public Miejsca(Context context,String komenda, SQLiteDatabase db)// do callable
     {
     	super(context,"miejsca",null,1);
     	this.komenda=komenda;
