@@ -64,6 +64,12 @@
             android:label="@string/title_activity_rejestracja" 
             android:screenOrientation="portrait">
         </activity>
+         <!-- PlaceView Activity -->
+         <activity android:name=".PlaceView" 
+            android:screenOrientation="portrait"/>
+         <!-- AddComments Activity -->
+         <activity android:name=".AddComments" 
+            android:screenOrientation="portrait"/>
         
          <!-- Potrzebne do android mapsow -->
    <meta-data

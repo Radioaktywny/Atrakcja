@@ -29,6 +29,7 @@ import cache.Miejsca2;
 import cache.User;
 import logowanie.Baza;
 import logowanie.Logowanie;
+import logowanie.Rejestracja;
 
 import java.io.File;
 import java.io.IOException;
@@ -50,6 +51,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
+import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
@@ -72,6 +74,7 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 //	boolean mRequestingLocationUpdates = true;
 	private GoogleApiClient mGoogleApiClient;
 	private Marker moj_aktualny_marker;
+	private Marker marker_wywolania;
 	Handler hand=new Handler();
 	private Location mLastLocation;
 	GPSLocation gps;
@@ -128,8 +131,7 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 						Log.d("Search zdjecia", "takich zjec to nima dla"+ index_zdjec);
 					}
 					}
-				f.pobierz(getBaseContext(),"miejsca",String.valueOf(i));
-					
+				f.pobierz(getBaseContext(),"miejsca",String.valueOf(i));		
 			}
 		}).start();
 	}
@@ -203,7 +205,7 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
     	Log.d("nacisnieto " , "zaladowalo mape");
     	gps = new GPSLocation(SearchActivity.this);
     	aktualizuj_gps= new GPSLocation(SearchActivity.this);
-    	test_gps();
+    	test_gps_watek();
     	Aktualna_Lokalizacja=gps.getLocation();
     	moja_mapka=map;
     	inicjalizuj_layout_markerow(moja_mapka);
@@ -250,7 +252,7 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
     }
     
     LatLng polozenie2;
-    private void test_gps()
+    private void test_gps_watek()
     {	
 			new Thread(new Runnable() {
 				public void run() {
@@ -284,16 +286,20 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 							}			
 				}
 			}).start();
-			
-		    
-	
-	
-    	
-    	 
     }
     
 
     private void inicjalizuj_layout_markerow(GoogleMap map) {
+    	map.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
+			
+			@Override
+			public void onInfoWindowClick(Marker marker) {
+				marker_wywolania=marker;
+				Intent activity = new Intent(SearchActivity.this, PlaceView.class);  
+		        startActivity(activity);
+				
+			}
+		});
     	map.setInfoWindowAdapter(new InfoWindowAdapter() {
     		
 			@Override
@@ -303,13 +309,16 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 			
 			@Override
 			public View getInfoContents(Marker marker) {
+				
 				try {
 				m= new Miejsca(getBaseContext(),null,null);
 				int id=m.getId(marker.getTitle());
+				
 				View v = getLayoutInflater().inflate(R.layout.infookienko, null);
 				TextView nazwa_miejscaTV=(TextView) v.findViewById(R.id.nazwa);
 				TextView opisTV=(TextView) v.findViewById(R.id.opis);
 				ImageView obrazek=(ImageView) v.findViewById(R.id.fota);
+				
 				nazwa_miejscaTV.setText(marker.getTitle());
 				opisTV.setText(marker.getSnippet());
 				BitmapFactory.Options options = new BitmapFactory.Options();
@@ -328,7 +337,7 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 				
 				}catch(Exception e){
 					Log.d("RYSUJE DLA ID", "nie mam obrazka "+e.getMessage());
-				}
+				}				
 //				Log.d("RYSUJE DLA ID", "laduje bez obrazka bo sie sypnal");
 //				View v = getLayoutInflater().inflate(R.layout.infookienko, null);
 //				TextView nazwa_miejscaTV=(TextView) v.findViewById(R.id.nazwa);
@@ -347,7 +356,13 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 				//return v;
     	}	
 		});
-		
+
+    	
+	}
+    public void nowy_layout(View v)
+	{
+    	Log.d("Search Activity", "laduje layout");
+		Toast("nowy laduje go xD");
 	}
 	private void inicjalizuj_markery() {
 		// TODO Auto-generated method stub
@@ -457,7 +472,7 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 		}
 		Log.d("zparsowalo_y", string.substring(koniec+1, string.length()));
 		d[1] = Double.valueOf(string.substring(koniec+1, string.length()-1));
-		
+
 		}
 		catch(NumberFormatException e)
 		{
@@ -580,6 +595,10 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 	}
 		
 	}
+	public Marker getMarker_wywolania()
+	{
+		return moj_aktualny_marker;
+	}	
 	private boolean Sa_wszystkie_markery()
 	{	
 		if(ilosc_markerow== id_sqllite)

@@ -9,8 +9,10 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:src="@drawable/cast_ic_notification_0" 
-        android:contentDescription="map_info" />
-    
+        android:contentDescription="map_info" 
+        
+        />
+    	
     
     <LinearLayout
         android:layout_width="wrap_content"
@@ -29,11 +31,16 @@
             android:layout_width="wrap_content"
      		android:layout_height="wrap_content"
         />
-        
-        
-        
+
+        <RatingBar
+            android:id="@+id/ratingBar1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" 
+            android:stepSize="1.0"
+          	android:rating="2.0"/>
         
     </LinearLayout>
-    
+
+ 
 
 </LinearLayout>
