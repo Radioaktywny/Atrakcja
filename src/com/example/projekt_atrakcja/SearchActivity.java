@@ -75,6 +75,7 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 	Handler hand=new Handler();
 	private Location mLastLocation;
 	GPSLocation gps;
+	GPSLocation aktualizuj_gps;
 	int ilosc_markerow=-1;
 	protected User user;
 	private int id=0;
@@ -201,6 +202,7 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
     if(start){
     	Log.d("nacisnieto " , "zaladowalo mape");
     	gps = new GPSLocation(SearchActivity.this);
+    	aktualizuj_gps= new GPSLocation(SearchActivity.this);
     	test_gps();
     	Aktualna_Lokalizacja=gps.getLocation();
     	moja_mapka=map;
@@ -247,23 +249,37 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
     	} 
     }
     
-    
+    LatLng polozenie2;
     private void test_gps()
     {	
-    	
 			new Thread(new Runnable() {
 				public void run() {
-				
 							// TODO Auto-generated method stub
 							while(true){
 								try {
-									Thread.sleep(1000);
+									Thread.sleep(5000);
 								} catch (InterruptedException e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
 								}
-							gps = new GPSLocation(getBaseContext());
-							Location lokalizacja = gps.getLocation();
+							hand.post(new Runnable() {
+							@Override
+							public void run() {
+							aktualizuj_gps = new GPSLocation(getBaseContext());
+									}
+								});
+							Location lokalizacja = aktualizuj_gps.getLocation();
+							if(gps.getLatitude() != aktualizuj_gps.getLatitude() && gps.getLongitude() != aktualizuj_gps.getLongitude())
+							{	polozenie2 = new LatLng(aktualizuj_gps.getLatitude(), aktualizuj_gps.getLongitude());
+							hand.post(new Runnable() {
+								@Override
+								public void run() {
+									moj_aktualny_marker.remove();
+									moj_aktualny_marker=moja_mapka.addMarker(new MarkerOptions().position(polozenie2).title("Tu jestes!").snippet("").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET)));
+								}
+							});	
+							  gps=aktualizuj_gps;
+							}	
 							Log.d("Search test_gpsu", String.valueOf(lokalizacja.getLatitude()));
 							}			
 				}
@@ -276,16 +292,7 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
     	 
     }
     
-    private void aktualizacja_polozenia(){
-    	
-//    	
-//    	
-//    	moj_aktualny_marker.remove();
-//    	moja_mapka.addMarker(new MarkerOptions().position(polozenie).title("Tu jestes!").snippet("").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET)));
-//	   	//map.moveCamera(CameraUpdateFactory.newLatLngZoom(polozenie, 16));
-    	
-    	
-    }
+
     private void inicjalizuj_layout_markerow(GoogleMap map) {
     	map.setInfoWindowAdapter(new InfoWindowAdapter() {
     		
