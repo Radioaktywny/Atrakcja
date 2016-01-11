@@ -183,7 +183,7 @@ public class FTP {
             outputStream2.close();
             inputStream.close(); 
         }}
-            catch (IOException ex) {
+            catch (Exception ex) {
             System.out.println("Error: " + ex.getMessage());
             ex.printStackTrace();
         } finally {
@@ -192,7 +192,7 @@ public class FTP {
                     ftpClient.logout();
                     ftpClient.disconnect();
                 }
-            } catch (IOException ex) {
+            } catch (Exception ex) {
                 ex.printStackTrace();
             }
         }

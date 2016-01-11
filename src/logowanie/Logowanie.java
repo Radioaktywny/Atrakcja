@@ -36,6 +36,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 import cache.Miejsca;
+import cache.Miejsca2;
 import cache.User;
 
 public class Logowanie extends Activity 
@@ -105,7 +106,7 @@ public class Logowanie extends Activity
 	void aktualizuj_sqllita(final SQLiteDatabase db){
 		
 		ExecutorService exe = Executors.newFixedThreadPool(1);
-		Future <String> zwrot=exe.submit(new Miejsca(getBaseContext(),"aktualizuj",db));
+		Future <String> zwrot=exe.submit(new Miejsca2(getBaseContext(),"aktualizuj",db));
 		try {
 			Zaladowany_sqllite=zwrot.get();
 		} catch (InterruptedException | ExecutionException e) {

@@ -17,7 +17,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import logowanie.Baza;
 
-public class Miejsca extends SQLiteOpenHelper implements Callable<String>
+public class Miejsca2 extends SQLiteOpenHelper implements Callable<String>
 {
     private int id_sql_lita=0;
     private int id_globala=0;
@@ -26,17 +26,17 @@ public class Miejsca extends SQLiteOpenHelper implements Callable<String>
     public List<String[]> miejsca = new ArrayList<String[]>();
     SQLiteDatabase db;
     
-    public Miejsca(Context context,String komenda, SQLiteDatabase db)// do callable
+    public Miejsca2(Context context,String komenda, SQLiteDatabase db)// do callable
     {
     	super(context,"miejsca",null,1);
     	this.komenda=komenda;
     	this.db=db;
     }
-    public Miejsca(Context context)
+    public Miejsca2(Context context)
     {
     	super(context,"miejsca",null,1);
     }
-    public void stworz(SQLiteDatabase db)
+    public void stworz(SQLiteDatabase db) throws InterruptedException, ExecutionException
     {	
     	db.execSQL("CREATE TABLE if not exists miejsca ( id INT NOT NULL, nazwa TEXT NOT NULL , lokalizacja TEXT NOT NULL , uzytkownik TEXT NOT NULL , opis TEXT NOT NULL );");
     	try {
@@ -51,11 +51,13 @@ public class Miejsca extends SQLiteOpenHelper implements Callable<String>
         	{
         		
         		Log.d("Miejsca_baza_aktualna", "ID SA SOBIE ROWNE WIEC AKTUALNA");//mozna potem dodac return jakis i zmienic na calla xd
+        		//dopisz_do_SQLite_cala_baze(db);
         	}
         	else
         	{
         		try {
-					dopisz_do_SQLite(db);
+					//dopisz_do_SQLite(db);
+					dopisz_do_SQLite_cala_baze(db);
 				} catch (InterruptedException | ExecutionException e) {
 				Log.d("Miejsca_blad przy dopisywaniu bazy", e.getMessage());
 				}
@@ -132,12 +134,10 @@ public class Miejsca extends SQLiteOpenHelper implements Callable<String>
 		String cos=pobierz_(j,"nazwa");
     	return cos;
     }
-    public int getId(String nazwa) {
-    	String cos=pobierz_Id(nazwa,"id");
-    	return Integer.parseInt(cos.replaceAll("[\\D]",""));
+    public String getId(int j) {
+    	String cos=pobierz_(j,"id");
+    	return cos;
     }
-   
-    
     public int getLastId() throws NumberFormatException, InterruptedException, ExecutionException{
     	SQLiteDatabase db= getReadableDatabase();
     	return sprawdz_id(db);
@@ -148,12 +148,6 @@ public class Miejsca extends SQLiteOpenHelper implements Callable<String>
 	    cursor.moveToFirst();
 		return cursor.getString(cursor.getColumnIndex(string));
 		
-	}
-    private String pobierz_Id(String j, String string) {
-    	SQLiteDatabase db= getReadableDatabase();
-	    Cursor cursor = db.rawQuery("SELECT * FROM miejsca where nazwa = \""+j+"\"",null);
-	    cursor.moveToFirst();
-		return cursor.getString(cursor.getColumnIndex(string));
 	}
  public void setRekord(String id,String nazwa,String lokacja, String user, String opis) {
 	 	db.execSQL("INSERT INTO miejsca  (id, nazwa , lokalizacja , uzytkownik , opis ) VALUES ('"+id_sql_lita+"','"+nazwa+"','"+lokacja+"','"+user+"','"+opis+"');");
@@ -226,7 +220,80 @@ public class Miejsca extends SQLiteOpenHelper implements Callable<String>
         Log.d("Miejsce_sql_lite", "dopisano: "+nazwa+lokacja+user+opis);
         }
     }
-    private int sprawdz_idbazy() throws NumberFormatException, InterruptedException, ExecutionException {
+   
+    
+    public void dopisz_do_SQLite_cala_baze(SQLiteDatabase db) throws InterruptedException, ExecutionException
+    {	
+    	ExecutorService exe = Executors.newFixedThreadPool(1);
+    	Log.d("Miejsca2", "tworze execa");
+    	Future <String> nazwa_f= exe.submit(new Baza("SELECT * FROM `miejsca` where `id`>=\""+id_sql_lita+"\" order by `id`", "zwroc_beta"));
+    	String nazwa=nazwa_f.get();
+    	//Log.d("Miejsca2", nazwa+"<---koniec");
+    	przeszukaj_stringa(nazwa);
+    }
+    
+    
+    
+    
+    
+    private void przeszukaj_stringa(String temps) {
+    
+    	int id_start = 0;
+		int start;
+		String lokacja=null;
+	    String nazwa=null;
+	    String opis=null;
+	    String user=null;
+	    String id=null;
+		for(int i=0;i<temps.length();i++)//przeszukuje calego stringa
+        {
+			if(temps.startsWith("/1/", i) )
+			{	id_start= i+3;
+			//System.out.println("znalazlem " +String.valueOf(i));
+			}
+			if(temps.startsWith("/2/", i) )
+			{	
+				id=temps.substring(id_start, i);
+				id_start=i+3;
+			}
+			if(temps.startsWith("/3/", i) )
+			{	
+				nazwa=temps.substring(id_start, i);
+				id_start=i+3;
+			}
+			if(temps.startsWith("/4/", i) )
+			{	
+				lokacja=temps.substring(id_start, i);
+				id_start=i+3;
+			}
+			if(temps.startsWith("/5/", i) )
+			{	
+				user=temps.substring(id_start, i);
+				id_start=i+3;
+			}
+			if(temps.startsWith("@$", i) )
+			{	
+				opis=temps.substring(id_start,i);
+				id_start=i+3;
+			}
+			
+			if(id!=null && lokacja!=null && nazwa!=null && opis !=null && user!=null )
+			{
+				id_sql_lita=Integer.parseInt(id.replaceAll("[\\D]",""));
+				Log.d("Miejsca2" , id_sql_lita+nazwa+lokacja+user+opis);
+				db.execSQL("INSERT INTO miejsca  (id, nazwa , lokalizacja , uzytkownik , opis ) VALUES ('"+id_sql_lita+"','"+nazwa+"','"+lokacja+"','"+user+"','"+opis+"');");
+				System.out.println("i:"+ id + " l:"+lokacja + " n:"+nazwa + " o:"+ opis + " use:"+user);
+				id=null;
+				lokacja=null;
+				nazwa=null;
+				opis=null;
+				user=null;
+			}
+			
+			
+        }
+	}
+	private int sprawdz_idbazy() throws NumberFormatException, InterruptedException, ExecutionException {
         ExecutorService exe = Executors.newFixedThreadPool(1);
         Future<String> fut=exe.submit(new Baza("SELECT `id` from `miejsca` ORDER BY `id` DESC LIMIT 1", "zwroc2"));
         int i=Integer.parseInt(fut.get().replaceAll("[\\D]",""));
