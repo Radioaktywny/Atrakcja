@@ -18,10 +18,7 @@
     <string name="zmien_haslo">zmień hasło</string>
     <string name="zdjecie">Dodaj zdjęcie</string>
     <string name="oznacz">Oznacz Miejsce</string>
-    
+    <string name="title_activity_add_comments">AddComments</string>
+    <string name="title_activity_place_view">PlaceView</string>
 
-    
-    
-    
-    
 </resources>
