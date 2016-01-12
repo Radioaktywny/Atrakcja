@@ -34,7 +34,7 @@
         android:textColor="#FFFFFF" />
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/opismiejsca"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_x="48dp"
