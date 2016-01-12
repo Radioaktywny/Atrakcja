@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.ImageView;
 import cache.User;
 import logowanie.Logowanie;
+import logowanie.Rejestracja;
  
 public class ChallengeActivity extends Activity {
     private User user;
@@ -52,12 +53,13 @@ public class ChallengeActivity extends Activity {
     {
        // FTP f = new FTP();
         //f.pobierz(this.getBaseContext(),"miejsca");
-        
-        ImageView miniaturka =(ImageView) findViewById(R.id.imageView2);
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-        Bitmap bitmap = BitmapFactory.decodeFile(getFilesDir()+"/miejsca/LOL.png", options);
-        miniaturka.setImageBitmap(bitmap);
+        Intent activity = new Intent(ChallengeActivity.this, AddComments.class);  
+        startActivity(activity);
+//        ImageView miniaturka =(ImageView) findViewById(R.id.imageView2);
+//        BitmapFactory.Options options = new BitmapFactory.Options();
+//        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+//        Bitmap bitmap = BitmapFactory.decodeFile(getFilesDir()+"/miejsca/LOL.png", options);
+//        miniaturka.setImageBitmap(bitmap);
                 
     }
 }

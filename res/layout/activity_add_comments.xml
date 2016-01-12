@@ -32,4 +32,32 @@
         android:text="Large Text"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
+    <EditText
+        android:id="@+id/editText1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="28dp"
+        android:layout_y="226dp"
+        android:ems="10"
+        android:hint="wpisz komentarz" >
+
+        <requestFocus />
+    </EditText>
+
+    <RatingBar
+        android:id="@+id/ratingBar1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="19dp"
+        android:layout_y="288dp" />
+
+    <Button
+        android:id="@+id/komentButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="76dp"
+        android:layout_y="368dp"
+        android:text="WYSLIJ KOMENTARZ" 
+        android:onClick="wyslijkomentarz"/>
+
 </AbsoluteLayout>
