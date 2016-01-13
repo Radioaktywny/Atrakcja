@@ -158,7 +158,47 @@ public class Baza implements  Callable<String> {
 			return zwroc;
 			
 		}
-		
+		public String[] pobierzkomenty() throws SQLException
+	    {
+	        String dane[]=new String[200];
+	        if (ladujSterownik())
+	            System.out.print(" sterownik OK");
+	        else
+	            System.exit(1);
+	        String baza = "jdbc:mysql://www.db4free.net:3306/projekt_2015";
+	        java.sql.Connection connection = DriverManager.getConnection(baza, "maciek2015", "testtest");
+	        s = createStatement(connection);        
+	        ResultSet r = executeQuery(s, "SELECT * FROM `pytania`");
+	        
+	        ResultSetMetaData rsmd;
+	        try {
+	            rsmd = r.getMetaData();
+	 
+	            int numcols = rsmd.getColumnCount(); // pobieranie liczby kolumn
+	 
+	            // wyswietlanie nazw kolumn:                
+	            
+	            int j=0;
+	            // wyswietlanie kolejnych rekordow:
+	            while (r.next()) {
+	                for (int i = 0; i < numcols; i++) {
+	                    Object obj = r.getObject(i+1);
+	                    if (obj != null)
+	                        dane[i+6*j]= obj.toString() ;               
+	                }
+	                j++;
+	            }
+	        } catch (SQLException e) {
+	            System.out.println("Blad odczytu z bazy! " + e.toString());
+	            System.exit(3);
+	        }
+	        
+	        
+	        closeConnection(connection, s);
+	        
+	        return dane;
+	        
+	    }
 		public static String returnDataFromQuery_wersja_gamma(ResultSet r) {
 			ResultSetMetaData rsmd;
 			String zwroc="";

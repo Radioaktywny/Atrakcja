@@ -50,28 +50,25 @@ public class AddComments extends Activity {
             Toast("Niestety musisz zalogowac siê ponownie");
             startActivity(new Intent(AddComments.this,Logowanie.class));
             finish(); 
-        }
-        
-        id = getIntent().getExtras().getInt("keyName");
-        
-        Location l = SearchActivity.getLokalizacja();      
-        
+        }        
+        id = getIntent().getExtras().getInt("keyName");         
         try {
-            findlocation(l,id);
+            findlocation(id);
         } catch (NumberFormatException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
 
-    private void findlocation(Location location, int id) {
+    private void findlocation(int id) {
               
         
         TextView nazwa_text=(TextView) findViewById(R.id.opismiejsca);
         TextView opis_text=(TextView) findViewById(R.id.textView2);
         ImageView zdjecie=(ImageView) findViewById(R.id.imageView1);
         
-        lokalizacja=m.getLokalizajca(id);
+        lokalizacja=m.getLokalizajca(id).toString();
+        lokalizacja=lokalizacja.substring(0, lokalizacja.length()-1);
         String nazwa=m.getNazwa(id);
         String opis=m.getOpis(id);
         BitmapFactory.Options options = new BitmapFactory.Options();

@@ -349,7 +349,6 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 					
 				int id=m.getId(marker.getTitle());
 				
-				
 				Log.d("RYSUJE DLA ID", "dla"+String.valueOf(id));
 				View v = getLayoutInflater().inflate(R.layout.infookienko, null);
 				getMark(v, id);
@@ -710,15 +709,17 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
     }
 	private void getMark(View v, int id) throws InterruptedException, ExecutionException
     {	RatingBar ocena=(RatingBar) v.findViewById(R.id.ratingBar2);
+        String lokalizacja=m.getLokalizajca(id);
+        lokalizacja=lokalizacja.substring(0,lokalizacja.length()-1);
         ExecutorService exe = Executors.newFixedThreadPool(1);
-        Future <String> mark=exe.submit(new Baza("Select avg(ocena) from oceny where lokalizacja = '"+m.getLokalizajca(id)+"'", "zwroc2"));
-       // exe.shutdown(); 
+        Future <String> mark=exe.submit(new Baza("Select avg(ocena) from oceny where lokalizacja = '"+lokalizacja+"'", "zwroc2"));
+        exe.shutdown(); 
         // tu  mi sie sypalo bo moze nie byc oceny i nie wiedzial jak ma przerobic znak ""
        try
        {	
     	   Log.d("Search Acitivity gwiazdki ","powinno miec : "+mark.get() + " id:"+String.valueOf(id));
     	   ocena.setRating(Float.valueOf(mark.get()));
-    	   exe.shutdown();
+    	   
     	   
        }catch(Exception e)
        {	 Log.d("Search Acitivity gwiazdki sie sypia", e.getMessage());

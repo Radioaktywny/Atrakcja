@@ -44,7 +44,7 @@ public class PlaceView extends Activity {
         opis_miejsca=(TextView) findViewById(R.id.textView2);
         nazwa_miejsca=(TextView) findViewById(R.id.textView1);
         zdjecie_miejsca=(ImageView) findViewById(R.id.zdjecie_miejsca);
-        ocena=(RatingBar) findViewById(R.id.ratingBar2);
+        ocena=(RatingBar) findViewById(R.id.ratingBar1);
         opis_miejsca.setText(m.getOpis(id));
         nazwa_miejsca.setText(m.getNazwa(id));
         BitmapFactory.Options options = new BitmapFactory.Options();
@@ -58,8 +58,11 @@ public class PlaceView extends Activity {
     }
     private void getMark(int id) throws InterruptedException, ExecutionException
     {
-        ExecutorService exe = Executors.newFixedThreadPool(1);
-        Future <String> ocena=exe.submit(new Baza("Select avg(ocena) from oceny where lokalizacja = '"+m.getLokalizajca(id)+"'", "zwroc2"));
+        ExecutorService exe = Executors.newFixedThreadPool(2);
+        String lokalizacja=m.getLokalizajca(id);
+        lokalizacja=lokalizacja.substring(0,lokalizacja.length()-1);
+        Future <String> ocena=exe.submit(new Baza("Select avg(ocena) from oceny where lokalizacja = '"+lokalizacja+"'", "zwroc2"));
+        Future <String> komentarze=exe.submit(new Baza("SELECT ocena,opis,uzytkownik FROM `projekt_2015`.`oceny` WHERE `lokalizacja` = '"+lokalizacja+"' ORDER BY ocena ASC","zwroc"));
         exe.shutdown(); 
         // tu  mi sie sypalo bo moze nie byc oceny i nie wiedzial jak ma przerobic znak ""
        try
