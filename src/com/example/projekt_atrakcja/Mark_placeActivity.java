@@ -70,7 +70,7 @@ public class Mark_placeActivity extends Activity {
     }
     private void wyslijcos() 
     {
-        
+        //?
                 // TODO Auto-generated method stub
         
     }

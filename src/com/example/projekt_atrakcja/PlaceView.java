@@ -16,6 +16,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import cache.Miejsca;
 import logowanie.Baza;
+import logowanie.Logowanie;
 
 public class PlaceView extends Activity {
     private TextView opis_miejsca,nazwa_miejsca;
@@ -27,10 +28,11 @@ public class PlaceView extends Activity {
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place_view);
-        
+        int id = getIntent().getExtras().getInt("keyName");
         m= new Miejsca(getBaseContext());
         try {
-            init(AddComments.getId());
+        	
+            init(id);
         } catch (InterruptedException | ExecutionException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -55,9 +57,17 @@ public class PlaceView extends Activity {
     {
         ExecutorService exe = Executors.newFixedThreadPool(1);
         Future <String> ocena=exe.submit(new Baza("Select avg(ocena) from oceny where lokalizacja = '"+m.getLokalizajca(id)+"'", "zwroc2"));
-        exe.shutdown();        
-        this.ocena.setRating(Float.valueOf(ocena.get()));
-        
+        exe.shutdown(); 
+        // tu  mi sie sypalo bo moze nie byc oceny i nie wiedzial jak ma przerobic znak ""
+       try
+       {
+    	   this.ocena.setRating(Float.valueOf(ocena.get()));
+    	   this.ocena.setClickable(false);
+    	   
+       }catch(Exception e)
+       {
+    	   this.ocena.setVisibility(0x00000008);
+       }
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

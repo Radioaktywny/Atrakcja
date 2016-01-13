@@ -1,7 +1,9 @@
 package com.example.projekt_atrakcja;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.sqlite.SQLiteDatabase;
@@ -11,6 +13,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.SharedElementCallback;
@@ -73,10 +76,10 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 //	Location mCurrentLocation;
 //	boolean mRequestingLocationUpdates = true;
 	boolean Czy_zmienilem_lokalizacje=false;
-	int przekaz_do_PlaceView;
-	int przekaz_do_Addcomments;
+	//int przekaz_do_PlaceView;
+	static int przekaz_do_Addcomments;
 	private Marker moj_aktualny_marker;
-	private Marker marker_wywolania;
+	private static Marker marker_wywolania=null;;
 	Handler hand=new Handler();
 	private Location mLastLocation;
 	GPSLocation gps;
@@ -87,7 +90,7 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 	private int id_sqllite;
 	private double x=0;
 	private double y=0;
-	protected Miejsca m;
+	protected static Miejsca m;
 	private int index_zdjec;
 	protected static Location Aktualna_Lokalizacja=null;
 	boolean start=true;
@@ -124,12 +127,11 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
         
     }
 	private void laduj_zdjecia_watek(final int i) {
-		final FTP f = new FTP();
+	final FTP f = new FTP();
 	new Thread(new Runnable() {
 	@Override
 	public void run() 
 	{
-		
 		if(i==0)
 		for(;index_zdjec<=id_sqllite ; index_zdjec++){ // tu trzeba poprawic
 		try
@@ -171,7 +173,7 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 			}
 		}).start();
 	}
-		
+		//----- doo poprawy metodfa bez sensu
 	private void aktualizuj_sqllita() {
 				try{
 			    	m= new Miejsca(getBaseContext(),null,null);//inicjalizacja miejsca 
@@ -179,11 +181,13 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 			    	ExecutorService exe = Executors.newFixedThreadPool(1);
 					Future <String> zwrot=exe.submit(new Miejsca2(getBaseContext(),"aktualizuj",db));
 						String Zaladowany_sqllite = zwrot.get();
+						db.close();
 						Log.d("Logowanie aktualizacja_sqllita", "powiodla sie");
 //					} catch (InterruptedException | ExecutionException e) {
 //						// TODO Auto-generated catch block
 //						Log.d("Logowanie aktualizacja_sqllita", e.getMessage());
 //					}
+
 					if(Zaladowany_sqllite.equals("zakonczono"))
 					{
 						String lokacja="";
@@ -246,7 +250,6 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 							@Override
 							public void run() {
 								Toast("czekaj chwile bo sie sypie");
-								
 							}
 						});
 						
@@ -315,9 +318,19 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 			
 			@Override
 			public void onInfoWindowClick(Marker marker) {
-				marker_wywolania=marker;
-				Intent activity = new Intent(SearchActivity.this, PlaceView.class);  
-		        startActivity(activity);
+				final int id =m.getId(marker.getTitle());
+				
+				hand.post(new Runnable() {
+					
+					@Override
+					public void run() {
+						Intent intent = new Intent(SearchActivity.this , PlaceView.class);
+		            	intent.putExtra("keyName", id);
+				        startActivity(intent);
+						
+					}
+				});
+				
 				
 			}
 		});
@@ -580,8 +593,8 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 				String przerob=m.getLokalizajca(i).substring(11,19);
 				tab[i]=przerabiam_szybko+przerob;
 			}
-		
-		new Thread(new Runnable() {
+			Thread Lokacja_watek;
+		Lokacja_watek = new Thread(new Runnable() {
 		@Override
 		public void run() {
 			while(true){
@@ -594,7 +607,7 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 				String lok_sql=tab[i];
 				String	lok_gps="x"+String.valueOf(gps.getLatitude()).substring(0, String.valueOf(gps.getLatitude()).length()-3)+"y"+String.valueOf(gps.getLongitude()).substring(0, String.valueOf(gps.getLongitude()).length()-3);;
 				if(porownaj_stringi(lok_sql , lok_gps) && przekaz_do_Addcomments != i)
-				{
+				{	tab[i]="juz tu byles";
 					przekaz_do_Addcomments=i;
 					try {
 						Thread.sleep(1000);
@@ -603,12 +616,27 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 						e.printStackTrace();
 					}
 					hand.post(new Runnable() {
+						
 						@Override
 						public void run() {
-							//przekaz_do_Addcomments;
-							//Toast("LOL wszedlem na"+ m.getNazwa(przekaz_do_Addcomments));
+							buildDialog(SearchActivity.this,przekaz_do_Addcomments).show();
+							
 						}
 					});
+							
+						
+						
+						
+				
+							
+//							try {
+//								Thread.sleep(100000);
+//							} catch (InterruptedException e) {
+//								// TODO Auto-generated catch block
+//								e.printStackTrace();
+//							}
+							//przekaz_do_Addcomments;
+		//		Toast("LOL wszedlem na"+ m.getNazwa(przekaz_do_Addcomments));
 					
 				}
 				
@@ -624,13 +652,15 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 			}
 			
 		}
-	}).start();
+	});
+		Lokacja_watek.start();
 		
 		}
 		}catch(Exception e)
 		{
 			Log.d("Search Activity", "Watek sprawdzania lokacji wysypal sie" + e.getMessage());
 		}
+		
 	}
 	private boolean porownaj_stringi(String lok_sql, String lok_gps) {
 	Log.d("SPR sql",lok_sql);
@@ -641,4 +671,62 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 		}else
 			return false;
 	}
+//	public static int getId_dla_Placeview()
+//	{	try{
+//			int id=m.getId(marker_wywolania.getTitle());
+//			return id;
+//	}catch(Exception e )
+//	{
+//		return 1;
+//	}
+		
+		//	przekaz_do_PlaceView;
+//	}
+//	public static int getId_dla_AddComments()
+//	{	try{
+//			
+//			return przekaz_do_Addcomments;
+//	}catch(Exception e )
+//	{
+//		return 1;
+//	}
+//		
+//		//	przekaz_do_PlaceView;
+//	}
+	
+	
+	public AlertDialog.Builder buildDialog(final Context c ,final int i) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(c);
+        builder.setTitle("LOOOOO WIDZE ZE JESTES w : ");
+        builder.setMessage(m.getNazwa(i));
+        builder.setMessage(m.getOpis(i));
+       // builder.setMessage("/n"+m.getOpis(i)+"/n");
+        //builder.setMessage("CHCESZ DODAC SUPER KOMCIA?");
+
+        builder.setPositiveButton("Tak", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            
+          
+            
+            	Intent intent = new Intent(c , AddComments.class);
+            	intent.putExtra("keyName", i);
+            	startActivity(intent);
+				//startActivity(intent);
+				
+            }
+        });
+        builder.setNegativeButton("Nie :C", new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+//				Intent intent = new Intent(Settings.ACTION_DATA_ROAMING_SETTINGS);
+//				startActivity(intent);
+			}
+		});
+
+        return builder;
+    }
 }

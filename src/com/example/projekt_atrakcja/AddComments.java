@@ -37,12 +37,14 @@ public class AddComments extends Activity {
     private static int id;
     private User user;
     private String lokalizacja;
+    private String data;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        
+      
         m= new Miejsca(getBaseContext());
+       
         if(wczytaj_pasy(getBaseContext()))
         {
             setContentView(R.layout.activity_add_comments);            
@@ -52,14 +54,13 @@ public class AddComments extends Activity {
             startActivity(new Intent(AddComments.this,Logowanie.class));
             finish(); 
         }
-    
-    
+        //takie hacki :D
+        id = getIntent().getExtras().getInt("keyName");
         Location l = SearchActivity.getLokalizacja();
        
         try {
-            findlocation(l,sprawdz_id());
-        } catch (NumberFormatException | InterruptedException
-                | ExecutionException e) {
+            findlocation(l,id);
+        } catch (NumberFormatException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
@@ -82,17 +83,18 @@ public class AddComments extends Activity {
         TextView nazwa_text=(TextView) findViewById(R.id.opismiejsca);
         TextView opis_text=(TextView) findViewById(R.id.textView2);
         ImageView zdjecie=(ImageView) findViewById(R.id.imageView1);
-        this.id=i-1;
+       // this.id=i-1;
         //DO TESTOW !!!
+        //chce miec taki ladny kod :( jutro juz swoj uprzatne bo znow nie widze na loczy xd
         
         
-//        String nazwa=m.getNazwa(i);
-//        String opis=m.getOpis(i);
-          String nazwa="DUPA MACIEK IDZIE DO SEWCIA";
-          String opis="DUPA MACIEK IDZIE DO SEWCIA to jest opis";
+        String nazwa=m.getNazwa(id);
+        String opis=m.getOpis(i);
+//          String nazwa="DUPA MACIEK IDZIE DO SEWCIA";
+//          String opis="DUPA MACIEK IDZIE DO SEWCIA to jest opis";
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-        Bitmap bitmap = BitmapFactory.decodeFile(getFilesDir()+"/miejsca/"+"18"+".png", options);
+        Bitmap bitmap = BitmapFactory.decodeFile(getFilesDir()+"/miejsca/"+id+".png", options);
         nazwa_text.setText(nazwa);
         opis_text.setText(opis);
         zdjecie.setImageBitmap(bitmap);
@@ -159,8 +161,9 @@ private int sprawdz_id() throws NumberFormatException, InterruptedException, Exe
         ocena.setRating(0);
         
         Toast("Dodano komentarz !");
-        
-        startActivity(new Intent(AddComments.this,PlaceView.class));
+        Intent intent =new Intent(AddComments.this,PlaceView.class);
+        intent.putExtra("keyName", id);
+        startActivity(intent);
         finish(); 
         
         
