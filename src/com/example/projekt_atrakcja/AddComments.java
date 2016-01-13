@@ -71,15 +71,11 @@ public class AddComments extends Activity {
         
         Double latitude = location.getLatitude();
         Double longitude = location.getLongitude();
-        for(;i<id;++i)
-        {
-            lokalizacja=m.getLokalizajca(i);
+        
+            lokalizacja=m.getLokalizajca(id);
         Double d[]=przerob_lokacje(lokalizacja);
-        if(d[0]==latitude && d[1]==longitude)
-        {
-            break;
-        }
-        }
+        
+       
         TextView nazwa_text=(TextView) findViewById(R.id.opismiejsca);
         TextView opis_text=(TextView) findViewById(R.id.textView2);
         ImageView zdjecie=(ImageView) findViewById(R.id.imageView1);
@@ -89,7 +85,7 @@ public class AddComments extends Activity {
         
         
         String nazwa=m.getNazwa(id);
-        String opis=m.getOpis(i);
+        String opis=m.getOpis(id);
 //          String nazwa="DUPA MACIEK IDZIE DO SEWCIA";
 //          String opis="DUPA MACIEK IDZIE DO SEWCIA to jest opis";
         BitmapFactory.Options options = new BitmapFactory.Options();
