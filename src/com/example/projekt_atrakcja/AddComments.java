@@ -37,27 +37,25 @@ public class AddComments extends Activity {
     private static int id;
     private User user;
     private String lokalizacja;
-    private String data;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
-      
-        m= new Miejsca(getBaseContext());
-       
+        m= new Miejsca(getBaseContext());       
         if(wczytaj_pasy(getBaseContext()))
         {
             setContentView(R.layout.activity_add_comments);            
         }        
         else
         {
+            Toast("Niestety musisz zalogowac siê ponownie");
             startActivity(new Intent(AddComments.this,Logowanie.class));
             finish(); 
         }
-        //takie hacki :D
+        
         id = getIntent().getExtras().getInt("keyName");
-        Location l = SearchActivity.getLokalizacja();
-       
+        
+        Location l = SearchActivity.getLokalizacja();      
+        
         try {
             findlocation(l,id);
         } catch (NumberFormatException e) {
@@ -67,84 +65,28 @@ public class AddComments extends Activity {
     }
 
     private void findlocation(Location location, int id) {
-        int i=0;
+              
         
-        Double latitude = location.getLatitude();
-        Double longitude = location.getLongitude();
-        
-            lokalizacja=m.getLokalizajca(id);
-        Double d[]=przerob_lokacje(lokalizacja);
-        
-       
         TextView nazwa_text=(TextView) findViewById(R.id.opismiejsca);
         TextView opis_text=(TextView) findViewById(R.id.textView2);
         ImageView zdjecie=(ImageView) findViewById(R.id.imageView1);
-       // this.id=i-1;
-        //DO TESTOW !!!
-        //chce miec taki ladny kod :( jutro juz swoj uprzatne bo znow nie widze na loczy xd
         
-        
+        lokalizacja=m.getLokalizajca(id);
         String nazwa=m.getNazwa(id);
         String opis=m.getOpis(id);
-//          String nazwa="DUPA MACIEK IDZIE DO SEWCIA";
-//          String opis="DUPA MACIEK IDZIE DO SEWCIA to jest opis";
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inPreferredConfig = Bitmap.Config.ARGB_8888;
         Bitmap bitmap = BitmapFactory.decodeFile(getFilesDir()+"/miejsca/"+id+".png", options);
+        if(bitmap!=null)
+            zdjecie.setImageBitmap(bitmap);
+        else
+            zdjecie.setImageResource(R.drawable.miejsce_default);
+        
         nazwa_text.setText(nazwa);
         opis_text.setText(opis);
-        zdjecie.setImageBitmap(bitmap);
-        
+               
         // TODO Auto-generated method stub
         
-    }
-private int sprawdz_id() throws NumberFormatException, InterruptedException, ExecutionException {
-        
-        try{
-            final SQLiteDatabase db= openOrCreateDatabase("miejsca", MODE_PRIVATE, null);
-        Cursor cursor = db.rawQuery("SELECT id from miejsca order by id DESC LIMIT 1;", null);
-        cursor.moveToFirst();
-        String s = cursor.getString(cursor.getColumnIndex("id"));
-        int id=Integer.parseInt(s.replaceAll("[\\D]",""));////dziala dobrze !!!
-        Log.d("Miejsce_id_sql_lita", String.valueOf(id));
-        cursor.close();
-        if(id>0)
-            return id;
-        else
-            return 0;        
-        }
-        catch(Exception e)
-        {
-            Log.d("id_curso_sie_wysypal", e.getMessage());
-            return 0;
-        }
-    }
-    private Double[] przerob_lokacje(String string) {
-        int koniec=0;
-        Double[] d =new Double[2];
-        try{
-        for(int i=0; i <string.length()-3; i++)
-        {
-            if(string.startsWith("x", i))
-            {   
-                while(!string.startsWith("y", koniec))//dopoki nie napotkam kolejnej liczby
-                {
-                 koniec++;
-                }
-                d[0]= Double.valueOf(string.substring(i+1, koniec));
-                Log.d("zparsowalo_x", string.substring(i+1, koniec));
-                break;
-            }
-        }
-        Log.d("zparsowalo_y", string.substring(koniec+1, string.length()));
-        d[1] = Double.valueOf(string.substring(koniec+1, string.length()-1));
-        
-        }
-        catch(NumberFormatException e)
-        {
-            Log.d("nie zparsowalo", e.getMessage());
-        }
-        return d;
     }
     public void wyslijkomentarz(View view)
     {
@@ -152,11 +94,9 @@ private int sprawdz_id() throws NumberFormatException, InterruptedException, Exe
         EditText koment=(EditText) findViewById(R.id.editText1) ;  
         RatingBar ocena = (RatingBar) findViewById(R.id.ratingBar2);
         commentToDatabase(lokalizacja,(int)ocena.getRating(),koment.getText().toString());
-        koment.setHint("dodano komentarz");
-        koment.setText("");
-        ocena.setRating(0);
-        
+            
         Toast("Dodano komentarz !");
+        
         Intent intent =new Intent(AddComments.this,PlaceView.class);
         intent.putExtra("keyName", id);
         startActivity(intent);
@@ -168,8 +108,7 @@ private int sprawdz_id() throws NumberFormatException, InterruptedException, Exe
     {
         ExecutorService exe = Executors.newFixedThreadPool(1);
         exe.submit(new Baza("INSERT INTO `oceny`(`lokalizacja`, `ocena`, `opis`,`uzytkownik`) VALUES (\""+lokalizacja+"\",\""+ocena+"\",\""+opis+"\",\""+user.getLogin()+"\")", "dodaj"));
-        exe.shutdown();
-        
+        exe.shutdown();        
     }
     private boolean wczytaj_pasy(Context context) 
     {       

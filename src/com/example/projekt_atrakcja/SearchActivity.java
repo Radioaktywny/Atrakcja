@@ -369,6 +369,7 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 					Log.d("RYSUJE DLA ID", "no i ustawilo");
 					return v;
 				}else{
+				    obrazek.setImageResource(R.drawable.miejsce_default);
 					return v;
 				}
 				

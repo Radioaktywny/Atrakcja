@@ -1,63 +1,173 @@
 <?xml version="1.0" encoding="utf-8"?>
-<AbsoluteLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/tlo"
+    android:textAlignment="gravity"
+    android:columnCount="1"
     android:orientation="vertical" >
 
     <!-- Screen Design for the SONGS -->
-
-    <TextView
-        android:id="@+id/szczegoly_miejsca"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_x="-2dp"
-        android:layout_y="0dp"
-        android:gravity="center_vertical"
-        android:padding="15dip"
-        android:text="informacje o miejscu"
-        android:textSize="28sp" />
 
     <ImageView
         android:id="@+id/zdjecie_miejsca"
         android:layout_width="94dp"
         android:layout_height="94dp"
-        android:layout_x="19dp"
-        android:layout_y="53dp"
+        android:layout_alignParentLeft="true"
         android:src="@drawable/cast_ic_notification_0" />
 
     <TextView
         android:id="@+id/textView1"
-        android:layout_width="116dp"
+        android:layout_width="220dp"
         android:layout_height="70dp"
-        android:layout_x="158dp"
-        android:layout_y="69dp"
-        android:text="Large Text"
+        android:layout_alignBottom="@+id/zdjecie_miejsca"
+        android:layout_alignParentRight="true"
+        android:text="nazwa"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
         android:id="@+id/textView2"
-        android:layout_width="245dp"
-        android:layout_height="45dp"
-        android:layout_x="28dp"
-        android:layout_y="149dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/zdjecie_miejsca"
+        android:text="opis"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <RatingBar
+        android:id="@+id/ratingBar1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/textView2" />
+    
+    <ScrollView
+	    android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/textView9" > >
+	  <LinearLayout 
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+	      
+	
+    <TextView
+        android:id="@+id/textView12"
+        android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+        android:text="Large Text"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/textView21"
+       android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+        android:text="Medium Text"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <RatingBar
+        android:id="@+id/ratingBar11"
+       android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+        android:text="Large Text"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/textView4"
+       android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
         android:text="Medium Text"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <RatingBar
         android:id="@+id/ratingBar2"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_x="21dp"
-        android:layout_y="208dp" />
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp" />
 
     <TextView
-        android:id="@+id/textView3"
-        android:layout_width="137dp"
-        android:layout_height="wrap_content"
-        android:layout_x="28dp"
-        android:layout_y="276dp"
-        android:text="Komentarze :"
+        android:id="@+id/textView5"
+       android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+        android:text="Large Text"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/textView6"
+       android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+        android:text="Medium Text"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
-</AbsoluteLayout>
+    <RatingBar
+        android:id="@+id/ratingBar3"
+       android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp" />
+
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+        android:text="Large Text"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+        android:text="Medium Text"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <RatingBar
+        android:id="@+id/ratingBar4"
+        android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp" />
+    <Button
+        android:layout_marginTop="10dp"
+        android:id="@+id/buttonkomentarze"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/tlo_obrazka"
+        android:gravity="center"
+        android:text="Pokaz wszystkie komentarze"
+        android:layout_gravity="center"        
+        android:textColor="#FFFFFF"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+</LinearLayout>
+    
+    </ScrollView>
+
+    <Button
+        android:id="@+id/textView9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/ratingBar1"
+        android:background="#000000"
+        android:gravity="center"
+        android:text="Najlepsze komentarze"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="#FFFFFF" />
+	
+</RelativeLayout>

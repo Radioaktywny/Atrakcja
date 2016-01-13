@@ -50,7 +50,10 @@ public class PlaceView extends Activity {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inPreferredConfig = Bitmap.Config.ARGB_8888;
         Bitmap bitmap = BitmapFactory.decodeFile(getFilesDir()+"/miejsca/"+id+".png", options);
-        zdjecie_miejsca.setImageBitmap(bitmap);
+        if(bitmap!=null)
+            zdjecie_miejsca.setImageBitmap(bitmap);
+        else
+            zdjecie_miejsca.setImageResource(R.drawable.miejsce_default);        
         getMark(id);
     }
     private void getMark(int id) throws InterruptedException, ExecutionException
