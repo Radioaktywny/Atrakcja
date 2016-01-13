@@ -25,6 +25,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager.LayoutParams;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import cache.Miejsca;
@@ -351,6 +352,7 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 				
 				Log.d("RYSUJE DLA ID", "dla"+String.valueOf(id));
 				View v = getLayoutInflater().inflate(R.layout.infookienko, null);
+				getMark(v, id);
 				TextView nazwa_miejscaTV=(TextView) v.findViewById(R.id.nazwa);
 				TextView opisTV=(TextView) v.findViewById(R.id.opis);
 				ImageView obrazek=(ImageView) v.findViewById(R.id.fota);
@@ -524,7 +526,6 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 	}
 	public static Location getLokalizacja() {
 		return Aktualna_Lokalizacja;
-
 	}
 	private boolean wczytaj_pasy(Context context) 
 	{       
@@ -583,10 +584,11 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 	private void Czy_wszedles_na_oznaczona_lokalizacje() throws InterruptedException
 	{	
 		m= new Miejsca(getBaseContext());
-		try{
-		if( m != null){
-		final String[] tab= new String[m.getLastId()];
-		
+		try
+		{
+			if( m != null)
+			{
+			final String[] tab= new String[m.getLastId()];
 			for(int i=0;i<m.getLastId();i++)
 			{
 				String przerabiam_szybko=m.getLokalizajca(i).substring(0,8);
@@ -594,63 +596,46 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 				tab[i]=przerabiam_szybko+przerob;
 			}
 			Thread Lokacja_watek;
-		Lokacja_watek = new Thread(new Runnable() {
-		@Override
-		public void run() {
-			while(true){
-			if(gps != null && Czy_zmienilem_lokalizacje==true){
-			
-			for(int i=0;i<id_sqllite;i++)
+			Lokacja_watek = new Thread(new Runnable() {
+			@Override
+			public void run() 
 			{
-				
-
-				String lok_sql=tab[i];
-				String	lok_gps="x"+String.valueOf(gps.getLatitude()).substring(0, String.valueOf(gps.getLatitude()).length()-3)+"y"+String.valueOf(gps.getLongitude()).substring(0, String.valueOf(gps.getLongitude()).length()-3);;
-				if(porownaj_stringi(lok_sql , lok_gps) && przekaz_do_Addcomments != i)
-				{	tab[i]="juz tu byles";
-					przekaz_do_Addcomments=i;
-					try {
-						Thread.sleep(1000);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					hand.post(new Runnable() {
-						
-						@Override
-						public void run() {
-							buildDialog(SearchActivity.this,przekaz_do_Addcomments).show();
-							
-						}
-					});
-							
-						
-						
-						
-				
-							
-//							try {
-//								Thread.sleep(100000);
-//							} catch (InterruptedException e) {
-//								// TODO Auto-generated catch block
-//								e.printStackTrace();
-//							}
-							//przekaz_do_Addcomments;
-		//		Toast("LOL wszedlem na"+ m.getNazwa(przekaz_do_Addcomments));
+				while(true)
+				{
+					if(gps != null && Czy_zmienilem_lokalizacje==true)
+					{
+						for(int i=0;i<id_sqllite;i++)
+						{
+							String lok_sql=tab[i];
+							String	lok_gps="x"+String.valueOf(gps.getLatitude()).substring(0, String.valueOf(gps.getLatitude()).length()-3)+"y"+String.valueOf(gps.getLongitude()).substring(0, String.valueOf(gps.getLongitude()).length()-3);;
+							if(porownaj_stringi(lok_sql , lok_gps) && przekaz_do_Addcomments != i)
+							{	
+								tab[i]="juz tu byles";
+								przekaz_do_Addcomments=i;
+								try 
+								{
+									Thread.sleep(1000);
+								} catch (InterruptedException e) {
+									e.printStackTrace();
+								}
+								hand.post(new Runnable() 
+								{
+								@Override
+								public void run() 
+								{
+									buildDialog(SearchActivity.this,przekaz_do_Addcomments).show();
+								}});
+							}
 					
+						}
+						try {
+							Thread.sleep(1000);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+						Czy_zmienilem_lokalizacje=false;
 				}
-				
 			}
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			Czy_zmienilem_lokalizacje=false;
-			}
-			}
-			
 		}
 	});
 		Lokacja_watek.start();
@@ -703,19 +688,13 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
         builder.setMessage(m.getOpis(i));
        // builder.setMessage("/n"+m.getOpis(i)+"/n");
         //builder.setMessage("CHCESZ DODAC SUPER KOMCIA?");
-
         builder.setPositiveButton("Tak", new DialogInterface.OnClickListener() {
-
             @Override
             public void onClick(DialogInterface dialog, int which) {
-            
-          
-            
             	Intent intent = new Intent(c , AddComments.class);
             	intent.putExtra("keyName", i);
+            	//intent.putExtra("Lokalizacja", m.getLokalizajca(i));
             	startActivity(intent);
-				//startActivity(intent);
-				
             }
         });
         builder.setNegativeButton("Nie :C", new DialogInterface.OnClickListener() {
@@ -726,7 +705,23 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 //				startActivity(intent);
 			}
 		});
-
         return builder;
+    }
+	private void getMark(View v, int id) throws InterruptedException, ExecutionException
+    {	RatingBar ocena=(RatingBar) v.findViewById(R.id.ratingBar2);
+        ExecutorService exe = Executors.newFixedThreadPool(1);
+        Future <String> mark=exe.submit(new Baza("Select avg(ocena) from oceny where lokalizacja = '"+m.getLokalizajca(id)+"'", "zwroc2"));
+       // exe.shutdown(); 
+        // tu  mi sie sypalo bo moze nie byc oceny i nie wiedzial jak ma przerobic znak ""
+       try
+       {	
+    	   Log.d("Search Acitivity gwiazdki ","powinno miec : "+mark.get() + " id:"+String.valueOf(id));
+    	   ocena.setRating(Float.valueOf(mark.get()));
+    	   exe.shutdown();
+    	   
+       }catch(Exception e)
+       {	 Log.d("Search Acitivity gwiazdki sie sypia", e.getMessage());
+    	   ocena.setVisibility(0x00000008);
+       }
     }
 }

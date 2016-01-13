@@ -62,7 +62,6 @@ public class PlaceView extends Activity {
        try
        {
     	   this.ocena.setRating(Float.valueOf(ocena.get()));
-    	   this.ocena.setClickable(false);
     	   
        }catch(Exception e)
        {
