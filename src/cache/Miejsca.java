@@ -146,14 +146,20 @@ public class Miejsca extends SQLiteOpenHelper implements Callable<String>
     	SQLiteDatabase db= getReadableDatabase();
 	    Cursor cursor = db.rawQuery("SELECT * FROM miejsca where id = "+j+"",null);
 	    cursor.moveToFirst();
-		return cursor.getString(cursor.getColumnIndex(string));
+	    String zwrot=cursor.getString(cursor.getColumnIndex(string));
+	    cursor.close();
+	    db.close();
+		return zwrot;
 		
 	}
     private String pobierz_Id(String j, String string) {
     	SQLiteDatabase db= getReadableDatabase();
 	    Cursor cursor = db.rawQuery("SELECT * FROM miejsca where nazwa = \""+j+"\"",null);
 	    cursor.moveToFirst();
-		return cursor.getString(cursor.getColumnIndex(string));
+	    String cos=cursor.getString(cursor.getColumnIndex(string));
+	    cursor.close();
+	    db.close();
+		return cos;
 	}
  public void setRekord(String id,String nazwa,String lokacja, String user, String opis) {
 	 	db.execSQL("INSERT INTO miejsca  (id, nazwa , lokalizacja , uzytkownik , opis ) VALUES ('"+id_sql_lita+"','"+nazwa+"','"+lokacja+"','"+user+"','"+opis+"');");
@@ -164,6 +170,7 @@ public class Miejsca extends SQLiteOpenHelper implements Callable<String>
 	 	cos[3]=user;
 	 	cos[4]=opis;		 	
 	 	miejsca.add(cos);
+	 	db.close();
  }
  	
 	private int sprawdz_id(SQLiteDatabase db) throws NumberFormatException, InterruptedException, ExecutionException {

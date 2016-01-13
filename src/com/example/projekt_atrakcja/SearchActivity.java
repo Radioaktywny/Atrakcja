@@ -64,7 +64,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 
 
-public class SearchActivity extends FragmentActivity implements OnMapReadyCallback, ConnectionCallbacks, OnConnectionFailedListener  {
+public class SearchActivity extends FragmentActivity implements OnMapReadyCallback  {
 
 	//    private static final String REQUESTING_LOCATION_UPDATES_KEY = null;
 //	private static final String LOCATION_KEY = null;
@@ -72,7 +72,9 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 //	String mLastUpdateTime;
 //	Location mCurrentLocation;
 //	boolean mRequestingLocationUpdates = true;
-	private GoogleApiClient mGoogleApiClient;
+	boolean Czy_zmienilem_lokalizacje=false;
+	int przekaz_do_PlaceView;
+	int przekaz_do_Addcomments;
 	private Marker moj_aktualny_marker;
 	private Marker marker_wywolania;
 	Handler hand=new Handler();
@@ -95,11 +97,18 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 		
 		
 		sprawdzaj_id_watek();
+		
 		//test_gps();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search_layout);
-        laduj_zdjecia_watek(0);
-        
+        try {
+			Czy_wszedles_na_oznaczona_lokalizacje();
+			Log.d("SPR", "utworzylem watek");
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			Log.d("SPR", e.getMessage());
+		}
+        laduj_zdjecia_watek(0); 
         if(wczytaj_pasy(getBaseContext()))
         {
         	com.google.android.gms.maps.SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -115,22 +124,24 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
         
     }
 	private void laduj_zdjecia_watek(final int i) {
+		final FTP f = new FTP();
+	new Thread(new Runnable() {
+	@Override
+	public void run() 
+	{
 		
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				FTP f = new FTP();
-				if(i==0)
-				for(;index_zdjec<=id_sqllite ; index_zdjec++){ // tu trzeba poprawic
-					try{
-						f.pobierz(getBaseContext(),"miejsca",String.valueOf(index_zdjec));
-						Log.d("Search Mam zdjecia dla:",  String.valueOf(index_zdjec));
+		if(i==0)
+		for(;index_zdjec<=id_sqllite ; index_zdjec++){ // tu trzeba poprawic
+		try
+		{
+			f.pobierz(getBaseContext(),"miejsca",String.valueOf(index_zdjec));
+			Log.d("Search Mam zdjecia dla:",  String.valueOf(index_zdjec));
 					}
 					catch(Exception e)
 					{
 						Log.d("Search zdjecia", "takich zjec to nima dla"+ index_zdjec);
 					}
-					}
+					}else
 				f.pobierz(getBaseContext(),"miejsca",String.valueOf(i));		
 			}
 		}).start();
@@ -271,8 +282,11 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 									}
 								});
 							Location lokalizacja = aktualizuj_gps.getLocation();
+							
 							if(gps.getLatitude() != aktualizuj_gps.getLatitude() && gps.getLongitude() != aktualizuj_gps.getLongitude())
-							{	polozenie2 = new LatLng(aktualizuj_gps.getLatitude(), aktualizuj_gps.getLongitude());
+							{	
+							Czy_zmienilem_lokalizacje=true;
+							polozenie2 = new LatLng(aktualizuj_gps.getLatitude(), aktualizuj_gps.getLongitude());
 							hand.post(new Runnable() {
 								@Override
 								public void run() {
@@ -281,6 +295,13 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 								}
 							});	
 							  gps=aktualizuj_gps;
+							}else{
+								try {
+									Thread.sleep(1000);
+								} catch (InterruptedException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
 							}	
 							Log.d("Search test_gpsu", String.valueOf(lokalizacja.getLatitude()));
 							}			
@@ -309,16 +330,17 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 			
 			@Override
 			public View getInfoContents(Marker marker) {
-				
-				try {
 				m= new Miejsca(getBaseContext(),null,null);
+				try {
+					
 				int id=m.getId(marker.getTitle());
 				
+				
+				Log.d("RYSUJE DLA ID", "dla"+String.valueOf(id));
 				View v = getLayoutInflater().inflate(R.layout.infookienko, null);
 				TextView nazwa_miejscaTV=(TextView) v.findViewById(R.id.nazwa);
 				TextView opisTV=(TextView) v.findViewById(R.id.opis);
 				ImageView obrazek=(ImageView) v.findViewById(R.id.fota);
-				
 				nazwa_miejscaTV.setText(marker.getTitle());
 				opisTV.setText(marker.getSnippet());
 				BitmapFactory.Options options = new BitmapFactory.Options();
@@ -336,6 +358,7 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 				}
 				
 				}catch(Exception e){
+					
 					Log.d("RYSUJE DLA ID", "nie mam obrazka "+e.getMessage());
 				}				
 //				Log.d("RYSUJE DLA ID", "laduje bez obrazka bo sie sypnal");
@@ -359,17 +382,9 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 
     	
 	}
-    public void nowy_layout(View v)
-	{
-    	Log.d("Search Activity", "laduje layout");
-		Toast("nowy laduje go xD");
-	}
-	private void inicjalizuj_markery() {
-		// TODO Auto-generated method stub
-		
-	}
+  
 	private void pobierz_lokalizacje_sqllite(GoogleMap map ) throws NumberFormatException, InterruptedException, ExecutionException {
-    	m= new Miejsca(getBaseContext(),null,null);//inicjalizacja miejsca 
+    	m= new Miejsca(getBaseContext());//inicjalizacja miejsca 
     	String lokacja="";
     	String nazwa="";
     	String opis="";
@@ -484,29 +499,8 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 		LatLng polozenie = new LatLng(gps.getLatitude(), gps.getLongitude());
         map.addMarker(new MarkerOptions().position(polozenie).title(nazwa));
 	}    
-    protected synchronized void buildGoogleApiClient(){
-		Log.d("Building", "zbudowane");
-		mGoogleApiClient= new GoogleApiClient.Builder(this)
-				.addConnectionCallbacks(this)
-				.addOnConnectionFailedListener(this)
-				.addApi(LocationServices.API)
-				.build();
-	}
-  
-    protected void createLocationRequest() {
-    	///do wywaleni wszystko nie dziala
-    	
-        LocationRequest mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(10000);
-        mLocationRequest.setFastestInterval(5000);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-    }
-    
-
 
 	private int sprawdz_id() throws NumberFormatException, InterruptedException, ExecutionException {
-		
-		
 		ExecutorService exe = Executors.newFixedThreadPool(1);
 		Future<String> fut=exe.submit(new Baza("SELECT `id` from `miejsca` ORDER BY `id` DESC LIMIT 1", "zwroc2"));
 		int i=Integer.parseInt(fut.get().replaceAll("[\\D]",""));
@@ -515,42 +509,24 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 		else
 			return 0;
 	}
-	private boolean wczytaj_pasy(Context context) 
-    {       
-        try {
-            File plik = new File(context.getFilesDir().getAbsolutePath() + "/" + "userpass" +".txt");
-            Scanner in = new Scanner(plik);
-            user= new User(in.nextLine(),in.nextLine(),in.nextLine());  
-            in.close();
-            return true;
-            } catch (IOException e) {   
-                e.printStackTrace();
-                return false;
-            }           
-                 
-    }
 	public static Location getLokalizacja() {
 		return Aktualna_Lokalizacja;
 
 	}
-//	@Override
-//    public void onLocationChanged(Location location) {
-//      Log.d("Pozycja", String.valueOf(location.getLatitude()));
-//      Toast(String.valueOf(location.getLatitude()));
-//      mCurrentLocation = location;
-//         mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
-//      
-//    }
-//	@Override
-//	public void onSaveInstanceState(Bundle savedInstanceState) {
-//		savedInstanceState.putBoolean(REQUESTING_LOCATION_UPDATES_KEY,
-//	            mRequestingLocationUpdates);
-//	    
-//		savedInstanceState.putParcelable(LOCATION_KEY, mCurrentLocation);
-//	    savedInstanceState.putString(LAST_UPDATED_TIME_STRING_KEY, mLastUpdateTime);
-//	    super.onSaveInstanceState(savedInstanceState);
-//	}
-
+	private boolean wczytaj_pasy(Context context) 
+	{       
+	    try {
+	        File plik = new File(context.getFilesDir().getAbsolutePath() + "/" + "userpass" +".txt");
+	        Scanner in = new Scanner(plik);
+	        user= new User(in.nextLine(),in.nextLine(),in.nextLine());  
+	        in.close();
+	        return true;
+	        } catch (IOException e) {   
+	            e.printStackTrace();
+	            return false;
+	        }           
+	             
+	}
 	private void Toast(String informacja)
 	{
 		
@@ -559,29 +535,12 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 		info.show();
 		
 	}
-	@Override
-	public void onConnected(Bundle arg0) {
-		// TODO Auto-generated method stub
 		
-	}
-	@Override
-	public void onConnectionSuspended(int arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void onConnectionFailed(ConnectionResult arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-	
 	@Override
 	protected void onResumeFragments() {
 		Log.d("nacisniety", " onResumeFragments() kurwa nacisnalem xd");
 		super.onResumeFragments();
-	
 		//onUserInteraction();
-	
 	}
 
 	@Override
@@ -608,5 +567,78 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 		return false;
 		
 	}
-	
+	private void Czy_wszedles_na_oznaczona_lokalizacje() throws InterruptedException
+	{	
+		m= new Miejsca(getBaseContext());
+		try{
+		if( m != null){
+		final String[] tab= new String[m.getLastId()];
+		
+			for(int i=0;i<m.getLastId();i++)
+			{
+				String przerabiam_szybko=m.getLokalizajca(i).substring(0,8);
+				String przerob=m.getLokalizajca(i).substring(11,19);
+				tab[i]=przerabiam_szybko+przerob;
+			}
+		
+		new Thread(new Runnable() {
+		@Override
+		public void run() {
+			while(true){
+			if(gps != null && Czy_zmienilem_lokalizacje==true){
+			
+			for(int i=0;i<id_sqllite;i++)
+			{
+				
+
+				String lok_sql=tab[i];
+				String	lok_gps="x"+String.valueOf(gps.getLatitude()).substring(0, String.valueOf(gps.getLatitude()).length()-3)+"y"+String.valueOf(gps.getLongitude()).substring(0, String.valueOf(gps.getLongitude()).length()-3);;
+				if(porownaj_stringi(lok_sql , lok_gps) && przekaz_do_Addcomments != i)
+				{
+					przekaz_do_Addcomments=i;
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					hand.post(new Runnable() {
+						@Override
+						public void run() {
+							//przekaz_do_Addcomments;
+							//Toast("LOL wszedlem na"+ m.getNazwa(przekaz_do_Addcomments));
+						}
+					});
+					
+				}
+				
+			}
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			Czy_zmienilem_lokalizacje=false;
+			}
+			}
+			
+		}
+	}).start();
+		
+		}
+		}catch(Exception e)
+		{
+			Log.d("Search Activity", "Watek sprawdzania lokacji wysypal sie" + e.getMessage());
+		}
+	}
+	private boolean porownaj_stringi(String lok_sql, String lok_gps) {
+	Log.d("SPR sql",lok_sql);
+	Log.d("SPR lok",lok_gps);
+		if(lok_sql.equals(lok_gps))
+		{
+			return true;
+		}else
+			return false;
+	}
 }
