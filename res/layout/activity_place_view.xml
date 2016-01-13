@@ -9,29 +9,14 @@
 
     <TextView
         android:id="@+id/szczegoly_miejsca"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_x="48dp"
+        android:layout_x="-2dp"
         android:layout_y="0dp"
         android:gravity="center_vertical"
         android:padding="15dip"
-        android:text="więcej informacji"
+        android:text="informacje o miejscu"
         android:textSize="28sp" />
-
-    <TextView
-        android:id="@+id/nazwa_miejsca1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_x="2dp"
-        android:layout_y="172dp"
-        android:ems="10" 
-        />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent" >
-
-</TextView>
 
     <ImageView
         android:id="@+id/zdjecie_miejsca"
@@ -42,11 +27,37 @@
         android:src="@drawable/cast_ic_notification_0" />
 
     <TextView
-        android:id="@+id/opis_miejsca"
-        android:layout_width="match_parent"
+        android:id="@+id/textView1"
+        android:layout_width="116dp"
+        android:layout_height="70dp"
+        android:layout_x="158dp"
+        android:layout_y="69dp"
+        android:text="Large Text"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="245dp"
+        android:layout_height="45dp"
+        android:layout_x="28dp"
+        android:layout_y="149dp"
+        android:text="Medium Text"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <RatingBar
+        android:id="@+id/ratingBar2"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_x="2dp"
-        android:layout_y="238dp"
-        android:ems="10" />
+        android:layout_x="21dp"
+        android:layout_y="208dp" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="137dp"
+        android:layout_height="wrap_content"
+        android:layout_x="28dp"
+        android:layout_y="276dp"
+        android:text="Komentarze :"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </AbsoluteLayout>

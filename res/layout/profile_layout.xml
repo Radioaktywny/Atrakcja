@@ -70,7 +70,7 @@
         android:textSize="28sp" />
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/komentButton"
         style="?android:attr/buttonStyleSmall"
         android:layout_width="96dp"
         android:layout_height="wrap_content"

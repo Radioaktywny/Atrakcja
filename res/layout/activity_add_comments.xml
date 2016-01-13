@@ -12,23 +12,52 @@
         android:id="@+id/imageView1"
         android:layout_width="96dp"
         android:layout_height="96dp"
+        android:layout_x="10dp"
+        android:layout_y="10dp"
         android:src="@drawable/cast_ic_notification_0" />
 
-    <TextView
-        android:id="@+id/textView1"
+    <EditText
+        android:id="@+id/editText1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_x="170dp"
-        android:layout_y="25dp"
-        android:text="Large Text"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:layout_x="30dp"
+        android:layout_y="230dp"
+        android:ems="10"
+        android:hint="wpisz komentarz" >
+
+        <requestFocus />
+    </EditText>
+
+    <RatingBar
+        android:id="@+id/ratingBar2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="30dp"
+        android:layout_y="280dp" />
+
+    <Button
+        android:id="@+id/komentButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="30dp"
+        android:layout_y="330dp"
+        android:text="WYSLIJ KOMENTARZ" 
+        android:onClick="wyslijkomentarz"/>
 
     <TextView
         android:id="@+id/textView2"
+        android:layout_width="130dp"
+        android:layout_height="102dp"
+        android:layout_x="130dp"
+        android:layout_y="95dp"
+        android:text="Large Text" />
+
+    <TextView
+        android:id="@+id/opismiejsca"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_x="168dp"
-        android:layout_y="89dp"
+        android:layout_height="98dp"
+        android:layout_x="130dp"
+        android:layout_y="10dp"
         android:text="Large Text"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
