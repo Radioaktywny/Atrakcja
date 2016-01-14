@@ -16,12 +16,17 @@ public class Baza implements  Callable<String> {
 	private String sql_zwroc2=null;
 	private String sprawdz_polaczenie=null;	
 	private String sql;
+	private String komentarze=null;
 	private String sql_zwroc_wersja_beta=null;
 	private Statement s ;
 		
 	public Baza(String sql,String rodzaj)
-	{			
-			if(rodzaj.equals("dodaj"))
+	{			if(rodzaj.equals("komentarze"))
+            	{
+            	    komentarze=rodzaj;
+            	    this.sql=sql;
+            	}
+			    if(rodzaj.equals("dodaj"))
 				{				
 					sql_dodaj=rodzaj;
 					this.sql=sql;
@@ -49,7 +54,7 @@ public class Baza implements  Callable<String> {
 					this.sql=sql;
 					sql_zwroc_wersja_beta=rodzaj;
 				}
-	}
+	}              
 	static boolean ladujSterownik() 
 	{
 			try {
@@ -158,9 +163,9 @@ public class Baza implements  Callable<String> {
 			return zwroc;
 			
 		}
-		public String[] pobierzkomenty() throws SQLException
+		public String pobierzkomenty(String sql) throws SQLException
 	    {
-	        String dane[]=new String[200];
+	        String dane;
 	        if (ladujSterownik())
 	            System.out.print(" sterownik OK");
 	        else
@@ -168,8 +173,8 @@ public class Baza implements  Callable<String> {
 	        String baza = "jdbc:mysql://www.db4free.net:3306/projekt_2015";
 	        java.sql.Connection connection = DriverManager.getConnection(baza, "maciek2015", "testtest");
 	        s = createStatement(connection);        
-	        ResultSet r = executeQuery(s, "SELECT * FROM `pytania`");
-	        
+	        ResultSet r = executeQuery(s, sql);
+	        dane=" ";
 	        ResultSetMetaData rsmd;
 	        try {
 	            rsmd = r.getMetaData();
@@ -184,7 +189,7 @@ public class Baza implements  Callable<String> {
 	                for (int i = 0; i < numcols; i++) {
 	                    Object obj = r.getObject(i+1);
 	                    if (obj != null)
-	                        dane[i+6*j]= obj.toString() ;               
+	                        dane=dane+ obj.toString()+"%+" ;               
 	                }
 	                j++;
 	            }
@@ -196,7 +201,7 @@ public class Baza implements  Callable<String> {
 	        
 	        closeConnection(connection, s);
 	        
-	        return dane;
+	        return dane+"";
 	        
 	    }
 		public static String returnDataFromQuery_wersja_gamma(ResultSet r) {
@@ -312,7 +317,7 @@ public class Baza implements  Callable<String> {
 		public String call() throws Exception {
 			
 			String zwrot="dziala";
-			
+						
 			if(sql_dodaj != null)
 			{
 			Log.d("baza", "weszlo do dodaj");
@@ -409,6 +414,16 @@ public class Baza implements  Callable<String> {
 				} catch (SQLException | ClassNotFoundException e) {
 					return "nie polaczono";
 				}
+			}
+			if(komentarze!=null)
+			{
+			    try {
+			        zwrot=pobierzkomenty(sql);               
+			    }catch(SQLException e)
+			    {
+			        Log.d("komenty", e.getMessage());
+			    }
+			    
 			}
 			
 			return zwrot;		
