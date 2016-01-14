@@ -20,6 +20,7 @@ import android.graphics.Bitmap.CompressFormat;
 import android.graphics.ImageFormat;
 import android.os.Environment;
 import android.os.StrictMode;
+import android.util.Log;
 
 public class FTP {
     
@@ -198,6 +199,77 @@ public class FTP {
         }
        
     }
+    
+    public void pobierz_wszystko(Context context,String folderToADD,String name)
+    {
+        File folder = new File(context.getFilesDir() + 
+                File.separator + folderToADD);
+        boolean success = true;
+        if (!folder.exists()) {
+            success = folder.mkdir();
+        }
+        if (success) {
+            // Do so1mething on success
+        } else {
+            // Do something else on failure 
+}
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);     
+        ByteArrayInputStream bs=null;
+        ftpClient = new FTPClient();
+        try {
+        	int ilosc_zdjec=Integer.parseInt(name.replaceAll("[\\D]",""));
+            ftpClient.connect(server, port);
+            ftpClient.login(user, pass);
+            ftpClient.enterLocalPassiveMode();
+            ftpClient.setFileType(ftpClient.BINARY_FILE_TYPE);
+            for(int i = 0 ; i<= ilosc_zdjec ; i++)
+            {
+            	try{
+            		String remoteFile2 = "/Projekt/miejsca/"+i+".png";
+                    File downloadFile2 = new File(folder.getAbsolutePath(),i+".png");
+                    OutputStream outputStream2 = new BufferedOutputStream(new FileOutputStream(downloadFile2));
+                    InputStream inputStream = ftpClient.retrieveFileStream(remoteFile2);
+                    byte[] bytesArray = new byte[4096];
+                    int bytesRead = -1;
+                    while ((bytesRead = inputStream.read(bytesArray)) != -1) 
+                    {
+                         outputStream2.write(bytesArray, 0, bytesRead);
+                    }
+                    success = ftpClient.completePendingCommand();
+                    if (success) 
+                    {
+                    	Log.d("Watek Zdjecia", "pobralem fote dla "+String.valueOf(i));
+                    }
+                        outputStream2.close();
+                        inputStream.close(); 
+                    }
+            	catch(Exception e)
+            	{
+            		Log.d("Watek Zdjecia", "nie mam dla "+String.valueOf(i));
+            	}
+            }
+        }
+        catch (Exception ex) {
+        System.out.println("Error: " + ex.getMessage());
+        ex.printStackTrace();
+    } finally {
+        try {
+            if (ftpClient.isConnected()) {
+                ftpClient.logout();
+                ftpClient.disconnect();
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+   
+}
+            
+           
+    
+    
+    
     boolean checkFileExists(String filePath) throws IOException {
         InputStream inputStream = ftpClient.retrieveFileStream(filePath);
         returnCode = ftpClient.getReplyCode();
