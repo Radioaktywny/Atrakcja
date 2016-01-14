@@ -319,7 +319,8 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 			
 			@Override
 			public void onInfoWindowClick(Marker marker) {
-				final int id =m.getId(marker.getTitle());
+				;
+				final int id =m.getId("x"+String.valueOf(marker.getPosition().latitude)+"y"+String.valueOf(marker.getPosition().longitude));
 				
 				hand.post(new Runnable() {
 					
@@ -344,11 +345,10 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 			
 			@Override
 			public View getInfoContents(Marker marker) {
-				m= new Miejsca(getBaseContext(),null,null);
-				try {
-					
-				int id=m.getId(marker.getTitle());
 				
+				try {
+				m= new Miejsca(getBaseContext());
+				final int id =m.getId("x"+String.valueOf(marker.getPosition().latitude)+"y"+String.valueOf(marker.getPosition().longitude));
 				Log.d("RYSUJE DLA ID", "dla"+String.valueOf(id));
 				View v = getLayoutInflater().inflate(R.layout.infookienko, null);
 				getMark(v, id);
@@ -361,6 +361,7 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 				options.inPreferredConfig = Bitmap.Config.ARGB_8888;
 				Bitmap bitmap = BitmapFactory.decodeFile(getFilesDir()+"/miejsca/"+String.valueOf(id)+".png", options);
 				Log.d("RYSUJE DLA ID", "powinno utworzyc bitmape dla"+id);
+				m.close();
 				if(bitmap!=null)
 				{
 					BitmapDescriptor b = BitmapDescriptorFactory.fromBitmap(bitmap);
@@ -714,7 +715,6 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
         ExecutorService exe = Executors.newFixedThreadPool(1);
         Future <String> mark=exe.submit(new Baza("Select avg(ocena) from oceny where lokalizacja = '"+lokalizacja+"'", "zwroc2"));
         exe.shutdown(); 
-        // tu  mi sie sypalo bo moze nie byc oceny i nie wiedzial jak ma przerobic znak ""
        try
        {	
     	   Log.d("Search Acitivity gwiazdki ","powinno miec : "+mark.get() + " id:"+String.valueOf(id));

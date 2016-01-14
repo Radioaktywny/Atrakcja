@@ -119,7 +119,7 @@ public class Logowanie extends Activity
 	}
 	
 	
-//	int i=0;
+	int i=0;
 	public void zarejestruj(View view) throws NumberFormatException, InterruptedException, ExecutionException
 	{	
 		kolo("wlacz");
@@ -141,7 +141,7 @@ public class Logowanie extends Activity
 //				{
 //					i=0;
 //				}
-			
+
 		
 		
 			
