@@ -66,25 +66,8 @@ public class Miejsca extends SQLiteOpenHelper implements Callable<String>
         	Czy_zakonczona=true;
        // 	pobierz_sqlite(db);//i sa juz w arrajliscie
 }    
-    public String[] getRekord2(int j) {
-    	Log.d("Miejsce getRekord","poczatke");
-    	SQLiteDatabase db= this.getReadableDatabase();
-    	Cursor cursor = db.rawQuery("SELECT * FROM MIEJSCA",null);
-        cursor.moveToFirst();
-        String s[]= new String[5];
-        
-                Log.d("Zarzadca_bazy pobierz_sqlita", "wszedl do whila");
-	            s[0]=cursor.getString(cursor.getColumnIndex("id"));
-	            s[1]=cursor.getString(cursor.getColumnIndex("nazwa"));
-	            s[2]=cursor.getString(cursor.getColumnIndex("lokalizacja"));
-	            s[3]=cursor.getString(cursor.getColumnIndex("uzytkownik"));
-	            s[4]=cursor.getString(cursor.getColumnIndex("opis"));
-	            
-	            cursor.moveToNext();
-        return s;
-	}
-    
-    public String[] getRekord(int j) {
+   
+   public String[] getRekord(int j) {
     	Log.d("Miejsce getRekord","poczatke");
    try{
     SQLiteDatabase db= getReadableDatabase();
@@ -132,9 +115,9 @@ public class Miejsca extends SQLiteOpenHelper implements Callable<String>
 		String cos=pobierz_(j,"nazwa");
     	return cos;
     }
-    public int getId(String nazwa) {
-    	String cos=pobierz_Id(nazwa,"id");
-    	return Integer.parseInt(cos.replaceAll("[\\D]",""));
+    public int getId(String lokalizacja)  {
+    	int cos=pobierz_Id(lokalizacja,"id");
+    	return cos;
     }
    
     
@@ -146,20 +129,21 @@ public class Miejsca extends SQLiteOpenHelper implements Callable<String>
     	SQLiteDatabase db= getReadableDatabase();
 	    Cursor cursor = db.rawQuery("SELECT * FROM miejsca where id = "+j+"",null);
 	    cursor.moveToFirst();
+	    
 	    String zwrot=cursor.getString(cursor.getColumnIndex(string));
 	    cursor.close();
 	    db.close();
 		return zwrot;
 		
 	}
-    private String pobierz_Id(String j, String string) {
+    private int pobierz_Id(String lokalizacja, String nazwa_tablicy) {
     	SQLiteDatabase db= getReadableDatabase();
-	    Cursor cursor = db.rawQuery("SELECT * FROM miejsca where nazwa = \""+j+"\"",null);
+	    Cursor cursor = db.rawQuery("SELECT * FROM miejsca where lokalizacja LIKE '%"+lokalizacja+"%'",null);
 	    cursor.moveToFirst();
-	    String cos=cursor.getString(cursor.getColumnIndex(string));
+	    String cos=cursor.getString(cursor.getColumnIndex(nazwa_tablicy));
 	    cursor.close();
 	    db.close();
-		return cos;
+		return Integer.parseInt(cos.replaceAll("[\\D]",""));
 	}
  public void setRekord(String id,String nazwa,String lokacja, String user, String opis) {
 	 	db.execSQL("INSERT INTO miejsca  (id, nazwa , lokalizacja , uzytkownik , opis ) VALUES ('"+id_sql_lita+"','"+nazwa+"','"+lokacja+"','"+user+"','"+opis+"');");
