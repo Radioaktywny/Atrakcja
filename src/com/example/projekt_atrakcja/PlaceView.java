@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -66,7 +67,7 @@ public class PlaceView extends Activity {
         String lokalizacja=m.getLokalizajca(id);
         lokalizacja=lokalizacja.substring(0,lokalizacja.length()-1);
         Future <String> ocena=exe.submit(new Baza("Select avg(ocena) from oceny where lokalizacja = '"+lokalizacja+"'", "zwroc2"));
-        Future <String> komentarze=exe.submit(new Baza("SELECT opis,uzytkownik,ocena FROM `oceny` WHERE `lokalizacja` = '"+lokalizacja+"';","komentarze"));
+        Future <String> komentarze=exe.submit(new Baza("SELECT uzytkownik,opis,ocena FROM `oceny` WHERE `lokalizacja` = '"+lokalizacja+"';","komentarze"));
         exe.shutdown(); 
         // tu  mi sie sypalo bo moze nie byc oceny i nie wiedzial jak ma przerobic znak ""
        try
@@ -99,7 +100,14 @@ public class PlaceView extends Activity {
                 (RatingBar) findViewById(R.id.ratingBar3),
                 (RatingBar) findViewById(R.id.ratingBar4)
         };
-        
+        Button zmien=(Button)findViewById(R.id.buttonkomentarze);
+        Button zmien1=(Button)findViewById(R.id.textView9);
+        for(int i=0;i<4;++i)
+        {            
+            opisy[i].setVisibility(0x00000008);
+            nazwy[i].setVisibility(0x00000008);
+            oceny[i].setVisibility(0x00000008);          
+        }
 //        TextView opis_miejsca1 = (TextView) findViewById(R.id.textView12);
 //        TextView nazwa_miejsca1 = (TextView) findViewById(R.id.textView21);
 //        RatingBar ocena1 = (RatingBar) findViewById(R.id.ratingBar11);
@@ -114,12 +122,20 @@ public class PlaceView extends Activity {
 //        RatingBar ocena4 = (RatingBar) findViewById(R.id.ratingBar4);
         try
         {
-        for(int i=0;i<(licznik/3);++i)
-        {
-            Log.d("KURWA", komenty[i]);
+            int i=0;
+        for(;i<(licznik/3);++i)
+        {            
             opisy[i].setText(komenty[3*i+1]);
             nazwy[i].setText(komenty[3*i]);
-            oceny[i].setRating(Float.valueOf(komenty[3*i+2]));           
+            oceny[i].setRating(Float.valueOf(komenty[3*i+2])); 
+            opisy[i].setVisibility(1);
+            nazwy[i].setVisibility(1);
+            oceny[i].setVisibility(1); 
+        }
+        if(i==0)
+        {
+            zmien.setVisibility(0x00000008);
+            zmien1.setText("brak komentarzy ");
         }
         }catch(Exception e)
         {
