@@ -232,18 +232,19 @@ public class FTP {
                     InputStream inputStream = ftpClient.retrieveFileStream(remoteFile2);
                     byte[] bytesArray = new byte[4096];
                     int bytesRead = -1;
-                    
-                    //if(checkFileExists("/Projekt/miejsca/"+name+".png"))
-                    
-                    while ((bytesRead = inputStream.read(bytesArray)) != -1) {
-                        outputStream2.write(bytesArray, 0, bytesRead);
-                    }
-                    if(i== ilosc_zdjec)
+                    while ((bytesRead = inputStream.read(bytesArray)) != -1) 
                     {
-                    	outputStream2.close();
+                         outputStream2.write(bytesArray, 0, bytesRead);
+                    }
+                    success = ftpClient.completePendingCommand();
+                    if (success) 
+                    {
+                    	Log.d("Watek Zdjecia", "pobralem fote dla "+String.valueOf(i));
+                    }
+                        outputStream2.close();
                         inputStream.close(); 
                     }
-            	}catch(Exception e)
+            	catch(Exception e)
             	{
             		Log.d("Watek Zdjecia", "nie mam dla "+String.valueOf(i));
             	}
