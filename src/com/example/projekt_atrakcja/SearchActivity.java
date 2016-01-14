@@ -133,22 +133,10 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 	@Override
 	public void run() 
 	{
-		if(i==0)
-		for(;index_zdjec<=id_sqllite ; index_zdjec++){ // tu trzeba poprawic
-		try
-		{
-			f.pobierz(getBaseContext(),"miejsca",String.valueOf(index_zdjec));
-			Log.d("Search Mam zdjecia dla:",  String.valueOf(index_zdjec));
-					}
-					catch(Exception e)
-					{
-						Log.d("Search zdjecia", "takich zjec to nima dla"+ index_zdjec);
-					}
-					}else
-				f.pobierz(getBaseContext(),"miejsca",String.valueOf(i));		
-			}
-		}).start();
-	}
+	
+			f.pobierz_wszystko(getBaseContext(),"miejsca",String.valueOf(id_sqllite));
+		
+	}}).start();}
 	private void sprawdzaj_id_watek(){
 		new Thread(new Runnable() {
 			
@@ -290,6 +278,7 @@ public class SearchActivity extends FragmentActivity implements OnMapReadyCallba
 							if(gps.getLatitude() != aktualizuj_gps.getLatitude() && gps.getLongitude() != aktualizuj_gps.getLongitude())
 							{	
 							Czy_zmienilem_lokalizacje=true;
+							
 							polozenie2 = new LatLng(aktualizuj_gps.getLatitude(), aktualizuj_gps.getLongitude());
 							hand.post(new Runnable() {
 								@Override
