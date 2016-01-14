@@ -4,26 +4,243 @@
     android:layout_height="match_parent"
     android:background="@drawable/tlo"
     android:orientation="vertical" >
-   
-  <!-- Screen Design for the SONGS -->
+   <ScrollView 
+       android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+    <RelativeLayout 
+     
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/tlo"
+    android:textAlignment="gravity"
+    android:columnCount="1"
+    android:orientation="vertical" >
+
+    <!-- Screen Design for the SONGS -->
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/zdjecie_miejsca"
         android:layout_width="94dp"
         android:layout_height="94dp"
+        android:layout_alignParentLeft="true"
         android:src="@drawable/cast_ic_notification_0" />
 
-  <TextView android:text="Challange"
-            android:padding="15dip"
-            android:textSize="18dip"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"/>
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="220dp"
+        android:layout_height="70dp"
+        android:layout_alignBottom="@+id/zdjecie_miejsca"
+        android:layout_alignParentRight="true"
+        android:text="nazwa"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
-  <Button
-      android:id="@+id/komentButton"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="pobierz zdj" 
-      android:onClick="pobierz"/>
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/zdjecie_miejsca"
+        android:text="opis"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
+    <RatingBar
+        android:id="@+id/ratingBar1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/textView2" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/ratingBar1"
+        android:background="#000000"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+    <ImageView
+        android:layout_below="@+id/textView3"
+        android:id="@+id/zdjecie_miejsca2"
+        android:layout_width="94dp"
+        android:layout_height="94dp"
+        android:layout_alignParentLeft="true"
+        android:src="@drawable/cast_ic_notification_0" />
+
+    <TextView
+        android:id="@+id/textView12"
+        android:layout_width="220dp"
+        android:layout_height="70dp"
+        android:layout_alignBottom="@+id/zdjecie_miejsca2"
+        android:layout_alignParentRight="true"
+        android:text="nazwa"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/textView22"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/zdjecie_miejsca2"
+        android:text="opis"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <RatingBar
+        android:id="@+id/ratingBar12"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/textView22" />
+
+    <TextView
+        android:id="@+id/textView32"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/ratingBar12"
+        android:background="#000000"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+    
+     <ImageView
+        android:id="@+id/zdjecie_miejsca3"
+        android:layout_below="@+id/textView32"
+        android:layout_width="94dp"
+        android:layout_height="94dp"
+        android:layout_alignParentLeft="true"
+        android:src="@drawable/cast_ic_notification_0" />
+
+    <TextView
+        android:id="@+id/textView13"
+        android:layout_width="220dp"
+        android:layout_height="70dp"
+        android:layout_alignBottom="@+id/zdjecie_miejsca3"
+        android:layout_alignParentRight="true"
+        android:text="nazwa"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/textView23"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/zdjecie_miejsca3"
+        android:text="opis"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <RatingBar
+        android:id="@+id/ratingBar13"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/textView23" />
+
+    <TextView
+        android:id="@+id/textView33"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/ratingBar13"
+        android:background="#000000"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+    
+    
+    
+     <ImageView
+         android:layout_below="@+id/textView33"
+        android:id="@+id/zdjecie_miejsca4"
+        android:layout_width="94dp"
+        android:layout_height="94dp"
+        android:layout_alignParentLeft="true"
+        android:src="@drawable/cast_ic_notification_0" />
+
+    <TextView
+        android:id="@+id/textView14"
+        android:layout_width="220dp"
+        android:layout_height="70dp"
+        android:layout_alignBottom="@+id/zdjecie_miejsca4"
+        android:layout_alignParentRight="true"
+        android:text="nazwa"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/textView24"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/zdjecie_miejsca4"
+        android:text="opis"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <RatingBar
+        android:id="@+id/ratingBar14"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/textView24" />
+
+    <TextView
+        android:id="@+id/textView34"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/ratingBar14"
+        android:background="#000000"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+    
+    
+    
+     <ImageView
+         android:layout_below="@+id/textView34"
+        android:id="@+id/zdjecie_miejsca5"
+        android:layout_width="94dp"
+        android:layout_height="94dp"
+        android:layout_alignParentLeft="true"
+        android:src="@drawable/cast_ic_notification_0" />
+
+    <TextView
+        android:id="@+id/textView15"
+        android:layout_width="220dp"
+        android:layout_height="70dp"
+        android:layout_alignBottom="@+id/zdjecie_miejsca5"
+        android:layout_alignParentRight="true"
+        android:text="nazwa"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/textView25"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/zdjecie_miejsca5"
+        android:text="opis"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <RatingBar
+        android:id="@+id/ratingBar15"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/textView25" />
+
+    <TextView
+        android:id="@+id/textView35"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/ratingBar15"
+        android:background="#000000"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    </RelativeLayout>
+    </ScrollView>
+  <!-- Screen Design for the SONGS -->
 </LinearLayout>

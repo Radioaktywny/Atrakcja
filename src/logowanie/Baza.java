@@ -174,7 +174,7 @@ public class Baza implements  Callable<String> {
 	        java.sql.Connection connection = DriverManager.getConnection(baza, "maciek2015", "testtest");
 	        s = createStatement(connection);        
 	        ResultSet r = executeQuery(s, sql);
-	        dane=" ";
+	        dane="";
 	        ResultSetMetaData rsmd;
 	        try {
 	            rsmd = r.getMetaData();
