@@ -240,6 +240,14 @@
         android:background="#000000"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
+    <ProgressBar
+        android:id="@+id/progressBar1"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/ratingBar1"
+        android:layout_centerHorizontal="true" />
+
     </RelativeLayout>
     </ScrollView>
   <!-- Screen Design for the SONGS -->

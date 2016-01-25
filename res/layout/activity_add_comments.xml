@@ -61,4 +61,12 @@
         android:text="Large Text"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
+    <ProgressBar
+        android:id="@+id/progressBar1"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="86dp"
+        android:layout_y="141dp" />
+
 </AbsoluteLayout>

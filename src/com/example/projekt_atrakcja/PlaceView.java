@@ -12,8 +12,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,21 +29,38 @@ public class PlaceView extends Activity {
     private RatingBar ocena;
     private Miejsca m;
     private int licznik=0;
+    private ProgressBar proces;
     @Override
     protected void onCreate(Bundle savedInstanceState) 
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place_view);
+        kolo("utworz");
+        kolo("wlacz");
         int id = getIntent().getExtras().getInt("keyName");
         m= new Miejsca(getBaseContext());
-        try {
-        	
+        try {        	
             init(id);
         } catch (InterruptedException | ExecutionException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        
+        kolo("wylacz");
+    }
+    private void kolo(String info) {
+        if(info.equals("utworz"))
+        {
+            proces=(ProgressBar)findViewById(R.id.progressBar1);
+            proces.setVisibility(View.GONE);
+        }
+        else if(info.equals("wlacz"))
+        {
+            proces.setVisibility(View.VISIBLE);
+        }
+        else if(info.equals("wylacz"))
+        {
+            proces.setVisibility(View.GONE);
+        }
     }
 
     private void init(int id) throws InterruptedException, ExecutionException {

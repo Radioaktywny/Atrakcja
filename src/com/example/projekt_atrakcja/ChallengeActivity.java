@@ -19,6 +19,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import cache.Miejsca;
@@ -31,6 +32,7 @@ public class ChallengeActivity extends Activity {
     private User user;
     private int licznik=0;
     private Miejsca m;
+    private ProgressBar proces;
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
        
@@ -44,6 +46,8 @@ public class ChallengeActivity extends Activity {
             startActivity(new Intent(ChallengeActivity.this,Logowanie.class));
             finish(); 
         }
+        kolo("utworz");
+        kolo("wlacz");
         m= new Miejsca(getBaseContext());
         try {
             init();
@@ -51,7 +55,24 @@ public class ChallengeActivity extends Activity {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+        kolo("wylacz");
     }
+    private void kolo(String info) {
+        if(info.equals("utworz"))
+        {
+            proces=(ProgressBar)findViewById(R.id.progressBar1);
+            proces.setVisibility(View.GONE);
+        }
+        else if(info.equals("wlacz"))
+        {
+            proces.setVisibility(View.VISIBLE);
+        }
+        else if(info.equals("wylacz"))
+        {
+            proces.setVisibility(View.GONE);
+        }
+    }
+
     private void init() throws InterruptedException, ExecutionException 
     {
         ExecutorService exe = Executors.newFixedThreadPool(2);
@@ -83,7 +104,7 @@ public class ChallengeActivity extends Activity {
         Future <String> ocena=exe.submit(new Baza("SELECT u.id, AVG(o.ocena) AS srednia FROM  oceny o JOIN miejsca u\r\n" + 
                 "                 ON (u.lokalizacja=o.lokalizacja) group by u.id order by srednia DESC LIMIT 5", "komentarze"));
         String ocenyId[]=podzielStringa(ocena.get());
-        Log.d("KURWA", ocena.get());
+        Log.d("Challangeactivity ocena", ocena.get());
         for(int i=0;i<licznik/2;++i)
         {
             int id=Integer.valueOf(ocenyId[i*2]);

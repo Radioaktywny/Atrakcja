@@ -23,6 +23,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,6 +38,8 @@ public class AddComments extends Activity {
     private static int id;
     private User user;
     private String lokalizacja;
+
+    private ProgressBar proces;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +60,22 @@ public class AddComments extends Activity {
         } catch (NumberFormatException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
+        }
+        kolo("utworz");
+    }
+    private void kolo(String info) {
+        if(info.equals("utworz"))
+        {
+            proces=(ProgressBar)findViewById(R.id.progressBar1);
+            proces.setVisibility(View.GONE);
+        }
+        else if(info.equals("wlacz"))
+        {
+            proces.setVisibility(View.VISIBLE);
+        }
+        else if(info.equals("wylacz"))
+        {
+            proces.setVisibility(View.GONE);
         }
     }
 
@@ -87,18 +106,18 @@ public class AddComments extends Activity {
     }
     public void wyslijkomentarz(View view)
     {
-        
+        kolo("wlacz");    
         EditText koment=(EditText) findViewById(R.id.editText1) ;  
         RatingBar ocena = (RatingBar) findViewById(R.id.ratingBar2);
         commentToDatabase(lokalizacja,(int)ocena.getRating(),koment.getText().toString());
-            
+        kolo("wylacz");    
         Toast("Dodano komentarz !");
-        
+        kolo("wlacz:");
         Intent intent =new Intent(AddComments.this,PlaceView.class);
         intent.putExtra("keyName", id);
         startActivity(intent);
         finish(); 
-        
+        kolo("wylacz");
         
     }
     private void commentToDatabase(String lokalizacja,int ocena,String opis)

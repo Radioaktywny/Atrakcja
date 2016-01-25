@@ -73,4 +73,12 @@
         android:layout_y="53dp"
         android:src="@drawable/cast_ic_notification_0" />
 
+    <ProgressBar
+        android:id="@+id/progressBar1"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="111dp"
+        android:layout_y="213dp" />
+
 </AbsoluteLayout>

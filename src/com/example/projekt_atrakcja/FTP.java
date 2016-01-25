@@ -24,9 +24,9 @@ import android.util.Log;
 
 public class FTP {
     
-    private String server = "ftp.projekt_atrakcja.net23.net";
+    private String server = "ftp.projektatrakcja.comlu.com" ;
     private int port = 21;
-    private String user = "a7583522";
+    private String user = "a1893178";
     private String pass = "testtest";
     private FTPClient ftpClient;
     private int returnCode;

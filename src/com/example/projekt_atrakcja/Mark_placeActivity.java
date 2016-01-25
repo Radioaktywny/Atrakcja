@@ -29,6 +29,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import cache.Miejsca;
 import cache.User;
@@ -41,6 +42,7 @@ public class Mark_placeActivity extends Activity {
     private int id=0;
     protected Miejsca m;
     private Bitmap photo=null;
+    private ProgressBar proces;
     
     public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
@@ -66,7 +68,7 @@ public class Mark_placeActivity extends Activity {
 	        }
         } 
     	
-    	
+    	kolo("utworz");
     }
     private void wyslijcos() 
     {
@@ -116,9 +118,24 @@ public class Mark_placeActivity extends Activity {
     	Log.d("Lokalizacja", String.valueOf(SearchActivity.getLokalizacja().getLatitude()));
 		return SearchActivity.getLokalizacja();	
 	}
-    
+	private void kolo(String info) {
+        if(info.equals("utworz"))
+        {
+            proces=(ProgressBar)findViewById(R.id.progressBar1);
+            proces.setVisibility(View.GONE);
+        }
+        else if(info.equals("wlacz"))
+        {
+            proces.setVisibility(View.VISIBLE);
+        }
+        else if(info.equals("wylacz"))
+        {
+            proces.setVisibility(View.GONE);
+        }
+    }
+
     public void oznacz(View view) 
-    {	
+    {	kolo("wlacz");
     	try {
 		id = sprawdz_id();
     	} catch (NumberFormatException | InterruptedException | ExecutionException e1) {
@@ -161,7 +178,7 @@ public class Mark_placeActivity extends Activity {
             }
             else
             {
-                Toast("Brak zdjêcia :C");               
+                Toast("Brak zdjêcia");               
             }
         	dodaj_lokalizacje(nazwa_miejsca, opis);
         	Toast("Miejsce zostalo dodane :) ");
@@ -171,6 +188,9 @@ public class Mark_placeActivity extends Activity {
         else{
         	Toast("brak polaczenie z internetem");
         }
+		
+		
+		kolo("wylacz");
 }
       
 
